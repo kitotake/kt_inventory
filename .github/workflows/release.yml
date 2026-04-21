@@ -69,14 +69,14 @@ jobs:
 
       - name: Bundle files
         run: |
-          mkdir -p ./temp/ox_inventory
-          mkdir -p ./temp/ox_inventory/web
-          cp ./{server.lua,README.md,LICENSE,fxmanifest.lua,client.lua,init.lua} ./temp/ox_inventory
-          cp -r ./{setup,modules,data,locales} ./temp/ox_inventory
-          cp -r ./web/build ./temp/ox_inventory/web/build
-          cp ./web/LICENSE ./temp/ox_inventory/web/build
-          cp -r ./web/images ./temp/ox_inventory/web/images
-          cd ./temp && zip -r ../ox_inventory.zip ./ox_inventory
+          mkdir -p ./temp/kt_inventory
+          mkdir -p ./temp/kt_inventory/web
+          cp ./{server.lua,README.md,LICENSE,fxmanifest.lua,client.lua,init.lua} ./temp/kt_inventory
+          cp -r ./{setup,modules,data,locales} ./temp/kt_inventory
+          cp -r ./web/build ./temp/kt_inventory/web/build
+          cp ./web/LICENSE ./temp/kt_inventory/web/build
+          cp -r ./web/images ./temp/kt_inventory/web/images
+          cd ./temp && zip -r ../kt_inventory.zip ./kt_inventory
 
       - name: Create Release
         uses: "marvinpinto/action-automatic-releases@v1.2.1"
@@ -85,7 +85,7 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           title: "${{ env.RELEASE_VERSION }}"
           prerelease: false
-          files: ox_inventory.zip
+          files: kt_inventory.zip
 
         env:
           CI: false

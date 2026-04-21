@@ -19,7 +19,7 @@ SetTimeout(500, function()
     local customInventory = ESX.GetConfig().CustomInventory
 
 	if customInventory ~= nil and customInventory ~= "ox" then
-        error('es_extended has not been configured to enable support for ox_inventory!\nEnsure Config.CustomInventory has been set to "ox" in your es_extended resource config.')
+        error('es_extended has not been configured to enable support for kt_inventory!\nEnsure Config.CustomInventory has been set to "ox" in your es_extended resource config.')
     end
 
 	server.UseItem = ESX.UseItem
@@ -76,7 +76,7 @@ function server.buyLicense(inv, license)
 	return true, 'have_purchased'
 end
 
---- Takes traditional item data and updates it to support ox_inventory, i.e.
+--- Takes traditional item data and updates it to support kt_inventory, i.e.
 --- ```
 --- Old: {"cola":1, "burger":3}
 --- New: [{"slot":1,"name":"cola","count":1}, {"slot":2,"name":"burger","count":3}]

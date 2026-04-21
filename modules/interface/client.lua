@@ -1,7 +1,7 @@
 if not lib then return end
 
 -- Module is deprecated and provided for compatibility
--- All functions are now part of with ox_lib
+-- All functions are now part of with kt_lib
 
 exports('Keyboard', lib.inputDialog)
 

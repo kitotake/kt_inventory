@@ -24,7 +24,7 @@ for shopType, shopData in pairs(lib.load('data.shops') or {} --[[@as table<strin
 	local blip = shop.blip
 
 	if blip then
-		blip.name = ('ox_shop_%s'):format(shopType)
+		blip.name = ('kt_shop_%s'):format(shopType)
 		AddTextEntry(blip.name, shop.name or shopType)
 	end
 end
@@ -45,7 +45,7 @@ local function onEnterShop(point)
 		SetEntityInvincible(entity, true)
 		SetBlockingOfNonTemporaryEvents(entity, true)
 
-		exports.ox_target:addLocalEntity(entity, {
+		exports.kt_target:addLocalEntity(entity, {
             {
                 icon = point.icon or 'fas fa-shopping-basket',
                 label = point.label,
@@ -69,7 +69,7 @@ local function onExitShop(point)
 
 	if not entity then return end
 
-	exports.ox_target:removeLocalEntity(entity)
+	exports.kt_target:removeLocalEntity(entity)
 	Utils.DeleteEntity(entity)
 
 	point.entity = nil
@@ -84,7 +84,7 @@ local function wipeShops()
 		local shop = shops[i]
 
 		if shop.zoneId then
-            exports.ox_target:removeZone(shop.zoneId)
+            exports.kt_target:removeZone(shop.zoneId)
             shop.zoneId = nil
 		end
 
@@ -117,8 +117,8 @@ local function refreshShops()
 			if shop.model then
 				if not hasShopAccess(shop) then goto skipLoop end
 
-				exports.ox_target:removeModel(shop.model, shop.name)
-				exports.ox_target:addModel(shop.model, {
+				exports.kt_target:removeModel(shop.model, shop.name)
+				exports.kt_target:addModel(shop.model, {
                     {
                         name = shop.name,
                         icon = shop.icon or 'fas fa-shopping-basket',

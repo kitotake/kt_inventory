@@ -34,7 +34,7 @@ local function createCraftingBench(id, data)
 		local blip = data.blip
 
 		if blip then
-			blip.name = blip.name or ('ox_crafting_%s'):format(data.label and id or 0)
+			blip.name = blip.name or ('kt_crafting_%s'):format(data.label and id or 0)
 			AddTextEntry(blip.name, data.label or locale('crafting_bench'))
 		end
 
@@ -60,7 +60,7 @@ local function createCraftingBench(id, data)
     					}
     				}
 
-    				exports.ox_target:addBoxZone(zone)
+    				exports.kt_target:addBoxZone(zone)
 
     				if blip then
     					createBlip(blip, zone.coords)

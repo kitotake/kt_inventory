@@ -1,4 +1,4 @@
-## The following images were provided by [yaroph](https://forum.cfx.re/u/yaroph/) for free-use by ox_inventory.
+## The following images were provided by [yaroph](https://forum.cfx.re/u/yaroph/) for free-use by kt_inventory.
 - All files prefixed with _ammo-_, _at\__, and _WEAPON\__.
 - advancedkit
 - armour

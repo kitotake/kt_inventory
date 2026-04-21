@@ -117,7 +117,7 @@ exports('RegisterShop', function(shopType, shopDetails)
 	registerShopType(shopType, shopDetails)
 end)
 
-lib.callback.register('ox_inventory:openShop', function(source, data)
+lib.callback.register('kt_inventory:openShop', function(source, data)
 	local left, shop = Inventory(source)
 
 	if not left then return end
@@ -180,7 +180,7 @@ local function isRequiredGrade(grade, rank)
 	end
 end
 
-lib.callback.register('ox_inventory:buyItem', function(source, data)
+lib.callback.register('kt_inventory:buyItem', function(source, data)
 	if data.toType == 'player' then
 		if data.count == nil then data.count = 1 end
 

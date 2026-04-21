@@ -58,7 +58,7 @@ local function getCraftingCoords(source, bench, index)
 	end
 end
 
-lib.callback.register('ox_inventory:openCraftingBench', function(source, id, index)
+lib.callback.register('kt_inventory:openCraftingBench', function(source, id, index)
 	local left, bench = Inventory(source), CraftingBenches[id]
 
 	if not left then return end
@@ -89,7 +89,7 @@ end)
 
 local TriggerEventHooks = require 'modules.hooks.server'
 
-lib.callback.register('ox_inventory:craftItem', function(source, id, index, recipeId, toSlot)
+lib.callback.register('kt_inventory:craftItem', function(source, id, index, recipeId, toSlot)
 	local left, bench = Inventory(source), CraftingBenches[id]
 
 	if not left then return end
@@ -191,7 +191,7 @@ lib.callback.register('ox_inventory:craftItem', function(source, id, index, reci
 				toSlot = toSlot,
 			}) then return false end
 
-			local success = lib.callback.await('ox_inventory:startCrafting', source, id, recipeId)
+			local success = lib.callback.await('kt_inventory:startCrafting', source, id, recipeId)
 
 			if success then
 				for name, needs in pairs(recipe.ingredients) do

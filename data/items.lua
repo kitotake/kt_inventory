@@ -9,10 +9,10 @@ return {
 			anim = 'eating',
 			prop = 'burger',
 			usetime = 2500,
-			export = 'ox_inventory_examples.testburger'
+			export = 'kt_inventory_examples.testburger'
 		},
 		server = {
-			export = 'ox_inventory_examples.testburger',
+			export = 'kt_inventory_examples.testburger',
 			test = 'what an amazingly delicious burger, amirite?'
 		},
 		buttons = {

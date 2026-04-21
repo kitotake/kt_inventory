@@ -83,7 +83,7 @@ local function Item(name, cb)
 	end
 end
 
-local ox_inventory = exports[shared.resource]
+local kt_inventory = exports[shared.resource]
 -----------------------------------------------------------------------------------------------
 -- Clientside item use functions
 -----------------------------------------------------------------------------------------------
@@ -91,7 +91,7 @@ local ox_inventory = exports[shared.resource]
 Item('bandage', function(data, slot)
 	local maxHealth = GetEntityMaxHealth(cache.ped)
 	local health = GetEntityHealth(cache.ped)
-	ox_inventory:useItem(data, function(data)
+	kt_inventory:useItem(data, function(data)
 		if data then
 			SetEntityHealth(cache.ped, math.min(maxHealth, math.floor(health + maxHealth / 16)))
 			lib.notify({ description = 'You feel better already' })
@@ -101,7 +101,7 @@ end)
 
 Item('armour', function(data, slot)
 	if GetPedArmour(cache.ped) < 100 then
-		ox_inventory:useItem(data, function(data)
+		kt_inventory:useItem(data, function(data)
 			if data then
 				SetPlayerMaxArmour(PlayerData.id, 100)
 				SetPedArmour(cache.ped, 100)
@@ -113,7 +113,7 @@ end)
 client.parachute = false
 Item('parachute', function(data, slot)
 	if not client.parachute then
-		ox_inventory:useItem(data, function(data)
+		kt_inventory:useItem(data, function(data)
 			if data then
 				local chute = `GADGET_PARACHUTE`
 				SetPlayerParachuteTintIndex(PlayerData.id, -1)
@@ -157,7 +157,7 @@ Item('clothing', function(data, slot)
 		return print('Clothing is missing prop/component id in metadata')
 	end
 
-	ox_inventory:useItem(data, function(data)
+	kt_inventory:useItem(data, function(data)
 		if data then
 			metadata = data.metadata
 

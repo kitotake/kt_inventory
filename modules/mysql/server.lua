@@ -1,11 +1,11 @@
 if not lib then return end
 
 local Query = {
-    SELECT_STASH = 'SELECT data FROM ox_inventory WHERE owner = ? AND name = ?',
-    UPDATE_STASH = 'UPDATE ox_inventory SET data = ? WHERE owner = ? AND name = ?',
+    SELECT_STASH = 'SELECT data FROM kt_inventory WHERE owner = ? AND name = ?',
+    UPDATE_STASH = 'UPDATE kt_inventory SET data = ? WHERE owner = ? AND name = ?',
     UPSERT_STASH =
-    'INSERT INTO ox_inventory (data, owner, name) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data = VALUES(data)',
-    INSERT_STASH = 'INSERT INTO ox_inventory (owner, name) VALUES (?, ?)',
+    'INSERT INTO kt_inventory (data, owner, name) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data = VALUES(data)',
+    INSERT_STASH = 'INSERT INTO kt_inventory (owner, name) VALUES (?, ?)',
     SELECT_GLOVEBOX = 'SELECT plate, glovebox FROM `{vehicle_table}` WHERE `{vehicle_column}` = ?',
     SELECT_TRUNK = 'SELECT plate, trunk FROM `{vehicle_table}` WHERE `{vehicle_column}` = ?',
     SELECT_PLAYER = 'SELECT inventory FROM `{user_table}` WHERE `{user_column}` = ?',
@@ -48,10 +48,10 @@ Citizen.CreateThreadNow(function()
 
     Wait(0)
 
-    local success, result = pcall(MySQL.scalar.await, 'SELECT 1 FROM ox_inventory')
+    local success, result = pcall(MySQL.scalar.await, 'SELECT 1 FROM kt_inventory')
 
     if not success then
-        MySQL.query([[CREATE TABLE `ox_inventory` (
+        MySQL.query([[CREATE TABLE `kt_inventory` (
 			`owner` varchar(60) DEFAULT NULL,
 			`name` varchar(100) NOT NULL,
 			`data` longtext DEFAULT NULL,
@@ -60,7 +60,7 @@ Citizen.CreateThreadNow(function()
 		)]])
     else
         -- Shouldn't be needed anymore; was used for some data conversion for v2.5.0 (back in March 2022)
-        -- result = MySQL.query.await("SELECT owner, name FROM ox_inventory WHERE NOT owner = ''")
+        -- result = MySQL.query.await("SELECT owner, name FROM kt_inventory WHERE NOT owner = ''")
 
         -- if result and next(result) then
         -- 	local parameters = {}
@@ -74,7 +74,7 @@ Citizen.CreateThreadNow(function()
         -- 			local name = data.name:sub(0, #data.name - #snip)
 
         -- 			count += 1
-        -- 			parameters[count] = { query = 'UPDATE ox_inventory SET `name` = ? WHERE `owner` = ? AND `name` = ?', values = { name, data.owner, data.name } }
+        -- 			parameters[count] = { query = 'UPDATE kt_inventory SET `name` = ? WHERE `owner` = ? AND `name` = ?', values = { name, data.owner, data.name } }
         -- 		end
         -- 	end
 
@@ -116,7 +116,7 @@ Citizen.CreateThreadNow(function()
     local clearStashes = GetConvar('inventory:clearstashes', '6 MONTH')
 
     if clearStashes ~= '' then
-        pcall(MySQL.query.await, ('DELETE FROM ox_inventory WHERE lastupdated < (NOW() - INTERVAL %s)'):format(clearStashes))
+        pcall(MySQL.query.await, ('DELETE FROM kt_inventory WHERE lastupdated < (NOW() - INTERVAL %s)'):format(clearStashes))
     end
 end)
 

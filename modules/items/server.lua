@@ -4,7 +4,7 @@ local Items = {}
 local ItemList = require 'modules.items.shared' --[[@as table<string, OxServerItem>]]
 local Utils = require 'modules.utils.server'
 
-TriggerEvent('ox_inventory:itemList', ItemList)
+TriggerEvent('kt_inventory:itemList', ItemList)
 
 Items.containers = require 'modules.items.containers'
 
@@ -335,7 +335,7 @@ function Items.UpdateDurability(inv, slot, item, value, ostime)
 end
 
 ---@deprecated
----Use the 'ox_inventory:usedItem' event or the 'usingItem' or 'buyItem' hooks
+---Use the 'kt_inventory:usedItem' event or the 'usingItem' or 'buyItem' hooks
 local function Item(name, cb)
 	local item = ItemList[name]
 

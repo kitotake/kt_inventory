@@ -1,6 +1,6 @@
-if not lib.checkDependency('ox_core', '0.21.3', true) then return end
+if not lib.checkDependency('kt_core', '0.21.3', true) then return end
 
-local Ox = require '@ox_core.lib.init' --[[@as OxClient]]
+local Ox = require '@kt_core.lib.init' --[[@as OxClient]]
 local player = Ox.GetPlayer()
 
 RegisterNetEvent('ox:playerLogout', client.onLogout)

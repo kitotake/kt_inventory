@@ -12,8 +12,8 @@ local function Upgrade()
 
 	started = true
 
-	local trunk = MySQL.query.await('SELECT owner, name, data FROM ox_inventory WHERE name LIKE ?', {'trunk-%'})
-	local glovebox = MySQL.query.await('SELECT owner, name, data FROM ox_inventory WHERE name LIKE ?', {'glovebox-%'})
+	local trunk = MySQL.query.await('SELECT owner, name, data FROM kt_inventory WHERE name LIKE ?', {'trunk-%'})
+	local glovebox = MySQL.query.await('SELECT owner, name, data FROM kt_inventory WHERE name LIKE ?', {'glovebox-%'})
 
 	if trunk and glovebox then
 		local vehicles = {}
@@ -47,7 +47,7 @@ local function Upgrade()
 		end
 
 		MySQL.prepare.await('UPDATE owned_vehicles SET trunk = ?, glovebox = ? WHERE plate = ? AND owner = ?', parameters)
-		MySQL.prepare.await('DELETE FROM ox_inventory WHERE name LIKE ? OR name LIKE ?', {'trunk-%', 'glovebox-%'})
+		MySQL.prepare.await('DELETE FROM kt_inventory WHERE name LIKE ? OR name LIKE ?', {'trunk-%', 'glovebox-%'})
 
 		Print('Successfully converted trunks and gloveboxes')
 	else
@@ -193,7 +193,7 @@ local function Convert_Old_ESX_Property()
 		end
 		parameters[count] = {inventories[i].owner,"property"..inventories[i].owner,json.encode(inventory,{indent=false})}
 	end
-	MySQL.prepare.await('INSERT INTO ox_inventory (owner,name,data) VALUES (?,?,?)', parameters)
+	MySQL.prepare.await('INSERT INTO kt_inventory (owner,name,data) VALUES (?,?,?)', parameters)
 	Print('Successfully converted user property inventories')
 	started = false
 end

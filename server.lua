@@ -6,7 +6,7 @@ require 'modules.shops.server'
 require 'modules.pefcl.server'
 
 if GetConvar('inventory:versioncheck', 'true') == 'true' then
-	lib.versionCheck('overextended/ox_inventory')
+	lib.versionCheck('kitotake/kt_inventory')
 end
 
 local TriggerEventHooks = require 'modules.hooks.server'
@@ -61,11 +61,11 @@ function server.setPlayerInventory(player, data)
 		inv.player.ped = GetPlayerPed(player.source)
 
 		if server.syncInventory then server.syncInventory(inv) end
-		TriggerClientEvent('ox_inventory:setPlayerInventory', player.source, Inventory.Drops, inventory, totalWeight, inv.player)
+		TriggerClientEvent('kt_inventory:setPlayerInventory', player.source, Inventory.Drops, inventory, totalWeight, inv.player)
 	end
 end
 exports('setPlayerInventory', server.setPlayerInventory)
-AddEventHandler('ox_inventory:setPlayerInventory', server.setPlayerInventory)
+AddEventHandler('kt_inventory:setPlayerInventory', server.setPlayerInventory)
 
 local registeredDumpsters = {}
 
@@ -286,12 +286,12 @@ end
 ---@param source number
 ---@param invType string
 ---@param data string|number|table
-lib.callback.register('ox_inventory:openInventory', function(source, invType, data)
+lib.callback.register('kt_inventory:openInventory', function(source, invType, data)
 	return openInventory(source, invType, data)
 end)
 
 ---@param netId number
-lib.callback.register('ox_inventory:isVehicleATrailer', function(source, netId)
+lib.callback.register('kt_inventory:isVehicleATrailer', function(source, netId)
 	local entity = NetworkGetEntityFromNetworkId(netId)
 	local retval = GetVehicleType(entity)
 	return retval == 'trailer'
@@ -304,7 +304,7 @@ function server.forceOpenInventory(playerId, invType, data)
 	local left, right = openInventory(playerId, invType, data, true)
 
 	if left and right then
-		TriggerClientEvent('ox_inventory:forceOpenInventory', playerId, left, right)
+		TriggerClientEvent('kt_inventory:forceOpenInventory', playerId, left, right)
 		return right.id
 	end
 end
@@ -313,7 +313,7 @@ exports('forceOpenInventory', server.forceOpenInventory)
 
 local Licenses = lib.load('data.licenses')
 
-lib.callback.register('ox_inventory:buyLicense', function(source, id)
+lib.callback.register('kt_inventory:buyLicense', function(source, id)
 	local license = Licenses[id]
 	if not license then return end
 
@@ -323,12 +323,12 @@ lib.callback.register('ox_inventory:buyLicense', function(source, id)
 	return server.buyLicense(inventory, license)
 end)
 
-lib.callback.register('ox_inventory:getItemCount', function(source, item, metadata, target)
+lib.callback.register('kt_inventory:getItemCount', function(source, item, metadata, target)
 	local inventory = target and Inventory(target) or Inventory(source)
 	return (inventory and Inventory.GetItemCount(inventory, item, metadata, true))
 end)
 
-lib.callback.register('ox_inventory:getInventory', function(source, id)
+lib.callback.register('kt_inventory:getInventory', function(source, id)
 	local inventory = Inventory(id or source)
 	return inventory and {
 		id = inventory.id,
@@ -342,7 +342,7 @@ lib.callback.register('ox_inventory:getInventory', function(source, id)
 	}
 end)
 
-RegisterNetEvent('ox_inventory:usedItemInternal', function(slot)
+RegisterNetEvent('kt_inventory:usedItemInternal', function(slot)
     local inventory = Inventory(source)
 
     if not inventory then return end
@@ -356,7 +356,7 @@ RegisterNetEvent('ox_inventory:usedItemInternal', function(slot)
         return
     end
 
-    TriggerEvent('ox_inventory:usedItem', inventory.id, item.name, item.slot, next(item.metadata) and item.metadata)
+    TriggerEvent('kt_inventory:usedItem', inventory.id, item.name, item.slot, next(item.metadata) and item.metadata)
 
     inventory.usingItem = nil
 end)
@@ -366,7 +366,7 @@ end)
 ---@param slot number?
 ---@param metadata { [string]: any }?
 ---@return table | boolean | nil
-lib.callback.register('ox_inventory:useItem', function(source, itemName, slot, metadata, noAnim)
+lib.callback.register('kt_inventory:useItem', function(source, itemName, slot, metadata, noAnim)
 	local inventory = Inventory(source) --[[@as OxInventory]]
 
 	if inventory.player then
@@ -386,23 +386,23 @@ lib.callback.register('ox_inventory:useItem', function(source, itemName, slot, m
 
 				if ostime > durability then
                     Items.UpdateDurability(inventory, data, item, 0)
-					return TriggerClientEvent('ox_lib:notify', source, { type = 'error', description = locale('no_durability', label) })
+					return TriggerClientEvent('kt_lib:notify', source, { type = 'error', description = locale('no_durability', label) })
 				elseif consume ~= 0 and consume < 1 then
 					local degrade = (data.metadata.degrade or item.degrade) * 60
 					local percentage = ((durability - ostime) * 100) / degrade
 
 					if percentage < consume * 100 then
-						return TriggerClientEvent('ox_lib:notify', source, { type = 'error', description = locale('not_enough_durability', label) })
+						return TriggerClientEvent('kt_lib:notify', source, { type = 'error', description = locale('not_enough_durability', label) })
 					end
 				end
 			elseif durability <= 0 then
-				return TriggerClientEvent('ox_lib:notify', source, { type = 'error', description = locale('no_durability', label) })
+				return TriggerClientEvent('kt_lib:notify', source, { type = 'error', description = locale('no_durability', label) })
 			elseif consume ~= 0 and consume < 1 and durability < consume * 100 then
-				return TriggerClientEvent('ox_lib:notify', source, { type = 'error', description = locale('not_enough_durability', label) })
+				return TriggerClientEvent('kt_lib:notify', source, { type = 'error', description = locale('not_enough_durability', label) })
 			end
 
 			if data.count > 1 and consume < 1 and consume > 0 and not Inventory.GetEmptySlot(inventory) then
-				return TriggerClientEvent('ox_lib:notify', source, { type = 'error', description = locale('cannot_use', label) })
+				return TriggerClientEvent('kt_lib:notify', source, { type = 'error', description = locale('cannot_use', label) })
 			end
 		end
 
@@ -430,7 +430,7 @@ lib.callback.register('ox_inventory:useItem', function(source, itemName, slot, m
 						data.server = result
 					end
 				else
-					return TriggerClientEvent('ox_lib:notify', source, { type = 'error', description = locale('item_not_enough', item.name) })
+					return TriggerClientEvent('kt_lib:notify', source, { type = 'error', description = locale('item_not_enough', item.name) })
 				end
 			elseif not item.weapon and server.UseItem then
                 inventory.usingItem = data
@@ -452,7 +452,7 @@ lib.callback.register('ox_inventory:useItem', function(source, itemName, slot, m
 			}) then return false end
 
             ---@type boolean
-			local success = lib.callback.await('ox_inventory:usingItem', source, data, noAnim)
+			local success = lib.callback.await('kt_inventory:usingItem', source, data, noAnim)
 
 			if item.weapon then
 				inventory.weapon = success and slot or nil
@@ -639,7 +639,7 @@ lib.addCommand('clearevidence', {
 	local hasPermission = group and server.isPlayerBoss(source, group, grade)
 
 	if hasPermission then
-		MySQL.query('DELETE FROM ox_inventory WHERE name = ?', {('evidence-%s'):format(args.locker)})
+		MySQL.query('DELETE FROM kt_inventory WHERE name = ?', {('evidence-%s'):format(args.locker)})
 	end
 end)
 

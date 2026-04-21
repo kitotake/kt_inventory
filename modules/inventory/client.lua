@@ -104,14 +104,14 @@ function Inventory.OpenTrunk(entity)
 end
 
 if shared.target then
-    exports.ox_target:addModel(Inventory.Dumpsters, {
+    exports.kt_target:addModel(Inventory.Dumpsters, {
         icon = 'fas fa-dumpster',
         label = locale('search_dumpster'),
         onSelect = function(data) return Inventory.OpenDumpster(data.entity) end,
         distance = 2
     })
 
-    exports.ox_target:addGlobalVehicle({
+    exports.kt_target:addGlobalVehicle({
         icon = 'fas fa-truck-ramp-box',
         label = locale('open_label', locale('storage')),
         distance = 1.5,
@@ -323,7 +323,7 @@ Inventory.Evidence = setmetatable(lib.load('data.evidence'), {
             if evidence.point then
                 evidence.point:remove()
             elseif evidence.zoneId then
-                exports.ox_target:removeZone(evidence.zoneId)
+                exports.kt_target:removeZone(evidence.zoneId)
                 evidence.zone = nil
             end
 
@@ -364,7 +364,7 @@ Inventory.Stashes = setmetatable(lib.load('data.stashes'), {
             if stash.point then
                 stash.point:remove()
             elseif stash.zoneId then
-                exports.ox_target:removeZone(stash.zoneId)
+                exports.kt_target:removeZone(stash.zoneId)
                 stash.zoneId = nil
             end
 
@@ -377,7 +377,7 @@ Inventory.Stashes = setmetatable(lib.load('data.stashes'), {
                                 label = stash.target.label or locale('open_stash'),
                                 groups = stash.groups,
                                 onSelect = function()
-                                    exports.ox_inventory:openInventory('stash', stash.name)
+                                    exports.kt_inventory:openInventory('stash', stash.name)
                                 end,
                                 iconColor = stash.target.iconColor,
                             },
@@ -400,7 +400,7 @@ Inventory.Stashes = setmetatable(lib.load('data.stashes'), {
     end
 })
 
-RegisterNetEvent('ox_inventory:refreshMaxWeight', function(data)
+RegisterNetEvent('kt_inventory:refreshMaxWeight', function(data)
     if data.inventoryId == cache.serverId then
         PlayerData.maxWeight = data.maxWeight
     end
@@ -416,7 +416,7 @@ RegisterNetEvent('ox_inventory:refreshMaxWeight', function(data)
     })
 end)
 
-RegisterNetEvent('ox_inventory:refreshSlotCount', function(data)
+RegisterNetEvent('kt_inventory:refreshSlotCount', function(data)
     SendNUIMessage({
         action = 'refreshSlots',
         data = {

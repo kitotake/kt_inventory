@@ -1,25 +1,25 @@
-# ox_inventory
+# kt_inventory
 
 A complete inventory system for FiveM, implementing items, weapons, shops, and more without any strict framework dependency.
 
-![](https://img.shields.io/github/downloads/overextended/ox_inventory/total?logo=github)
-![](https://img.shields.io/github/downloads/overextended/ox_inventory/latest/total?logo=github)
-![](https://img.shields.io/github/contributors/overextended/ox_inventory?logo=github)
-![](https://img.shields.io/github/v/release/overextended/ox_inventory?logo=github)
+![](https://img.shields.io/github/downloads/kitotake/kt_inventory/total?logo=github)
+![](https://img.shields.io/github/downloads/kitotake/kt_inventory/latest/total?logo=github)
+![](https://img.shields.io/github/contributors/kitotake/kt_inventory?logo=github)
+![](https://img.shields.io/github/v/release/kitotake/kt_inventory?logo=github)
 
 ## 📚 Documentation
 
-https://overextended.dev/ox_inventory
+https://kitotake.dev/kt_inventory
 
 ## 💾 Download
 
-https://github.com/overextended/ox_inventory/releases/latest/download/ox_inventory.zip
+https://github.com/kitotake/kt_inventory/releases/latest/download/kt_inventory.zip
 
 ## Supported frameworks
 
 We do not guarantee compatibility or support for third-party resources.
 
-- [ox_core](https://github.com/overextended/ox_core)
+- [kt_core](https://github.com/kitotake/kt_core)
 - [esx](https://github.com/esx-framework/esx_core)
 - [qbox](https://github.com/Qbox-project/qbx_core)
 - [nd_core](https://github.com/ND-Framework/ND_Core)
@@ -56,7 +56,7 @@ We do not guarantee compatibility or support for third-party resources.
 
 ## Copyright
 
-Copyright © 2024 Overextended <https://github.com/overextended>
+Copyright © 2024 kitotake <https://github.com/kitotake>
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
