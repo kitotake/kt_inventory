@@ -197,7 +197,7 @@ end
 ---@return SlotWithItem?
 function Inventory.GetSlotWithItem(itemName, metadata, strict)
     local inventory = PlayerData.inventory
-    local item = Items(itemName) --[[@as OxClientItem?]]
+    local item = Items(itemName) --[[@as KtClientItem?]]
 
     if not inventory or not item then return end
 
@@ -229,7 +229,7 @@ exports('GetSlotIdWithItem', Inventory.GetSlotIdWithItem)
 ---@return SlotWithItem[]?
 function Inventory.GetSlotsWithItem(itemName, metadata, strict)
     local inventory = PlayerData.inventory
-    local item = Items(itemName) --[[@as OxClientItem?]]
+    local item = Items(itemName) --[[@as KtClientItem?]]
 
     if not inventory or not item then return end
 
@@ -274,7 +274,7 @@ end
 ---@return number
 function Inventory.GetItemCount(itemName, metadata, strict)
     local inventory = PlayerData.inventory
-    local item = Items(itemName) --[[@as OxClientItem?]]
+    local item = Items(itemName) --[[@as KtClientItem?]]
 
     if not inventory or not item then return 0 end
 
