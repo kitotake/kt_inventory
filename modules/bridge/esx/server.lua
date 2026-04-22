@@ -18,8 +18,8 @@ SetTimeout(500, function()
 	ESX = exports.es_extended:getSharedObject()
     local customInventory = ESX.GetConfig().CustomInventory
 
-	if customInventory ~= nil and customInventory ~= "ox" then
-        error('es_extended has not been configured to enable support for kt_inventory!\nEnsure Config.CustomInventory has been set to "ox" in your es_extended resource config.')
+	if customInventory ~= nil and customInventory ~= "kt" then
+        error('es_extended has not been configured to enable support for kt_inventory!\nEnsure Config.CustomInventory has been set to "kt" in your es_extended resource config.')
     end
 
 	server.UseItem = ESX.UseItem

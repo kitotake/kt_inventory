@@ -1,11 +1,11 @@
 if not lib.checkDependency('kt_core', '0.21.3', true) then return end
 
-local Ox = require '@kt_core.lib.init' --[[@as OxClient]]
-local player = Ox.GetPlayer()
+local Kt = require '@kt_core.lib.init' --[[@as KtClient]]
+local player = Kt.GetPlayer()
 
-RegisterNetEvent('ox:playerLogout', client.onLogout)
+RegisterNetEvent('kt:playerLogout', client.onLogout)
 
-RegisterNetEvent('ox:setGroup', function(name, grade)
+RegisterNetEvent('kt:setGroup', function(name, grade)
     PlayerData.groups[name] = grade
     OnPlayerData('groups')
 end)

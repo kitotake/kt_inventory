@@ -1,12 +1,12 @@
 if not lib.checkDependency('kt_core', '0.21.3', true) then return end
 
-local Ox = require '@kt_core.lib.init' --[[@as OxServer]]
+local kt = require '@kt_core.lib.init' --[[@as ktServer]]
 
 local Inventory = require 'modules.inventory.server'
 
-AddEventHandler('ox:playerLogout', server.playerDropped)
+AddEventHandler('kt:playerLogout', server.playerDropped)
 
-AddEventHandler('ox:setGroup', function(source, name, grade)
+AddEventHandler('kt:setGroup', function(source, name, grade)
 	local inventory = Inventory(source)
 
 	if not inventory then return end
@@ -16,13 +16,13 @@ end)
 
 ---@diagnostic disable-next-line: duplicate-set-field
 function server.setPlayerData(player)
-    player.groups = Ox.GetPlayer(player.source)?.getGroups()
+    player.groups = kt.GetPlayer(player.source)?.getGroups()
     return player
 end
 
 ---@diagnostic disable-next-line: duplicate-set-field
 function server.hasLicense(inv, name)
-	local player = Ox.GetPlayer(inv.id)
+	local player = kt.GetPlayer(inv.id)
 
     if not player then return end
 
@@ -31,7 +31,7 @@ end
 
 ---@diagnostic disable-next-line: duplicate-set-field
 function server.buyLicense(inv, license)
-	local player = Ox.GetPlayer(inv.id)
+	local player = kt.GetPlayer(inv.id)
 
     if not player then return end
 
@@ -59,5 +59,5 @@ end
 ---@return number | string
 ---@diagnostic disable-next-line: duplicate-set-field
 function server.getOwnedVehicleId(entityId)
-    return Ox.GetVehicle(entityId)?.id
+    return kt.GetVehicle(entityId)?.id
 end

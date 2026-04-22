@@ -1,6 +1,6 @@
 if not lib then return end
 
-local Items = require 'modules.items.shared' --[[@as table<string, OxClientItem>]]
+local Items = require 'modules.items.shared' --[[@as table<string, KtClientItem>]]
 
 local function sendDisplayMetadata(data)
     SendNUIMessage({
@@ -71,8 +71,8 @@ setmetatable(Items --[[@as table]], {
 	__call = getItem
 })
 
----@cast Items +fun(itemName: string): OxClientItem
----@cast Items +fun(): table<string, OxClientItem>
+---@cast Items +fun(itemName: string): KtClientItem
+---@cast Items +fun(): table<string, KtClientItem>
 
 local function Item(name, cb)
 	local item = Items[name]

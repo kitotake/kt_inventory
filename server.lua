@@ -87,7 +87,7 @@ local function getDumpsterFromCoords(coords)
 end
 
 ---@param playerPed number
----@param stash OxInventory
+---@param stash ktinventory
 ---@return vector3?
 local function getClosestStashCoords(playerPed, stash)
 	local playerCoords = GetEntityCoords(playerPed)
@@ -367,7 +367,7 @@ end)
 ---@param metadata { [string]: any }?
 ---@return table | boolean | nil
 lib.callback.register('kt_inventory:useItem', function(source, itemName, slot, metadata, noAnim)
-	local inventory = Inventory(source) --[[@as OxInventory]]
+	local inventory = Inventory(source) --[[@as ktinventory]]
 
 	if inventory.player then
 		local item = Items(itemName)
@@ -554,7 +554,7 @@ lib.addCommand({'additem', 'giveitem'}, {
 	local item = Items(args.item)
 
 	if item then
-		local inventory = Inventory(args.target) --[[@as OxInventory]]
+		local inventory = Inventory(args.target) --[[@as ktinventory]]
 		local count = args.count or 1
 		local success, response = Inventory.AddItem(inventory, item.name, count, args.type and { type = tonumber(args.type) or args.type })
 
@@ -583,7 +583,7 @@ lib.addCommand('removeitem', {
 	local item = Items(args.item)
 
 	if item and args.count > 0 then
-		local inventory = Inventory(args.target) --[[@as OxInventory]]
+		local inventory = Inventory(args.target) --[[@as ktinventory]]
 		local success, response = Inventory.RemoveItem(inventory, item.name, args.count, args.type and { type = tonumber(args.type) or args.type }, nil, true)
 
 		if not success then
@@ -611,7 +611,7 @@ lib.addCommand('setitem', {
 	local item = Items(args.item)
 
 	if item then
-		local inventory = Inventory(args.target) --[[@as OxInventory]]
+		local inventory = Inventory(args.target) --[[@as ktinventory]]
 		local success, response = Inventory.SetItem(inventory, item.name, args.count or 0, args.type and { type = tonumber(args.type) or args.type })
 
 		if not success then

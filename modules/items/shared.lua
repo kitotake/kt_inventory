@@ -13,7 +13,7 @@ local function setImagePath(path)
     end
 end
 
----@param data OxItem
+---@param data KtItem
 local function newItem(data)
 	data.weight = data.weight or 0
 
@@ -34,7 +34,7 @@ local function newItem(data)
 	end
 
 	if isServer then
-        ---@cast data OxServerItem
+        ---@cast data ktServerItem
         serverData = data.server
 		data.client = nil
 
@@ -50,7 +50,7 @@ local function newItem(data)
             data.cb = useExport(string.strsplit('.', serverData.export))
         end
 	else
-        ---@cast data OxClientItem
+        ---@cast data KtClientItem
         clientData = data.client
 		data.server = nil
 		data.count = 0
@@ -80,7 +80,7 @@ for type, data in pairs(lib.load('data.weapons') or {}) do
         v.weight = v.weight or 0
 
 		if type == 'Weapons' then
-			---@cast v OxWeapon
+			---@cast v KtWeapon
 			v.model = v.model or k -- actually weapon type or such? model for compatibility
 			v.hash = joaat(v.model)
 			v.stack = v.throwable and true or false

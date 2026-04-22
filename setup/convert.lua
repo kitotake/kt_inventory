@@ -2,7 +2,7 @@ local Items = require 'modules.items.server'
 local started
 
 local function Print(arg)
-	print(('^3=================================================================\n^0%s\n^3=================================================================^0'):format(arg))
+	print(('^3================================\n^0%s\n^3=====================================^0'):format(arg))
 end
 
 local function Upgrade()

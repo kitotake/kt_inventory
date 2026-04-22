@@ -5,12 +5,12 @@ local Inventory = require 'modules.inventory.server'
 local Shops = {}
 local locations = shared.target and 'targets' or 'locations'
 
----@class OxShopItem
+---@class KtShopItem
 ---@field slot number
 ---@field weight number
 
 local function setupShopItems(id, shopType, shopName, groups)
-	local shop = id and Shops[shopType][id] or Shops[shopType] --[[@as OxShop]]
+	local shop = id and Shops[shopType][id] or Shops[shopType] --[[@as KtShop]]
 
 	for i = 1, shop.slots do
 		local slot = shop.items[i]
@@ -23,7 +23,7 @@ local function setupShopItems(id, shopType, shopName, groups)
 		local Item = Items(slot.name)
 
 		if Item then
-			---@type OxShopItem
+			---@type KtShopItem
 			slot = {
 				name = Item.name,
 				slot = i,
@@ -46,7 +46,7 @@ local function setupShopItems(id, shopType, shopName, groups)
 end
 
 ---@param shopType string
----@param properties OxShop
+---@param properties KtShop
 local function registerShopType(shopType, properties)
 	local shopLocations = properties[locations] or properties.locations
 
@@ -112,7 +112,7 @@ for shopType, shopDetails in pairs(lib.load('data.shops') or {}) do
 end
 
 ---@param shopType string
----@param shopDetails OxShop
+---@param shopDetails KtShop
 exports('RegisterShop', function(shopType, shopDetails)
 	registerShopType(shopType, shopDetails)
 end)
@@ -133,7 +133,7 @@ lib.callback.register('kt_inventory:openShop', function(source, data)
 			if not shop then return end
 		end
 
-		---@cast shop OxShop
+		---@cast shop KtShop
 
 		if shop.groups then
 			local group = server.hasGroup(left, shop.groups)

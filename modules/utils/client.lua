@@ -135,9 +135,9 @@ function Utils.CreateBlip(settings, coords)
     return blip
 end
 
----Takes OxTargetBoxZone or legacy zone data (PolyZone) and creates a zone.
----@param data OxTargetBoxZone | { length: number, minZ: number, maxZ: number, loc: vector3, heading: number, width: number, distance: number }
----@param options? OxTargetOption[]
+---Takes KtTargetBoxZone or legacy zone data (PolyZone) and creates a zone.
+---@param data KtTargetBoxZone | { length: number, minZ: number, maxZ: number, loc: vector3, heading: number, width: number, distance: number }
+---@param options? KtTargetOption[]
 ---@return number
 function Utils.CreateBoxZone(data, options)
     if data.length then

@@ -73,7 +73,7 @@ lib.callback.register('kt_inventory:openCraftingBench', function(source, id, ind
 		if #(GetEntityCoords(GetPlayerPed(source)) - coords) > 10 then return end
 
 		if left.open and left.open ~= source then
-			local inv = Inventory(left.open) --[[@as OxInventory]]
+			local inv = Inventory(left.open) --[[@as ktinventory]]
 
 			-- Why would the player inventory open with an invalid target? Can't repro but whatever.
 			if inv?.player then

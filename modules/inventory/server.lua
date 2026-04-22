@@ -2,16 +2,16 @@ if not lib then return end
 
 local Inventory = {}
 
----@type table<any, OxInventory>
+---@type table<any, ktinventory>
 local Inventories = {}
 
----@class OxInventory
-local OxInventory = {}
-OxInventory.__index = OxInventory
+---@class ktinventory
+local ktinventory = {}
+ktinventory.__index = ktinventory
 
 ---Open a player's inventory, optionally with a secondary inventory.
 ---@param inv? inventory
-function OxInventory:openInventory(inv)
+function ktinventory:openInventory(inv)
 	if not self?.player then return end
 
 	inv = Inventory(inv)
@@ -27,7 +27,7 @@ end
 
 ---Close a player's inventory.
 ---@param noEvent? boolean
-function OxInventory:closeInventory(noEvent)
+function ktinventory:closeInventory(noEvent)
 	if not self.player or not self.open then return end
 
 	local inv = Inventory(self.open)
@@ -52,14 +52,14 @@ end
 ---Sync a player's inventory state.
 ---@param slots updateSlot[]
 ---@param weight { left?: number, right?: number } | number
-function OxInventory:syncSlotsWithPlayer(slots, weight)
+function ktinventory:syncSlotsWithPlayer(slots, weight)
 	TriggerClientEvent('kt_inventory:updateSlots', self.id, slots, weight)
 end
 
 ---Sync an inventory's state with all player's accessing it.
 ---@param slots updateSlot[]
 ---@param syncOwner? boolean
-function OxInventory:syncSlotsWithClients(slots, syncOwner)
+function ktinventory:syncSlotsWithClients(slots, syncOwner)
 	for playerId in pairs(self.openedBy) do
 		if self.id ~= playerId then
             local target = Inventories[playerId]
@@ -97,7 +97,7 @@ local GetVehicleNumberPlateText = GetVehicleNumberPlateText
 ---@param data table
 ---@param player table
 ---@param ignoreSecurityChecks boolean
----@return OxInventory | false | nil
+---@return ktinventory | false | nil
 local function loadInventoryData(data, player, ignoreSecurityChecks)
 	local source = source
 	local inventory
@@ -226,7 +226,7 @@ setmetatable(Inventory, {
 	end
 })
 
----@cast Inventory +fun(inv: inventory, player?: inventory, ignoreSecurityChecks?: boolean): OxInventory|false|nil
+---@cast Inventory +fun(inv: inventory, player?: inventory, ignoreSecurityChecks?: boolean): ktinventory|false|nil
 
 ---@param inv inventory
 ---@param owner? string | number
@@ -254,7 +254,7 @@ end)
 
 ---@param inv inventory
 ---@param slotId number
----@return OxInventory?
+---@return ktinventory?
 function Inventory.GetContainerFromSlot(inv, slotId)
 	local inventory = Inventory(inv)
 	local slotData = inventory and inventory.items[slotId]
@@ -287,7 +287,7 @@ function Inventory.CloseAll(inv, ignoreId)
 		return TriggerClientEvent('kt_inventory:closeInventory', -1, true)
 	end
 
-	inv = Inventory(inv) --[[@as OxInventory?]]
+	inv = Inventory(inv) --[[@as ktinventory?]]
 
 	if not inv then return end
 
@@ -304,7 +304,7 @@ end
 ---@param k string
 ---@param v any
 function Inventory.Set(inv, k, v)
-	inv = Inventory(inv) --[[@as OxInventory]]
+	inv = Inventory(inv) --[[@as ktinventory]]
 
 	if inv then
 		if type(v) == 'number' then
@@ -336,7 +336,7 @@ end
 ---@param inv inventory
 ---@param key string
 function Inventory.Get(inv, key)
-	inv = Inventory(inv) --[[@as OxInventory]]
+	inv = Inventory(inv) --[[@as ktinventory]]
 	if inv then
 		return inv[key]
 	end
@@ -351,7 +351,7 @@ end
 ---@param inv inventory
 ---@return MinimalInventorySlot[] items
 local function minimal(inv)
-	inv = Inventory(inv) --[[@as OxInventory]]
+	inv = Inventory(inv) --[[@as ktinventory]]
 	local inventory, count = {}, 0
 	for k, v in pairs(inv.items) do
 		if v.name and v.count > 0 then
@@ -373,7 +373,7 @@ end
 ---@param metadata any
 ---@param slot any
 function Inventory.SetSlot(inv, item, count, metadata, slot)
-	inv = Inventory(inv) --[[@as OxInventory]]
+	inv = Inventory(inv) --[[@as ktinventory]]
 
 	if not inv then return end
 
@@ -561,7 +561,7 @@ end, true)
 ---@param owner string | number | boolean
 ---@param items? table
 ---@param dbId? string | number
----@return OxInventory?
+---@return ktinventory?
 --- This should only be utilised internally!
 --- To create a stash, please use `exports.kt_inventory:RegisterStash` instead.
 function Inventory.Create(id, label, invType, slots, weight, maxWeight, owner, items, groups, dbId)
@@ -606,13 +606,13 @@ function Inventory.Create(id, label, invType, slots, weight, maxWeight, owner, i
 		self.weight = Inventory.CalculateWeight(items)
 	end
 
-	Inventories[self.id] = setmetatable(self, OxInventory)
+	Inventories[self.id] = setmetatable(self, ktinventory)
 	return Inventories[self.id]
 end
 
 ---@param inv inventory
 function Inventory.Remove(inv)
-	inv = Inventory(inv) --[[@as OxInventory]]
+	inv = Inventory(inv) --[[@as ktinventory]]
 
 	if not inv then return end
 
@@ -681,7 +681,7 @@ end
 exports('UpdateVehicle', Inventory.UpdateVehicle)
 
 function Inventory.Save(inv)
-	inv = Inventory(inv) --[[@as OxInventory]]
+	inv = Inventory(inv) --[[@as ktinventory]]
 
 	if not inv or inv.datastore then return end
 
@@ -868,7 +868,7 @@ function Inventory.GetItem(inv, item, metadata, returnsCount)
 
 	if item then
 		item = returnsCount and item or table.clone(item)
-		inv = Inventory(inv) --[[@as OxInventory]]
+		inv = Inventory(inv) --[[@as ktinventory]]
 		local count = 0
 
 		if inv then
@@ -924,7 +924,7 @@ function Inventory.SetItem(inv, item, count, metadata)
 	if type(item) ~= 'table' then item = Items(item) end
 
 	if item and count >= 0 then
-		inv = Inventory(inv) --[[@as OxInventory]]
+		inv = Inventory(inv) --[[@as ktinventory]]
 
 		if inv then
 			inv.changed = true
@@ -944,7 +944,7 @@ exports('SetItem', Inventory.SetItem)
 
 ---@param inv inventory
 function Inventory.GetCurrentWeapon(inv)
-	inv = Inventory(inv) --[[@as OxInventory]]
+	inv = Inventory(inv) --[[@as ktinventory]]
 
 	if inv?.player then
 		local weapon = inv.items[inv.weapon]
@@ -962,7 +962,7 @@ exports('GetCurrentWeapon', Inventory.GetCurrentWeapon)
 ---@param slotId number
 ---@return table? item
 function Inventory.GetSlot(inv, slotId)
-	inv = Inventory(inv) --[[@as OxInventory]]
+	inv = Inventory(inv) --[[@as ktinventory]]
 	local slot = inv and inv.items[slotId]
 
 	if slot and not Items.UpdateDurability(inv, slot, Items(slot.name), nil, os.time()) then
@@ -974,7 +974,7 @@ exports('GetSlot', Inventory.GetSlot)
 ---@param inv inventory
 ---@param slotId number
 function Inventory.SetDurability(inv, slotId, durability)
-	inv = Inventory(inv) --[[@as OxInventory]]
+	inv = Inventory(inv) --[[@as ktinventory]]
 	local slot = inv and inv.items[slotId]
 
 	if not slot then return end
@@ -993,7 +993,7 @@ local Utils = require 'modules.utils.server'
 ---@param slotId number
 ---@param metadata { [string]: any }
 function Inventory.SetMetadata(inv, slotId, metadata)
-	inv = Inventory(inv) --[[@as OxInventory]]
+	inv = Inventory(inv) --[[@as ktinventory]]
 	local slot = inv and inv.items[slotId]
 
 	if not slot then return end
@@ -1039,7 +1039,7 @@ exports('SetMetadata', Inventory.SetMetadata)
 ---@param inv inventory
 ---@param slots number
 function Inventory.SetSlotCount(inv, slots)
-	inv = Inventory(inv) --[[@as OxInventory]]
+	inv = Inventory(inv) --[[@as ktinventory]]
 
 	if not inv then return end
 	if type(slots) ~= 'number' then return end
@@ -1063,7 +1063,7 @@ exports('SetSlotCount', Inventory.SetSlotCount)
 ---@param inv inventory
 ---@param maxWeight number
 function Inventory.SetMaxWeight(inv, maxWeight)
-	inv = Inventory(inv) --[[@as OxInventory]]
+	inv = Inventory(inv) --[[@as ktinventory]]
 
 	if not inv then return end
 	if type(maxWeight) ~= 'number' then return end
@@ -1095,7 +1095,7 @@ function Inventory.AddItem(inv, item, count, metadata, slot, cb)
 
 	if not item then return false, 'invalid_item' end
 
-	inv = Inventory(inv) --[[@as OxInventory]]
+	inv = Inventory(inv) --[[@as ktinventory]]
 
 	if not inv?.slots then return false, 'invalid_inventory' end
 
@@ -1210,7 +1210,7 @@ exports('AddItem', Inventory.AddItem)
 ---@param metadata? table | string
 function Inventory.Search(inv, search, items, metadata)
 	if items then
-		inv = Inventory(inv) --[[@as OxInventory]]
+		inv = Inventory(inv) --[[@as ktinventory]]
 
 		if inv then
 			inv = inv.items
@@ -1263,7 +1263,7 @@ function Inventory.GetItemSlots(inv, item, metadata, strict)
 	if type(item) ~= 'table' then item = Items(item) end
 	if not item then return end
 
-	inv = Inventory(inv) --[[@as OxInventory]]
+	inv = Inventory(inv) --[[@as ktinventory]]
 	if not inv?.slots then return end
 
 	local totalCount, slots, emptySlots = 0, {}, inv.slots
@@ -1304,7 +1304,7 @@ function Inventory.RemoveItem(inv, item, count, metadata, slot, ignoreTotal, str
 	count = math.floor(count + 0.5)
 
 	if count > 0 then
-		inv = Inventory(inv) --[[@as OxInventory]]
+		inv = Inventory(inv) --[[@as ktinventory]]
 
 		if not inv?.slots then return false, 'invalid_inventory' end
 
@@ -1391,7 +1391,7 @@ function Inventory.CanCarryItem(inv, item, count, metadata)
 	if type(item) ~= 'table' then item = Items(item) end
 
 	if item then
-		inv = Inventory(inv) --[[@as OxInventory]]
+		inv = Inventory(inv) --[[@as ktinventory]]
 
 		if inv then
 			local itemSlots, _, emptySlots = Inventory.GetItemSlots(inv, item, type(metadata) == 'table' and metadata or { type = metadata or nil })
@@ -1422,7 +1422,7 @@ exports('CanCarryItem', Inventory.CanCarryItem)
 ---@param item table | string
 function Inventory.CanCarryAmount(inv, item)
     if type(item) ~= 'table' then item = Items(item) end
-	inv = Inventory(inv) --[[@as OxInventory]]
+	inv = Inventory(inv) --[[@as ktinventory]]
 
     if inv and item then
 		local availableWeight = inv.maxWeight - inv.weight
@@ -1435,7 +1435,7 @@ exports('CanCarryAmount', Inventory.CanCarryAmount)
 ---@param inv inventory
 ---@param weight number
 function Inventory.CanCarryWeight(inv, weight)
-	inv = Inventory(inv) --[[@as OxInventory]]
+	inv = Inventory(inv) --[[@as ktinventory]]
 
 	if not inv then return end
 
@@ -1451,7 +1451,7 @@ exports('CanCarryWeight', Inventory.CanCarryWeight)
 ---@param testItem string
 ---@param testItemCount number
 function Inventory.CanSwapItem(inv, firstItem, firstItemCount, testItem, testItemCount)
-	inv = Inventory(inv) --[[@as OxInventory]]
+	inv = Inventory(inv) --[[@as ktinventory]]
 
 	if not inv then return end
 
@@ -1546,7 +1546,7 @@ local TriggerEventHooks = require 'modules.hooks.server'
 ---@field coords? vector3
 
 ---@param source number
----@param playerInventory OxInventory
+---@param playerInventory ktinventory
 ---@param fromData SlotWithItem?
 ---@param data SwapSlotData
 local function dropItem(source, playerInventory, fromData, data)
@@ -2023,7 +2023,7 @@ exports('ReturnInventory', Inventory.Return)
 ---@param inv inventory
 ---@param keep? string | string[] an item or list of items to ignore while clearing items
 function Inventory.Clear(inv, keep)
-	inv = Inventory(inv) --[[@as OxInventory]]
+	inv = Inventory(inv) --[[@as ktinventory]]
 
 	if not inv or not next(inv.items) then return end
 
@@ -2126,7 +2126,7 @@ exports('GetEmptySlot', Inventory.GetEmptySlot)
 ---@param metadata any
 function Inventory.GetSlotForItem(inv, itemName, metadata)
 	local inventory = Inventory(inv)
-	local item = Items(itemName) --[[@as OxServerItem?]]
+	local item = Items(itemName) --[[@as ktServerItem?]]
 
 	if not inventory or not item then return end
 
@@ -2156,7 +2156,7 @@ exports('GetSlotForItem', Inventory.GetSlotForItem)
 ---@return SlotWithItem?
 function Inventory.GetSlotWithItem(inv, itemName, metadata, strict)
 	local inventory = Inventory(inv)
-	local item = Items(itemName) --[[@as OxServerItem?]]
+	local item = Items(itemName) --[[@as ktServerItem?]]
 
 	if not inventory or not item then return end
 
@@ -2192,7 +2192,7 @@ exports('GetSlotIdWithItem', Inventory.GetSlotIdWithItem)
 ---@return SlotWithItem[]?
 function Inventory.GetSlotsWithItem(inv, itemName, metadata, strict)
 	local inventory = Inventory(inv)
-	local item = Items(itemName) --[[@as OxServerItem?]]
+	local item = Items(itemName) --[[@as ktServerItem?]]
 
 	if not inventory or not item then return end
 
@@ -2242,7 +2242,7 @@ exports('GetSlotIdsWithItem', Inventory.GetSlotIdsWithItem)
 ---@return number
 function Inventory.GetItemCount(inv, itemName, metadata, strict)
 	local inventory = Inventory(inv)
-	local item = Items(itemName) --[[@as OxServerItem?]]
+	local item = Items(itemName) --[[@as ktServerItem?]]
 
 	if not inventory or not item then return 0 end
 
@@ -2263,7 +2263,7 @@ exports('GetItemCount', Inventory.GetItemCount)
 
 ---@alias InventorySaveData { [1]: MinimalInventorySlot, [2]: string | number, [3]: string | number | nil }
 
----@param inv OxInventory
+---@param inv ktinventory
 ---@param buffer table
 ---@param time integer
 ---@return integer?

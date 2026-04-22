@@ -1,7 +1,7 @@
 if not lib then return end
 
 local Items = {}
-local ItemList = require 'modules.items.shared' --[[@as table<string, OxServerItem>]]
+local ItemList = require 'modules.items.shared' --[[@as table<string, ktServerItem>]]
 local Utils = require 'modules.utils.server'
 
 TriggerEvent('kt_inventory:itemList', ItemList)
@@ -39,8 +39,8 @@ setmetatable(Items --[[@as table]], {
 	__call = getItem
 })
 
----@cast Items +fun(itemName: string): OxServerItem
----@cast Items +fun(): table<string, OxServerItem>
+---@cast Items +fun(itemName: string): ktServerItem
+---@cast Items +fun(): table<string, ktServerItem>
 
 -- Support both names
 exports('Items', function(item) return getItem(nil, item) end)
@@ -161,7 +161,7 @@ end
 local TriggerEventHooks = require 'modules.hooks.server'
 
 ---@param inv inventory
----@param item OxServerItem
+---@param item ktServerItem
 ---@param metadata any
 ---@param count number
 ---@return table, number
@@ -243,7 +243,7 @@ function Items.Metadata(inv, item, metadata, count)
 end
 
 ---@param metadata table<string, any>
----@param item OxServerItem
+---@param item ktServerItem
 ---@param name string
 ---@param ostime number
 ---Validate (and in some cases convert) item metadata when an inventory is being loaded.
@@ -300,9 +300,9 @@ function Items.CheckMetadata(metadata, item, name, ostime)
 end
 
 ---Update item durability, and call `Inventory.RemoveItem` if it was removed from decay.
----@param inv OxInventory
+---@param inv ktinventory
 ---@param slot SlotWithItem
----@param item OxServerItem
+---@param item ktServerItem
 ---@param value? number
 ---@param ostime? number
 ---@return boolean? removed

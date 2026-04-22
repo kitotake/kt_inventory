@@ -40,7 +40,7 @@ end
 local Inventory = require 'modules.inventory.server'
 
 function server.playerDropped(source)
-	local inv = Inventory(source) --[[@as OxInventory]]
+	local inv = Inventory(source) --[[@as ktinventory]]
 
 	if inv?.player then
 		inv:closeInventory()

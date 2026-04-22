@@ -352,7 +352,7 @@ lib.callback.register('kt_inventory:usingItem', function(data, noAnim)
 
 	if item and usingItem then
 		if not item.client then return true end
-		---@cast item +OxClientProps
+		---@cast item +KtClientProps
 		item = item.client
 
 		if type(item.anim) == 'string' then
@@ -1204,7 +1204,7 @@ RegisterNetEvent('kt_inventory:setPlayerInventory', function(currentDrops, inven
 
 	local ItemData = table.create(0, #Items)
 
-	for _, v in pairs(Items --[[@as table<string, OxClientItem>]]) do
+	for _, v in pairs(Items --[[@as table<string, KtClientItem>]]) do
 		local buttons = v.buttons and {} or nil
 
 		if buttons then
