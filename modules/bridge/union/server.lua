@@ -35,13 +35,24 @@ end)
 -- ────────────────────────────────────────────────────────────────────────────
 AddEventHandler('union:player:spawned', function(source, characterData)
     if not characterData or not characterData.unique_id then
-        warn(('[kt_inventory:union] union:player:spawned — unique_id manquant pour source %s'):format(source))
+        lib.print.warn(('[kt_inventory:union] union:player:spawned — unique_id manquant pour source %s'):format(source))
         return
     end
 
-    local player = getUnionPlayer(source)
+    
+    local uniqueId = characterData.unique_id
+
+    -- Retry jusqu'à 10 fois si le joueur n'est pas encore dans PlayerManager
+    local player = nil
+    for i = 1, 10 do
+        player = getUnionPlayer(source)
+        if player then break end
+        lib.print.warn(('[kt_inventory:union] GetPlayerFromId(%s) = nil, tentative %d/10...'):format(source, i))
+        Wait(200)
+    end
+
     if not player then
-        warn(('[kt_inventory:union] GetPlayerFromId(%s) = nil'):format(source))
+        lib.print.error(('[kt_inventory:union] GetPlayerFromId(%s) = nil après 10 tentatives — inventaire non chargé pour unique_id=%s'):format(source, uniqueId))
         return
     end
 
@@ -61,9 +72,11 @@ AddEventHandler('union:player:spawned', function(source, characterData)
     local ktPlayer = {
         source     = source,
         name       = player.name or GetPlayerName(source),
-        identifier = char.unique_id,
+        identifier = uniqueId,
         groups     = groups,
     }
+
+    lib.print.info(('[kt_inventory:union] ✅ Chargement inventaire pour unique_id=%s (joueur: %s, source: %s)'):format(uniqueId, ktPlayer.name, source))
 
     server.setPlayerInventory(ktPlayer)
 end)
@@ -88,7 +101,6 @@ end
 ---@diagnostic disable-next-line: duplicate-set-field
 function server.syncInventory(inv)
     -- Rien à synchroniser vers Union Framework
-    -- (la banque Union est dans bank_accounts, pas dans les items)
 end
 
 -- ────────────────────────────────────────────────────────────────────────────
@@ -114,7 +126,6 @@ function server.buyLicense(inv, license)
 
     Inventory.RemoveItem(inv, 'money', license.price)
 
-    -- Chercher l'identifier (license) depuis l'inventaire owner
     local charRow = MySQL.fetchOne and
         MySQL.fetchOne.await('SELECT identifier FROM characters WHERE unique_id = ?', { inv.owner }) or
         MySQL.row and MySQL.row.await and MySQL.row.await('SELECT identifier FROM characters WHERE unique_id = ?', { inv.owner })
@@ -146,7 +157,7 @@ end
 function server.getOwnedVehicleId(entityId)
     local plate = GetVehicleNumberPlateText(entityId)
     if not plate or plate == '' then return nil end
-    return plate:match('^%s*(.-)%s*$')  -- trim whitespace
+    return plate:match('^%s*(.-)%s*$')
 end
 
 lib.print.info('[kt_inventory] Bridge Union Framework chargé.')
