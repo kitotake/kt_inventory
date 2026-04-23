@@ -12,21 +12,30 @@ local Items     = require 'modules.items.server'
 
 --- Récupère le joueur Union depuis l'export Union
 local function getUnionPlayer(source)
-    return exports['union']:GetPlayerFromId(source)
+print(('[kt_inventory:union] Tentative de récupération du joueur Union pour source %s...'):format(source))
+    print(('[kt_inventory:union] GetPlayerFromId(%s) = nil, export Union non fonctionnel?'):format(source))
+
+return exports['union']:GetPlayerFromId(source)
+
+
 end
 
 -- ────────────────────────────────────────────────────────────────────────────
 -- Déconnexion → fermeture + suppression de l'inventaire en mémoire
 -- ────────────────────────────────────────────────────────────────────────────
 AddEventHandler('playerDropped', server.playerDropped)
+print('[kt_inventory:union] playerDropped handler enregistré.')
 
 -- ────────────────────────────────────────────────────────────────────────────
 -- Mise à jour du job en live (ex : /setjob)
 -- ────────────────────────────────────────────────────────────────────────────
 AddEventHandler('union:job:updated', function(source, job, grade)
     local inventory = Inventory(source)
+    print(('[kt_inventory:union] Job update pour source %s: %s (grade %s)'):format(source, job, grade))
     if not inventory then return end
+    print(('[kt_inventory:union] Inventory trouvé pour source %s, mise à jour du job...'):format(source))
     inventory.player.groups[job] = grade
+    print(('[kt_inventory:union] Job mis à jour dans l\'inventaire pour source %s: %s (grade %s)'):format(source, job, grade))
 end)
 
 -- ────────────────────────────────────────────────────────────────────────────
@@ -34,13 +43,15 @@ end)
 -- Déclenché par union:spawn:confirm → union:player:spawned
 -- ────────────────────────────────────────────────────────────────────────────
 AddEventHandler('union:player:spawned', function(source, characterData)
+    print(('[kt_inventory:union] union:player:spawned reçu pour source %s, unique_id=%s'):format(source, characterData and characterData.unique_id or 'nil'))
     if not characterData or not characterData.unique_id then
         lib.print.warn(('[kt_inventory:union] union:player:spawned — unique_id manquant pour source %s'):format(source))
         return
     end
 
-    
+    print(('[kt_inventory:union] unique_id trouvé pour source %s: %s'):format(source, characterData.unique_id))
     local uniqueId = characterData.unique_id
+    print(('[kt_inventory:union] Tentative de chargement de l\'inventaire pour unique_id=%s...'):format(uniqueId))
 
     -- Retry jusqu'à 10 fois si le joueur n'est pas encore dans PlayerManager
     local player = nil
