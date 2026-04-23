@@ -1,114 +1,105 @@
--- ============================================
--- kt_inventory - MySQL (Union Framework READY)
--- Utilise unique_id (personnage)
--- ============================================
+-- modules/mysql/server_union.lua
+-- Module MySQL kt_inventory adapté pour Union Framework
+-- Utilise unique_id (personnage) comme owner au lieu de identifier (joueur)
 
 if not lib then return end
 
--- ─────────────────────────────────────────────
--- QUERIES
--- ─────────────────────────────────────────────
-
 local Query = {
-    -- ── Stashes ─────────────────────────────
-    SELECT_STASH = 'SELECT data FROM kt_inventory WHERE unique_id = ? AND name = ?',
-    UPSERT_STASH = 'INSERT INTO kt_inventory (data, unique_id, name) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data = VALUES(data)',
+    -- ── Stash ────────────────────────────────────────────────────────────────
+    SELECT_STASH  = 'SELECT data FROM kt_inventory WHERE unique_id = ? AND name = ?',
+    UPSERT_STASH  = 'INSERT INTO kt_inventory (data, unique_id, name) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data = VALUES(data)',
 
-    -- ── Véhicules (Union) ───────────────────
+    -- ── Véhicules (owned_vehicles de Union, clé = plate) ────────────────────
     SELECT_GLOVEBOX = 'SELECT plate, glovebox FROM owned_vehicles WHERE plate = ?',
-    SELECT_TRUNK    = 'SELECT plate, trunk FROM owned_vehicles WHERE plate = ?',
-    UPDATE_TRUNK    = 'UPDATE owned_vehicles SET trunk = ? WHERE plate = ?',
+    SELECT_TRUNK    = 'SELECT plate, trunk    FROM owned_vehicles WHERE plate = ?',
+    UPDATE_TRUNK    = 'UPDATE owned_vehicles SET trunk    = ? WHERE plate = ?',
     UPDATE_GLOVEBOX = 'UPDATE owned_vehicles SET glovebox = ? WHERE plate = ?',
 
-    -- ── Joueur ──────────────────────────────
-    SELECT_PLAYER = 'SELECT data FROM kt_inventory WHERE unique_id = ? AND name = ?',
-    UPSERT_PLAYER = 'INSERT INTO kt_inventory (data, unique_id, name) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data = VALUES(data)',
+    -- ── Inventaire joueur (2 params : data + unique_id, name hardcodé) ───────
+    -- On embed 'player' directement pour rester compatible avec le batch
+    -- prepareInventorySave retourne { data, inv.owner } → 2 params
+    UPSERT_PLAYER = "INSERT INTO kt_inventory (data, unique_id, name) VALUES (?, ?, 'player') ON DUPLICATE KEY UPDATE data = VALUES(data)",
 }
 
--- ─────────────────────────────────────────────
--- INITIALISATION
--- ─────────────────────────────────────────────
-
+-- ────────────────────────────────────────────────────────────────────────────
+-- Initialisation DB
+-- ────────────────────────────────────────────────────────────────────────────
 Citizen.CreateThreadNow(function()
     Wait(0)
 
-    -- Vérifie table kt_inventory
+    -- Vérifier / créer la table kt_inventory
     local ok = pcall(MySQL.scalar.await, 'SELECT 1 FROM kt_inventory LIMIT 1')
     if not ok then
         MySQL.query([[
             CREATE TABLE IF NOT EXISTS `kt_inventory` (
-                `id` INT AUTO_INCREMENT PRIMARY KEY,
-                `unique_id` VARCHAR(32) NOT NULL,
-                `name` VARCHAR(100) NOT NULL DEFAULT 'player',
-                `data` LONGTEXT DEFAULT NULL,
-                `max_weight` INT DEFAULT 10000,
-                `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                `id`         INT AUTO_INCREMENT PRIMARY KEY,
+                `unique_id`  VARCHAR(32)  NOT NULL,
+                `name`       VARCHAR(100) NOT NULL DEFAULT 'player',
+                `data`       LONGTEXT     DEFAULT NULL,
+                `created_at` TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
+                `updated_at` TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                 UNIQUE KEY `uniq_inventory` (`unique_id`, `name`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         ]])
-
-        lib.print.info('[kt_inventory] Table kt_inventory créée')
+        lib.print.info('[kt_inventory:union] Table kt_inventory créée.')
     end
 
-    -- Vérifie colonnes véhicules
-    local cols = MySQL.query.await('SHOW COLUMNS FROM owned_vehicles')
-    if cols then
-        local hasTrunk, hasGlovebox = false, false
-
-        for _, col in ipairs(cols) do
-            if col.Field == 'trunk' then hasTrunk = true end
-            if col.Field == 'glovebox' then hasGlovebox = true end
-        end
-
-        if not hasTrunk then
-            MySQL.query('ALTER TABLE owned_vehicles ADD COLUMN trunk LONGTEXT NULL')
-        end
-
-        if not hasGlovebox then
-            MySQL.query('ALTER TABLE owned_vehicles ADD COLUMN glovebox LONGTEXT NULL')
-        end
+    -- Vérifier colonnes trunk / glovebox sur owned_vehicles
+    local cols = MySQL.query.await('SHOW COLUMNS FROM owned_vehicles') or {}
+    local hasTrunk, hasGlovebox = false, false
+    for _, col in ipairs(cols) do
+        if col.Field == 'trunk'    then hasTrunk    = true end
+        if col.Field == 'glovebox' then hasGlovebox = true end
     end
+    if not hasTrunk    then MySQL.query('ALTER TABLE owned_vehicles ADD COLUMN trunk    LONGTEXT NULL') end
+    if not hasGlovebox then MySQL.query('ALTER TABLE owned_vehicles ADD COLUMN glovebox LONGTEXT NULL') end
 
-    -- Nettoyage vieux stashes
-    local clear = GetConvar('inventory:clearstashes', '6 MONTH')
-    if clear ~= '' then
+    -- Nettoyage anciens stashes
+    local clearStashes = GetConvar('inventory:clearstashes', '6 MONTH')
+    if clearStashes ~= '' then
         pcall(MySQL.query.await,
-            ('DELETE FROM kt_inventory WHERE updated_at < (NOW() - INTERVAL %s)'):format(clear)
-        )
+            ('DELETE FROM kt_inventory WHERE updated_at < (NOW() - INTERVAL %s)'):format(clearStashes))
     end
+
+    lib.print.info('[kt_inventory:union] MySQL initialisé.')
 end)
 
--- ─────────────────────────────────────────────
--- API DB
--- ─────────────────────────────────────────────
-
+-- ────────────────────────────────────────────────────────────────────────────
+-- API db (globale, utilisée par modules/inventory/server.lua)
+-- ────────────────────────────────────────────────────────────────────────────
 db = {}
 
--- ── JOUEUR ──────────────────────────────────
+-- ── Joueur (inventaire par personnage via unique_id) ─────────────────────────
 
+--- Chargement : retourne une table décodée (ou nil si nouveau perso)
 function db.loadPlayer(uniqueId)
-    local result = MySQL.prepare.await(Query.SELECT_PLAYER, { uniqueId, 'player' })
+    local result = MySQL.scalar.await(
+        "SELECT data FROM kt_inventory WHERE unique_id = ? AND name = 'player'",
+        { uniqueId }
+    )
+    -- Inventory.Load attend type='table', on decode ici
     return result and json.decode(result) or nil
 end
 
+--- Sauvegarde individuelle (appelée par Inventory.Save)
 function db.savePlayer(uniqueId, inventory)
-    return MySQL.prepare(Query.UPSERT_PLAYER, { inventory, uniqueId, 'player' })
+    return MySQL.query(Query.UPSERT_PLAYER, { inventory, uniqueId })
 end
 
--- ── STASH ───────────────────────────────────
+-- ── Stash ─────────────────────────────────────────────────────────────────────
 
-function db.loadStash(uniqueId, name)
-    local result = MySQL.prepare.await(Query.SELECT_STASH, { uniqueId or '', name })
-    return result and json.decode(result) or nil
+--- Retourne la chaîne JSON brute (Inventory.Load la decode lui-même)
+function db.loadStash(owner, name)
+    return MySQL.scalar.await(Query.SELECT_STASH, { owner or '', name })
 end
 
-function db.saveStash(uniqueId, name, inventory)
-    return MySQL.prepare(Query.UPSERT_STASH, { inventory, uniqueId or '', name })
+function db.saveStash(owner, name, inventory)
+    return MySQL.query(Query.UPSERT_STASH, { inventory, owner or '', name })
 end
 
--- ── VEHICULE ────────────────────────────────
+-- ── Véhicules ─────────────────────────────────────────────────────────────────
 
+--- Retourne la ligne complète { plate, glovebox } — Inventory.Load extrait [invType]
 function db.loadGlovebox(plate)
     return MySQL.prepare.await(Query.SELECT_GLOVEBOX, { plate })
 end
@@ -125,14 +116,19 @@ function db.saveTrunk(plate, inventory)
     return MySQL.prepare(Query.UPDATE_TRUNK, { inventory, plate })
 end
 
--- ─────────────────────────────────────────────
--- SAVE GROUPÉ
--- ─────────────────────────────────────────────
-
+-- ── Sauvegarde groupée (appelée par Inventory.SaveInventories) ────────────────
+--
+-- Format reçu depuis prepareInventorySave :
+--   players   → { {data, uid}, {data, uid}, … }       (2 params — compatible UPSERT_PLAYER)
+--   trunks    → { {data, plate}, … }                   (2 params — compatible UPDATE_TRUNK)
+--   gloveboxes→ { {data, plate}, … }                   (2 params — compatible UPDATE_GLOVEBOX)
+--   stashes   → { {data, owner, name}, … }             (3 params — compatible UPSERT_STASH)
+--              ou flat si bulkstashsave=true
+--
 local function safeQuery(fn, ...)
     local ok, res = pcall(fn, ...)
     if not ok then
-        print('[kt_inventory] ERROR:', res)
+        print('[kt_inventory:union] Erreur sauvegarde : ' .. tostring(res))
         return nil
     end
     return res
@@ -140,14 +136,14 @@ end
 
 function db.saveInventories(players, trunks, gloveboxes, stashes, total)
     local pending = 0
-    local start = os.nanotime()
+    local start   = os.nanotime()
 
     local function done(label, count)
-        print(('[kt_inventory] Saved %d %s (%.2f ms)')
-            :format(count, label, (os.nanotime() - start) / 1e6))
+        lib.print.info(('[kt_inventory:union] Sauvegardé %d %s (%.2f ms)'):format(
+            count, label, (os.nanotime() - start) / 1e6))
     end
 
-    -- Players
+    -- Players  (2 params : data, unique_id)
     if total[1] > 0 then
         pending += 1
         Citizen.CreateThreadNow(function()
@@ -157,7 +153,7 @@ function db.saveInventories(players, trunks, gloveboxes, stashes, total)
         end)
     end
 
-    -- Trunks
+    -- Trunks   (2 params : data, plate)
     if total[2] > 0 then
         pending += 1
         Citizen.CreateThreadNow(function()
@@ -167,7 +163,7 @@ function db.saveInventories(players, trunks, gloveboxes, stashes, total)
         end)
     end
 
-    -- Gloveboxes
+    -- Gloveboxes (2 params : data, plate)
     if total[3] > 0 then
         pending += 1
         Citizen.CreateThreadNow(function()
@@ -177,11 +173,19 @@ function db.saveInventories(players, trunks, gloveboxes, stashes, total)
         end)
     end
 
-    -- Stashes
+    -- Stashes  (3 params : data, owner, name)
     if total[4] > 0 then
         pending += 1
         Citizen.CreateThreadNow(function()
-            safeQuery(MySQL.prepare.await, Query.UPSERT_STASH, stashes)
+            if server.bulkstashsave then
+                -- flat array : {data1, owner1, name1, data2, owner2, name2, …}
+                local n     = total[4] / 3
+                local query = Query.UPSERT_STASH:gsub('%(%?, %?, %?%)',
+                    string.rep('(?, ?, ?)', n, ', '))
+                safeQuery(MySQL.query.await, query, stashes)
+            else
+                safeQuery(MySQL.prepare.await, Query.UPSERT_STASH, stashes)
+            end
             pending -= 1
             done('stashes', total[4])
         end)

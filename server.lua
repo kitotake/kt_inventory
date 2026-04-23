@@ -10,7 +10,11 @@ if GetConvar('inventory:versioncheck', 'true') == 'true' then
 end
 
 local TriggerEventHooks = require 'modules.hooks.server'
-local db = require 'modules.mysql.server'
+
+local db = shared.framework == 'union'
+    and require 'modules.mysql.server_union'
+    or  require 'modules.mysql.server' -- MySQL wrapper pour Union ou MySQL-async selon le framework
+
 local Items = require 'modules.items.server'
 local Inventory = require 'modules.inventory.server'
 
