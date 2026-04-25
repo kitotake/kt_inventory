@@ -1,75 +1,62 @@
 -- modules/bridge/union/server.lua
--- Bridge entre kt_inventory et Union Framework (côté serveur)
 
 if not lib then return end
 
 local Inventory = require 'modules.inventory.server'
 local Items     = require 'modules.items.server'
 
--- ────────────────────────────────────────────────────────────────────────────
+-- ─────────────────────────────────────────────────────────────
 -- Helpers
--- ────────────────────────────────────────────────────────────────────────────
+-- ─────────────────────────────────────────────────────────────
 
---- Récupère le joueur Union depuis l'export Union
-local function getUnionPlayer(source)
-print(('[kt_inventory:union] Tentative de récupération du joueur Union pour source %s...'):format(source))
-    print(('[kt_inventory:union] GetPlayerFromId(%s) = nil, export Union non fonctionnel?'):format(source))
-
-return exports['union']:GetPlayerFromId(source)
-
-
+local function getUnionPlayer(src)
+    return exports['union']:GetPlayerFromId(src)
 end
 
--- ────────────────────────────────────────────────────────────────────────────
--- Déconnexion → fermeture + suppression de l'inventaire en mémoire
--- ────────────────────────────────────────────────────────────────────────────
+-- ─────────────────────────────────────────────────────────────
+-- Déconnexion
+-- ─────────────────────────────────────────────────────────────
+
 AddEventHandler('playerDropped', server.playerDropped)
-print('[kt_inventory:union] playerDropped handler enregistré.')
 
--- ────────────────────────────────────────────────────────────────────────────
--- Mise à jour du job en live (ex : /setjob)
--- ────────────────────────────────────────────────────────────────────────────
-AddEventHandler('union:job:updated', function(source, job, grade)
-    local inventory = Inventory(source)
-    print(('[kt_inventory:union] Job update pour source %s: %s (grade %s)'):format(source, job, grade))
-    if not inventory then return end
-    print(('[kt_inventory:union] Inventory trouvé pour source %s, mise à jour du job...'):format(source))
-    inventory.player.groups[job] = grade
-    print(('[kt_inventory:union] Job mis à jour dans l\'inventaire pour source %s: %s (grade %s)'):format(source, job, grade))
-end)
+-- ─────────────────────────────────────────────────────────────
+-- POINT D'ENTRÉE UNIQUE : chargement inventaire au spawn
+--
+-- C'est LE SEUL endroit où setPlayerInventory est appelé.
+-- inventory/main.lua n'écoute PAS union:player:spawned.
+-- ─────────────────────────────────────────────────────────────
 
--- ────────────────────────────────────────────────────────────────────────────
--- Chargement de l'inventaire quand le personnage est spawné
--- Déclenché par union:spawn:confirm → union:player:spawned
--- ────────────────────────────────────────────────────────────────────────────
-AddEventHandler('union:player:spawned', function(source, characterData)
-    print(('[kt_inventory:union] union:player:spawned reçu pour source %s, unique_id=%s'):format(source, characterData and characterData.unique_id or 'nil'))
+AddEventHandler('union:player:spawned', function(src, characterData)
     if not characterData or not characterData.unique_id then
-        lib.print.warn(('[kt_inventory:union] union:player:spawned — unique_id manquant pour source %s'):format(source))
+        lib.print.warn(
+            ('[kt_inventory:union] union:player:spawned — unique_id manquant pour source %s'):format(src)
+        )
         return
     end
 
-    print(('[kt_inventory:union] unique_id trouvé pour source %s: %s'):format(source, characterData.unique_id))
     local uniqueId = characterData.unique_id
-    print(('[kt_inventory:union] Tentative de chargement de l\'inventaire pour unique_id=%s...'):format(uniqueId))
 
-    -- Retry jusqu'à 10 fois si le joueur n'est pas encore dans PlayerManager
+    -- Retry : PlayerManager peut ne pas être encore prêt
     local player = nil
     for i = 1, 10 do
-        player = getUnionPlayer(source)
+        player = getUnionPlayer(src)
         if player then break end
-        lib.print.warn(('[kt_inventory:union] GetPlayerFromId(%s) = nil, tentative %d/10...'):format(source, i))
+        lib.print.warn(
+            ('[kt_inventory:union] GetPlayerFromId(%s) = nil, tentative %d/10'):format(src, i)
+        )
         Wait(200)
     end
 
     if not player then
-        lib.print.error(('[kt_inventory:union] GetPlayerFromId(%s) = nil après 10 tentatives — inventaire non chargé pour unique_id=%s'):format(source, uniqueId))
+        lib.print.error(
+            ('[kt_inventory:union] Impossible de charger l\'inventaire pour %s (unique_id=%s)'):format(src, uniqueId)
+        )
         return
     end
 
     local char = player.currentCharacter or characterData
 
-    -- Groupes : job actuel + groupe admin si applicable
+    -- Groupes
     local groups = {}
     if char.job and char.job ~= '' then
         groups[char.job] = char.job_grade or 0
@@ -78,45 +65,65 @@ AddEventHandler('union:player:spawned', function(source, characterData)
         groups[player.group] = 0
     end
 
-    -- Objet compatible avec server.setPlayerInventory
-    -- IMPORTANT : identifier = unique_id → inventaire par personnage
+    -- Objet ktPlayer compatible server.setPlayerInventory
     local ktPlayer = {
-        source     = source,
-        name       = player.name or GetPlayerName(source),
-        identifier = uniqueId,
+        source     = src,
+        name       = player.name or GetPlayerName(src),
+        identifier = uniqueId,   -- unique_id = identifiant inventaire par personnage
         groups     = groups,
+        sex        = char.gender,
+        dateofbirth = char.dateofbirth,
     }
 
-    lib.print.info(('[kt_inventory:union] ✅ Chargement inventaire pour unique_id=%s (joueur: %s, source: %s)'):format(uniqueId, ktPlayer.name, source))
+    lib.print.info(
+        ('[kt_inventory:union] Chargement inventaire → unique_id=%s (%s)'):format(uniqueId, ktPlayer.name)
+    )
 
+    -- Appel unique et contrôlé
     server.setPlayerInventory(ktPlayer)
 end)
 
--- ────────────────────────────────────────────────────────────────────────────
--- server.setPlayerData : transforme l'objet kt_player en données kt_inventory
--- ────────────────────────────────────────────────────────────────────────────
+-- ─────────────────────────────────────────────────────────────
+-- Mise à jour job en live
+-- ─────────────────────────────────────────────────────────────
+
+AddEventHandler('union:job:updated', function(src, job, grade)
+    local inv = Inventory(src)
+    if not inv then return end
+    inv.player.groups[job] = grade
+    lib.print.info(
+        ('[kt_inventory:union] Job mis à jour source=%s : %s (grade %s)'):format(src, job, grade)
+    )
+end)
+
+-- ─────────────────────────────────────────────────────────────
+-- server.setPlayerData
+-- ─────────────────────────────────────────────────────────────
+
 ---@diagnostic disable-next-line: duplicate-set-field
 function server.setPlayerData(player)
     return {
         source      = player.source,
         name        = player.name,
         groups      = player.groups or {},
-        sex         = nil,
-        dateofbirth = nil,
+        sex         = player.sex,
+        dateofbirth = player.dateofbirth,
     }
 end
 
--- ────────────────────────────────────────────────────────────────────────────
--- server.syncInventory : Union gère sa banque séparément, pas de sync cash
--- ────────────────────────────────────────────────────────────────────────────
+-- ─────────────────────────────────────────────────────────────
+-- server.syncInventory — Union gère sa banque séparément
+-- ─────────────────────────────────────────────────────────────
+
 ---@diagnostic disable-next-line: duplicate-set-field
-function server.syncInventory(inv)
-    -- Rien à synchroniser vers Union Framework
+function server.syncInventory(_inv)
+    -- rien à synchroniser vers Union
 end
 
--- ────────────────────────────────────────────────────────────────────────────
--- Licences via user_licenses de Union
--- ────────────────────────────────────────────────────────────────────────────
+-- ─────────────────────────────────────────────────────────────
+-- Licences
+-- ─────────────────────────────────────────────────────────────
+
 ---@diagnostic disable-next-line: duplicate-set-field
 function server.hasLicense(inv, name)
     return MySQL.scalar.await(
@@ -130,40 +137,38 @@ function server.buyLicense(inv, license)
     if server.hasLicense(inv, license.name) then
         return false, 'already_have'
     end
-
     if Inventory.GetItemCount(inv, 'money') < license.price then
         return false, 'can_not_afford'
     end
 
     Inventory.RemoveItem(inv, 'money', license.price)
 
-    local charRow = MySQL.fetchOne and
-        MySQL.fetchOne.await('SELECT identifier FROM characters WHERE unique_id = ?', { inv.owner }) or
-        MySQL.row and MySQL.row.await and MySQL.row.await('SELECT identifier FROM characters WHERE unique_id = ?', { inv.owner })
-
-    local identifier = charRow and charRow.identifier or inv.owner
+    local row = MySQL.fetchOne and
+        MySQL.fetchOne.await('SELECT identifier FROM characters WHERE unique_id = ?', { inv.owner })
 
     MySQL.query(
         'INSERT IGNORE INTO `user_licenses` (identifier, unique_id, type) VALUES (?, ?, ?)',
-        { identifier, inv.owner, license.name }
+        { row and row.identifier or inv.owner, inv.owner, license.name }
     )
 
     return true, 'have_purchased'
 end
 
--- ────────────────────────────────────────────────────────────────────────────
--- Boss check (basé sur le groupe Union)
--- ────────────────────────────────────────────────────────────────────────────
+-- ─────────────────────────────────────────────────────────────
+-- Boss check
+-- ─────────────────────────────────────────────────────────────
+
 ---@diagnostic disable-next-line: duplicate-set-field
-function server.isPlayerBoss(playerId, group, grade)
+function server.isPlayerBoss(playerId, _group, _grade)
     local player = getUnionPlayer(playerId)
     if not player then return false end
     return player.group == 'admin' or player.group == 'founder'
 end
 
--- ────────────────────────────────────────────────────────────────────────────
--- Véhicules : Union identifie les véhicules par plaque
--- ────────────────────────────────────────────────────────────────────────────
+-- ─────────────────────────────────────────────────────────────
+-- Véhicules
+-- ─────────────────────────────────────────────────────────────
+
 ---@diagnostic disable-next-line: duplicate-set-field
 function server.getOwnedVehicleId(entityId)
     local plate = GetVehicleNumberPlateText(entityId)
