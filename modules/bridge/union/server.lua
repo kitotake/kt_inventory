@@ -17,7 +17,16 @@ end
 -- Déconnexion
 -- ─────────────────────────────────────────────────────────────
 
-AddEventHandler('playerDropped', server.playerDropped)
+AddEventHandler('playerDropped', function()
+    server.playerDropped(source)
+    _loadingPlayers[source] = nil
+end)
+
+-- ─────────────────────────────────────────────────────────────
+-- Guard contre les double-appels
+-- ─────────────────────────────────────────────────────────────
+
+local _loadingPlayers = {}
 
 -- ─────────────────────────────────────────────────────────────
 -- POINT D'ENTRÉE UNIQUE : chargement inventaire au spawn
@@ -27,10 +36,18 @@ AddEventHandler('playerDropped', server.playerDropped)
 -- ─────────────────────────────────────────────────────────────
 
 AddEventHandler('union:player:spawned', function(src, characterData)
+    if _loadingPlayers[src] then
+        lib.print.warn(('[kt_inventory:union] union:player:spawned ignoré — chargement déjà en cours pour source %s'):format(src))
+        return
+    end
+
+    _loadingPlayers[src] = true
+
     if not characterData or not characterData.unique_id then
         lib.print.warn(
             ('[kt_inventory:union] union:player:spawned — unique_id manquant pour source %s'):format(src)
         )
+        _loadingPlayers[src] = nil
         return
     end
 
@@ -51,6 +68,7 @@ AddEventHandler('union:player:spawned', function(src, characterData)
         lib.print.error(
             ('[kt_inventory:union] Impossible de charger l\'inventaire pour %s (unique_id=%s)'):format(src, uniqueId)
         )
+        _loadingPlayers[src] = nil
         return
     end
 
@@ -67,11 +85,11 @@ AddEventHandler('union:player:spawned', function(src, characterData)
 
     -- Objet ktPlayer compatible server.setPlayerInventory
     local ktPlayer = {
-        source     = src,
-        name       = player.name or GetPlayerName(src),
-        identifier = uniqueId,   -- unique_id = identifiant inventaire par personnage
-        groups     = groups,
-        sex        = char.gender,
+        source      = src,
+        name        = player.name or GetPlayerName(src),
+        identifier  = uniqueId,
+        groups      = groups,
+        sex         = char.gender,
         dateofbirth = char.dateofbirth,
     }
 
@@ -79,8 +97,13 @@ AddEventHandler('union:player:spawned', function(src, characterData)
         ('[kt_inventory:union] Chargement inventaire → unique_id=%s (%s)'):format(uniqueId, ktPlayer.name)
     )
 
-    -- Appel unique et contrôlé
-    server.setPlayerInventory(ktPlayer)
+    local ok, err = pcall(server.setPlayerInventory, ktPlayer)
+
+    if not ok then
+        lib.print.error(('[kt_inventory:union] setPlayerInventory échoué pour %s : %s'):format(ktPlayer.name, tostring(err)))
+    end
+
+    _loadingPlayers[src] = nil
 end)
 
 -- ─────────────────────────────────────────────────────────────
