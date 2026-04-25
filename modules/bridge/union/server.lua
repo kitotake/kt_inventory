@@ -19,7 +19,7 @@ end
 
 AddEventHandler('playerDropped', function()
     server.playerDropped(source)
-    _loadingPlayers[source] = nil
+    _loadingPlayers = _loadingPlayers or {}
 end)
 
 -- ─────────────────────────────────────────────────────────────
