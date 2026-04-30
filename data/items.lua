@@ -70,7 +70,7 @@ return {
 
 	['burger'] = {
 		label = 'Burger',
-		weight = 220,
+		weight = 20,
 		client = {
 			status = { hunger = 200000 },
 			anim = 'eating',
@@ -82,7 +82,7 @@ return {
 
 	['sprunk'] = {
 		label = 'Sprunk',
-		weight = 350,
+		weight = 50,
 		client = {
 			status = { thirst = 200000 },
 			anim = { dict = 'mp_player_intdrink', clip = 'loop_bottle' },
@@ -94,7 +94,7 @@ return {
 
 	['parachute'] = {
 		label = 'Parachute',
-		weight = 8000,
+		weight = 800,
 		stack = false,
 		client = {
 			anim = { dict = 'clothingshirt', clip = 'try_shirt_positive_d' },
@@ -135,7 +135,7 @@ return {
 
 	['lockpick'] = {
 		label = 'Lockpick',
-		weight = 160,
+		weight = 16,
 	},
 
 	['phone'] = {
@@ -164,7 +164,7 @@ return {
 
 	['mustard'] = {
 		label = 'Mustard',
-		weight = 500,
+		weight = 50,
 		client = {
 			status = { hunger = 25000, thirst = 25000 },
 			anim = { dict = 'mp_player_intdrink', clip = 'loop_bottle' },
@@ -176,7 +176,7 @@ return {
 
 	['water'] = {
 		label = 'Water',
-		weight = 500,
+		weight = 50,
 		client = {
 			status = { thirst = 200000 },
 			anim = { dict = 'mp_player_intdrink', clip = 'loop_bottle' },
@@ -189,18 +189,18 @@ return {
 
 	['radio'] = {
 		label = 'Radio',
-		weight = 1000,
+		weight = 10,
 		stack = false,
 		allowArmed = true
 	},
 
 	['armour'] = {
 		label = 'Bulletproof Vest',
-		weight = 3000,
+		weight = 1500,
 		stack = false,
 		client = {
 			anim = { dict = 'clothingshirt', clip = 'try_shirt_positive_d' },
-			usetime = 3500
+			usetime = 2500
 		}
 	},
 

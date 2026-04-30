@@ -2,7 +2,7 @@ return {
 	Weapons = {
 		['WEAPON_BATTLERIFLE'] = {
 			label = 'Battle Rifle',
-			weight = 3300,
+			weight = 1500,
 			durability = 0.03,
 			ammoname = 'ammo-rifle2',
 		},
@@ -44,7 +44,7 @@ return {
 
 		['WEAPON_ASSAULTRIFLE_MK2'] = {
 			label = 'Assault Rifle MK2',
-			weight = 2950,
+			weight = 30000,
 			durability = 0.03,
 			ammoname = 'ammo-rifle2',
 		},
@@ -96,7 +96,7 @@ return {
 
 		['WEAPON_BULLPUPRIFLE_MK2'] = {
 			label = 'Bullpup Rifle MK2',
-			weight = 2900,
+			weight = 30000,
 			durability = 0.03,
 			ammoname = 'ammo-rifle'
 		},
@@ -123,7 +123,7 @@ return {
 
 		['WEAPON_CARBINERIFLE_MK2'] = {
 			label = 'Carbine Rifle MK2',
-			weight = 3000,
+			weight = 30000,
 			durability = 0.03,
 			ammoname = 'ammo-rifle'
 		},
@@ -151,7 +151,7 @@ return {
 
 		['WEAPON_COMBATMG_MK2'] = {
 			label = 'Combat MG MK2',
-			weight = 8000,
+			weight = 30000,
 			durability = 0.02,
 			ammoname = 'ammo-rifle2'
 		},
@@ -205,7 +205,7 @@ return {
 
 		['WEAPON_DBSHOTGUN'] = {
 			label = 'Double Barrel Shotgun',
-			weight = 3175,
+			weight = 4000,
 			durability = 0.4,
 			ammoname = 'ammo-shotgun'
 		},
@@ -232,7 +232,7 @@ return {
 
 		['WEAPON_FIREWORK'] = {
 			label = 'Firework Launcher',
-			weight = 1000,
+			weight = 1500,
 			durability = 0.5,
 			ammoname = 'ammo-firework'
 		},
@@ -245,7 +245,7 @@ return {
 
 		['WEAPON_FLAREGUN'] = {
 			label = 'Flare Gun',
-			weight = 1000,
+			weight = 500,
 			durability = 0.5,
 			ammoname = 'ammo-flare'
 		},
@@ -270,7 +270,7 @@ return {
 
 		['WEAPON_GRENADELAUNCHER'] = {
 			label = 'Grenade Launcher',
-			weight = 6500,
+			weight = 65000,
 			durability = 0.05,
 			ammoname = 'ammo-grenade'
 		},
@@ -296,7 +296,7 @@ return {
 
 		['WEAPON_HEAVYRIFLE'] = {
 			label = 'Heavy Rifle',
-			weight = 3300,
+			weight = 1500,
 			durability = 0.2,
 			ammoname = 'ammo-rifle'
 		},
@@ -346,7 +346,7 @@ return {
 
 		['WEAPON_HEAVYSNIPER_MK2'] = {
 			label = 'Heavy Sniper MK2',
-			weight = 14000,
+			weight = 30000,
 			durability = 0.5,
 			ammoname = 'ammo-heavysniper'
 		},
@@ -392,7 +392,7 @@ return {
 
 		['WEAPON_MARKSMANRIFLE_MK2'] = {
 			label = 'Marksman Rifle MK2',
-			weight = 4000,
+			weight = 30000,
 			durability = 0.4,
 			ammoname = 'ammo-sniper'
 		},
@@ -492,7 +492,7 @@ return {
 
 		['WEAPON_PISTOL_MK2'] = {
 			label = 'Pistol MK2',
-			weight = 1000,
+			weight = 1500,
 			durability = 0.5,
 			ammoname = 'ammo-9'
 		},
@@ -524,7 +524,7 @@ return {
 
 		['WEAPON_PUMPSHOTGUN_MK2'] = {
 			label = 'Pump Shotgun MK2',
-			weight = 3200,
+			weight = 20000,
 			durability = 0.1,
 			ammoname = 'ammo-shotgun'
 		},
@@ -565,7 +565,7 @@ return {
 
 		['WEAPON_REVOLVER_MK2'] = {
 			label = 'Revolver MK2',
-			weight = 2600,
+			weight = 20000,
 			durability = 0.1,
 			ammoname = 'ammo-44'
 		},
@@ -593,7 +593,7 @@ return {
 
 		['WEAPON_SMG_MK2'] = {
 			label = 'SMG Mk2',
-			weight = 2700,
+			weight = 15000,
 			durability = 0.05,
 			ammoname = 'ammo-9'
 		},
@@ -626,7 +626,7 @@ return {
 
 		['WEAPON_SNSPISTOL_MK2'] = {
 			label = 'SNS Pistol MK2',
-			weight = 465,
+			weight = 500,
 			durability = 0.1,
 			ammoname = 'ammo-45'
 		},
@@ -640,7 +640,7 @@ return {
 
 		['WEAPON_SPECIALCARBINE_MK2'] = {
 			label = 'Special Carbine MK2',
-			weight = 3370,
+			weight = 10000,
 			durability = 0.03,
 			ammoname = 'ammo-rifle'
 		},
@@ -1809,12 +1809,12 @@ return {
 
 		['ammo-9'] = {
 			label = '9mm',
-			weight = 7,
+			weight = 3,
 		},
 
 		['ammo-firework'] = {
 			label = 'Firework',
-			weight = 200,
+			weight = 2000,
 		},
 
 		['ammo-flare'] = {
@@ -1824,7 +1824,7 @@ return {
 
 		['ammo-grenade'] = {
 			label = '40mm Explosive',
-			weight = 400,
+			weight = 4000,
 		},
 
 		['ammo-heavysniper'] = {
@@ -1834,47 +1834,47 @@ return {
 
 		['ammo-laser'] = {
 			label = 'Laser charge',
-			weight = 1,
+			weight = 9000,
 		},
 
 		['ammo-musket'] = {
 			label = '.50 Ball',
-			weight = 38,
+			weight = 25,
 		},
 
 		['ammo-railgun'] = {
 			label = 'Railgun charge',
-			weight = 150,
+			weight = 9000,
 		},
 
 		['ammo-rifle'] = {
 			label = '5.56x45',
-			weight = 4,
+			weight = 10,
 		},
 
 		['ammo-rifle2'] = {
 			label = '7.62x39',
-			weight = 8,
+			weight = 2,
 		},
 
 		['ammo-rocket'] = {
 			label = 'Rocket',
-			weight = 500,
+			weight = 250,
 		},
 
 		['ammo-shotgun'] = {
 			label = '12 Gauge',
-			weight = 38,
+			weight = 25,
 		},
 
 		['ammo-sniper'] = {
 			label = '7.62x51',
-			weight = 9,
+			weight = 12,
 		},
 
 		['ammo-emp'] = {
 			label = 'EMP round',
-			weight = 400,
+			weight = 900,
 		},
 	}
 }
