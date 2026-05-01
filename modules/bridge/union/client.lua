@@ -1,4 +1,4 @@
--- modules/bridge/union/client.lua
+-- kt_inventory/modules/bridge/union/client.lua
 -- Bridge entre kt_inventory et Union Framework (côté client)
 
 -- ────────────────────────────────────────────────────────────────────────────
