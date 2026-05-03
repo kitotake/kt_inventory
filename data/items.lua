@@ -134,33 +134,34 @@ return {
 		label = 'Scrap Metal',
 		weight = 80,
 	},
+
     -- ─────────────────────────────────────────────
     -- 🍔 FAST FOOD
     -- ─────────────────────────────────────────────
 
     ['burger'] = {
         label = 'Burger',
-        weight = 2,
+        weight = 200,
         client = {
             image = 'burger.png',
             status = { hunger = 200000, stress = -20000 },
             anim = 'eating',
             prop = 'burger',
             usetime = 2500,
-            notification = 'Tu manges un burger 🍔'
+            notification = 'Tu manges un burger'
         }
     },
 
     ['cheeseburger'] = {
         label = 'Cheeseburger',
-        weight = 4,
+        weight = 220,
         client = {
             image = 'cheeseburger.png',
             status = { hunger = 250000, stress = -25000 },
             anim = 'eating',
             prop = 'burger',
             usetime = 2500,
-            notification = 'Tu manges un cheeseburger 🧀🍔'
+            notification = 'Tu manges un cheeseburger'
         }
     },
 
@@ -171,22 +172,24 @@ return {
             image = 'fries.png',
             status = { hunger = 150000, stress = -10000 },
             anim = 'eating',
+            -- FIX: prop 'fries' n'existe pas dans animations.lua, utilise 'burger' comme fallback
             prop = 'burger',
             usetime = 2000,
-            notification = 'Tu manges des frites 🍟'
+            notification = 'Tu manges des frites'
         }
     },
 
     ['pizza'] = {
         label = 'Pizza',
-        weight = 30,
+        weight = 300,
         client = {
             image = 'pizza.png',
             status = { hunger = 300000, stress = -30000 },
             anim = 'eating',
-            prop = 'pizza',
+            -- FIX: prop 'pizza' n'existe pas dans animations.lua, utilise prop inline
+            prop = { model = `prop_cs_burger_01`, pos = vec3(0.02, 0.02, -0.02), rot = vec3(0.0, 0.0, 0.0) },
             usetime = 3000,
-            notification = 'Tu manges une pizza 🍕'
+            notification = 'Tu manges une pizza'
         }
     },
 
@@ -197,9 +200,10 @@ return {
             image = 'donut.png',
             status = { hunger = 90000, stress = -15000 },
             anim = 'eating',
-            prop = 'donut',
+            -- FIX: prop 'donut' n'existe pas dans animations.lua, utilise 'burger' comme fallback
+            prop = 'burger',
             usetime = 1500,
-            notification = 'Tu manges un donut 🍩'
+            notification = 'Tu manges un donut'
         }
     },
 
@@ -209,40 +213,41 @@ return {
 
     ['water'] = {
         label = 'Water',
-        weight = 50,
+        weight = 500,
         client = {
             image = 'water.png',
             status = { thirst = 200000 },
             anim = { dict = 'mp_player_intdrink', clip = 'loop_bottle' },
-            prop = { model = `prop_ld_flow_bottle`, pos = vec3(0.03,0.03,0.02), rot = vec3(0,0,0) },
+            prop = { model = `prop_ld_flow_bottle`, pos = vec3(0.03, 0.03, 0.02), rot = vec3(0, 0, 0) },
             usetime = 2500,
-            notification = 'Tu bois de l’eau 💧'
+            -- FIX: apostrophe corrigée (l'eau -> eau)
+            notification = "Tu bois de l'eau"
         }
     },
 
     ['cola'] = {
         label = 'Cola',
-        weight = 5,
+        weight = 350,
         client = {
             image = 'cola.png',
             status = { thirst = 180000, stress = -5000 },
             anim = { dict = 'mp_player_intdrink', clip = 'loop_bottle' },
-            prop = { model = `prop_ecola_can`, pos = vec3(0.01,0.01,0.06), rot = vec3(5,5,-180) },
+            prop = { model = `prop_ecola_can`, pos = vec3(0.01, 0.01, 0.06), rot = vec3(5, 5, -180) },
             usetime = 2500,
-            notification = 'Tu bois un cola 🥤'
+            notification = 'Tu bois un cola'
         }
     },
 
     ['energy_drink'] = {
         label = 'Energy Drink',
-        weight = 6,
+        weight = 330,
         client = {
             image = 'energy.png',
             status = { thirst = 150000, stress = -10000 },
             anim = { dict = 'mp_player_intdrink', clip = 'loop_bottle' },
-            prop = { model = `prop_energy_drink`, pos = vec3(0.01,0.01,0.06), rot = vec3(0,0,0) },
+            prop = { model = `prop_energy_drink`, pos = vec3(0.01, 0.01, 0.06), rot = vec3(0, 0, 0) },
             usetime = 2000,
-            notification = 'Tu bois une energy drink ⚡'
+            notification = 'Tu bois une energy drink'
         }
     },
 
@@ -252,87 +257,92 @@ return {
 
     ['chocolate'] = {
         label = 'Chocolate',
-        weight = 5,
+        weight = 100,
         client = {
             image = 'chocolate.png',
             status = { hunger = 70000, stress = -20000 },
             anim = 'eating',
-            prop = 'chocolate',
+            -- FIX: prop 'chocolate' n'existe pas dans animations.lua
+            prop = 'burger',
             usetime = 1500,
-            notification = 'Tu manges du chocolat 🍫'
+            notification = 'Tu manges du chocolat'
         }
     },
 
     ['chips'] = {
         label = 'Chips',
-        weight = 8,
+        weight = 120,
         client = {
             image = 'chips.png',
             status = { hunger = 120000, stress = -8000 },
             anim = 'eating',
-            prop = 'chips',
+            -- FIX: prop 'chips' n'existe pas dans animations.lua
+            prop = 'burger',
             usetime = 2000,
-            notification = 'Tu manges des chips 🍟'
+            notification = 'Tu manges des chips'
         }
     },
 
     -- ─────────────────────────────────────────────
-    -- 🍱 CUISINE RP (IMPORTANT POUR RP)
+    -- 🍱 CUISINE RP
     -- ─────────────────────────────────────────────
 
     ['sandwich'] = {
         label = 'Sandwich',
-        weight = 18,
+        weight = 180,
         client = {
             image = 'sandwich.png',
             status = { hunger = 180000, stress = -15000 },
             anim = 'eating',
-            prop = 'sandwich',
+            -- FIX: prop 'sandwich' n'existe pas dans animations.lua
+            prop = 'burger',
             usetime = 2500,
-            notification = 'Tu manges un sandwich 🥪'
+            notification = 'Tu manges un sandwich'
         }
     },
 
     ['taco'] = {
         label = 'Taco',
-        weight = 12,
+        weight = 120,
         client = {
             image = 'taco.png',
             status = { hunger = 200000, stress = -20000 },
             anim = 'eating',
-            prop = 'taco',
+            -- FIX: prop 'taco' n'existe pas dans animations.lua
+            prop = 'burger',
             usetime = 2500,
-            notification = 'Tu manges un taco 🌮'
+            notification = 'Tu manges un taco'
         }
     },
 
     ['hotdog'] = {
         label = 'Hotdog',
-        weight = 5,
+        weight = 150,
         client = {
             image = 'hotdog.png',
             status = { hunger = 190000, stress = -18000 },
             anim = 'eating',
-            prop = 'hotdog',
+            -- FIX: prop 'hotdog' n'existe pas dans animations.lua
+            prop = 'burger',
             usetime = 2500,
-            notification = 'Tu manges un hotdog 🌭'
+            notification = 'Tu manges un hotdog'
         }
     },
 
     -- ─────────────────────────────────────────────
-    -- 🍺 BONUS (alcool RP si tu actives later)
+    -- 🍺 BOISSONS ALCOOLISEES
     -- ─────────────────────────────────────────────
 
     ['beer'] = {
         label = 'Beer',
-        weight = 25,
+        weight = 500,
         client = {
             image = 'beer.png',
             status = { stress = -40000 },
             anim = { dict = 'mp_player_intdrink', clip = 'loop_bottle' },
-            prop = { model = `prop_beer_bottle`, pos = vec3(0.01,0.01,0.06), rot = vec3(0,0,0) },
+            prop = { model = `prop_beer_bottle`, pos = vec3(0.01, 0.01, 0.06), rot = vec3(0, 0, 0) },
             usetime = 2500,
-            notification = 'Tu bois une bière 🍺'
+            notification = 'Tu bois une biere'
         }
     },
 }

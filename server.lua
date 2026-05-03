@@ -11,9 +11,16 @@ end
 
 local TriggerEventHooks = require 'modules.hooks.server'
 
-local db = shared.framework == 'union'
-    and require 'modules.mysql.server_union'
-    or  require 'modules.mysql.server' -- MySQL wrapper pour Union ou MySQL-async selon le framework
+-- FIX: db doit etre une variable GLOBALE (pas locale) car modules/inventory/server.lua
+-- et d'autres modules y accedent directement sans passer par un require.
+-- L'ancien code utilisait "local db = ..." ce qui rendait db inaccessible aux autres modules.
+-- La variable est desormais globale, ce qui correspond a l'usage dans server_union.lua
+-- et server.lua (tous deux font "db = {}" sans "local").
+if shared.framework == 'union' then
+    require 'modules.mysql.server_union'
+else
+    require 'modules.mysql.server'
+end
 
 local Items = require 'modules.items.server'
 local Inventory = require 'modules.inventory.server'
@@ -214,7 +221,7 @@ local function openInventory(source, invType, data, ignoreSecurityChecks)
 
 				if not right then
 					local netid = tonumber(data:sub(9))
-	
+
 					if netid and NetworkGetEntityFromNetworkId(netid) > 0 then
 						right = Inventory.Create(data, locale('dumpster'), invType, 15, 0, 100000, false)
 					end
@@ -438,11 +445,6 @@ lib.callback.register('kt_inventory:useItem', function(source, itemName, slot, m
 				end
 			elseif not item.weapon and server.UseItem then
                 inventory.usingItem = data
-				-- This is used to call an external useItem function, i.e. ESX.UseItem
-				-- If an error is being thrown on item use there is no internal solution. We previously kept a list
-				-- of usable items which led to issues when restarting resources (for obvious reasons), but config
-				-- developers complained the inventory broke their items. Safely invoking registered item callbacks
-				-- should resolve issues, i.e. https://github.com/esx-framework/esx-legacy/commit/9fc382bbe0f5b96ff102dace73c424a53458c96e
 				return pcall(server.UseItem, source, data.name, data)
 			end
 

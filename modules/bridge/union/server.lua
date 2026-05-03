@@ -1,5 +1,5 @@
--- kt_inventory/modules/bridge/union/server.lua
--- Bridge kt_inventory ↔ Union Framework (SERVER CLEAN FIXED)
+-- modules/bridge/union/server.lua
+-- Bridge kt_inventory <-> Union Framework (SERVER)
 
 if not lib then return end
 
@@ -38,7 +38,7 @@ local function isValidChar(char)
 end
 
 -- ─────────────────────────────────────────────
--- GROUP BUILDER SAFE
+-- GROUP BUILDER
 -- ─────────────────────────────────────────────
 
 local function buildGroups(char, player)
@@ -64,21 +64,19 @@ end
 -- ─────────────────────────────────────────────
 
 AddEventHandler('union:player:spawned', function(src, characterData)
-
     if _loadingPlayers[src] then
-        debug("skip spawn (already loading) src=" .. src)
+        debug("skip spawn (deja en cours) src=" .. src)
         return
     end
 
     if not isValidChar(characterData) then
-        debug("invalid character data src=" .. src)
+        debug("donnees personnage invalides src=" .. src)
         return
     end
 
     _loadingPlayers[src] = true
 
     CreateThread(function()
-
         local player = nil
 
         for i = 1, 10 do
@@ -88,7 +86,7 @@ AddEventHandler('union:player:spawned', function(src, characterData)
         end
 
         if not player then
-            debug("failed to get player src=" .. src)
+            debug("impossible d'obtenir le joueur src=" .. src)
             release(src)
             return
         end
@@ -107,14 +105,14 @@ AddEventHandler('union:player:spawned', function(src, characterData)
             dob        = char.dateofbirth
         }
 
-        debug(("loading inventory uid=%s"):format(char.unique_id))
+        debug(("chargement inventaire uid=%s"):format(char.unique_id))
 
         local ok, err = pcall(server.setPlayerInventory, ktPlayer)
 
         release(src)
 
         if not ok then
-            print("^1[kt_inventory] ERROR setPlayerInventory: " .. tostring(err) .. "^0")
+            print("^1[kt_inventory] ERREUR setPlayerInventory: " .. tostring(err) .. "^0")
         end
     end)
 end)
@@ -136,25 +134,47 @@ AddEventHandler('union:job:updated', function(src, job, grade)
 end)
 
 -- ─────────────────────────────────────────────
--- STATUS HOOK (IMPORTANT POUR FOOD SYSTEM)
+-- STATUS HOOK
+-- FIX: StatusManager n'est pas garanti d'exister globalement.
+-- On utilise TriggerClientEvent vers le bridge client a la place,
+-- ou on verifie proprement avant d'appeler StatusManager.
 -- ─────────────────────────────────────────────
 
 RegisterNetEvent("union:status:actionFromItem", function(values)
     local src = source
-    local status = StatusManager and StatusManager.cache and StatusManager.cache[src]
 
-    if not status then return end
+    -- FIX: Verification defensive de StatusManager avant utilisation
+    if not StatusManager then
+        -- Fallback: transmettre au client pour qu'il gere lui-meme
+        TriggerClientEvent("union:status:applyFromItem", src, values)
+        return
+    end
+
+    local cache = StatusManager.cache
+    if not cache or not cache[src] then
+        TriggerClientEvent("union:status:applyFromItem", src, values)
+        return
+    end
 
     if values.hunger then
-        StatusManager.add(src, "hunger", values.hunger / 10000)
+        local ok, err = pcall(StatusManager.add, src, "hunger", values.hunger / 10000)
+        if not ok then
+            lib.print.warn(('[kt_inventory:union] Erreur StatusManager.add hunger: %s'):format(tostring(err)))
+        end
     end
 
     if values.thirst then
-        StatusManager.add(src, "thirst", values.thirst / 10000)
+        local ok, err = pcall(StatusManager.add, src, "thirst", values.thirst / 10000)
+        if not ok then
+            lib.print.warn(('[kt_inventory:union] Erreur StatusManager.add thirst: %s'):format(tostring(err)))
+        end
     end
 
     if values.stress then
-        StatusManager.add(src, "stress", values.stress / 10000)
+        local ok, err = pcall(StatusManager.add, src, "stress", values.stress / 10000)
+        if not ok then
+            lib.print.warn(('[kt_inventory:union] Erreur StatusManager.add stress: %s'):format(tostring(err)))
+        end
     end
 end)
 
@@ -183,7 +203,7 @@ function server.buyLicense(inv, license)
     local price = license.price or 0
 
     if Inventory.GetItemCount(inv, "money") < price then
-        return false, "no_money"
+        return false, "can_not_afford"
     end
 
     Inventory.RemoveItem(inv, "money", price)
@@ -193,7 +213,7 @@ function server.buyLicense(inv, license)
         { inv.owner, inv.owner, license.name }
     )
 
-    return true
+    return true, "have_purchased"
 end
 
 -- ─────────────────────────────────────────────
@@ -205,4 +225,4 @@ AddEventHandler("playerDropped", function()
     release(src)
 end)
 
-print("^2[kt_inventory] Union bridge loaded^0")
+print("^2[kt_inventory] Union bridge server charge^0")

@@ -1,6 +1,5 @@
--- kt_inventory/modules/bridge/union/client.lua
--- Bridge entre kt_inventory et Union Framework (CLIENT)
-
+-- modules/bridge/union/client.lua
+-- Bridge kt_inventory <-> Union Framework (CLIENT)
 
 -- ────────────────────────────────────────────────────────────
 -- LOGOUT / RESET
@@ -26,16 +25,13 @@ end)
 
 -- ────────────────────────────────────────────────────────────
 -- PLAYER DATA
+-- FIX: Suppression de la redefinition de client.setPlayerData
+-- La version dans modules/bridge/client.lua est identique et suffit.
+-- Redefinir ici causait une double ecriture sans valeur ajoutee.
 -- ────────────────────────────────────────────────────────────
 
----@diagnostic disable-next-line: duplicate-set-field
-function client.setPlayerData(key, value)
-    PlayerData[key] = value
-    OnPlayerData(key, value)
-end
-
 -- ────────────────────────────────────────────────────────────
--- STATUS (FIX IMPORTANT)
+-- STATUS
 -- ────────────────────────────────────────────────────────────
 
 ---@diagnostic disable-next-line: duplicate-set-field
@@ -55,6 +51,13 @@ end)
 
 RegisterNetEvent("union:status:updateAll", function(s)
     client.setPlayerStatus(s)
+end)
+
+-- FIX: Handler pour le fallback serveur quand StatusManager n'est pas disponible
+-- Le serveur envoie cet event si StatusManager est absent
+RegisterNetEvent("union:status:applyFromItem", function(values)
+    if type(values) ~= "table" then return end
+    client.setPlayerStatus(values)
 end)
 
 -- ────────────────────────────────────────────────────────────
