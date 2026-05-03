@@ -1,55 +1,66 @@
 -- kt_inventory/modules/bridge/union/client.lua
--- Bridge entre kt_inventory et Union Framework (côté client)
+-- Bridge entre kt_inventory et Union Framework (CLIENT)
 
--- ────────────────────────────────────────────────────────────────────────────
--- Logout : réinitialise kt_inventory quand le personnage est déselectionné
--- ────────────────────────────────────────────────────────────────────────────
+
+-- ────────────────────────────────────────────────────────────
+-- LOGOUT / RESET
+-- ────────────────────────────────────────────────────────────
+
 RegisterNetEvent('union:character:deselected', client.onLogout)
 
--- Sécurité : si la sélection échoue, on reset aussi
-RegisterNetEvent('union:character:selected', function(success, character)
+RegisterNetEvent('union:character:selected', function(success)
     if not success then
         client.onLogout()
     end
 end)
 
--- ────────────────────────────────────────────────────────────────────────────
--- Mise à jour des groupes en live (changement de job, grade, etc.)
--- ────────────────────────────────────────────────────────────────────────────
+-- ────────────────────────────────────────────────────────────
+-- GROUPES
+-- ────────────────────────────────────────────────────────────
+
 RegisterNetEvent('union:job:updated', function(job, grade)
     if not PlayerData.groups then PlayerData.groups = {} end
     PlayerData.groups[job] = grade
     OnPlayerData('groups', PlayerData.groups)
 end)
 
--- ────────────────────────────────────────────────────────────────────────────
--- setPlayerData : stocke les données dans PlayerData (standard kt_inventory)
--- ────────────────────────────────────────────────────────────────────────────
+-- ────────────────────────────────────────────────────────────
+-- PLAYER DATA
+-- ────────────────────────────────────────────────────────────
+
 ---@diagnostic disable-next-line: duplicate-set-field
 function client.setPlayerData(key, value)
     PlayerData[key] = value
     OnPlayerData(key, value)
 end
 
--- ────────────────────────────────────────────────────────────────────────────
--- setPlayerStatus : hunger/thirst via LocalPlayer.state (même que QBX)
--- ────────────────────────────────────────────────────────────────────────────
+-- ────────────────────────────────────────────────────────────
+-- STATUS (FIX IMPORTANT)
+-- ────────────────────────────────────────────────────────────
+
 ---@diagnostic disable-next-line: duplicate-set-field
 function client.setPlayerStatus(values)
-    local playerState = LocalPlayer.state
-    for name, value in pairs(values) do
-        -- Compatibilité ESX (valeurs en millionièmes → ramenées à 0-100)
-        if value > 100 or value < -100 then
-            value = value * 0.0001
+    local state = LocalPlayer.state
+
+    for k, v in pairs(values) do
+        if type(v) == "number" then
+            state:set(k, v, true)
         end
-        local current = playerState[name] or 0
-        playerState:set(name, current + value, true)
     end
 end
 
--- ────────────────────────────────────────────────────────────────────────────
--- hasGroup : vérifie si le joueur appartient à un groupe/job requis
--- ────────────────────────────────────────────────────────────────────────────
+RegisterNetEvent("union:status:init", function(s)
+    client.setPlayerStatus(s)
+end)
+
+RegisterNetEvent("union:status:updateAll", function(s)
+    client.setPlayerStatus(s)
+end)
+
+-- ────────────────────────────────────────────────────────────
+-- GROUP CHECK
+-- ────────────────────────────────────────────────────────────
+
 ---@diagnostic disable-next-line: duplicate-set-field
 function client.hasGroup(group)
     if not PlayerData.loaded then return end

@@ -1,57 +1,5 @@
 return {
-	['testburger'] = {
-		label = 'Test Burger',
-		weight = 220,
-		degrade = 60,
-		client = {
-			image = 'burger_chicken.png',
-			status = { hunger = 200000 },
-			anim = 'eating',
-			prop = 'burger',
-			usetime = 2500,
-			export = 'kt_inventory_examples.testburger'
-		},
-		server = {
-			export = 'kt_inventory_examples.testburger',
-			test = 'what an amazingly delicious burger, amirite?'
-		},
-		buttons = {
-			{
-				label = 'Lick it',
-				action = function(slot)
-					print('You licked the burger')
-				end
-			},
-			{
-				label = 'Squeeze it',
-				action = function(slot)
-					print('You squeezed the burger :(')
-				end
-			},
-			{
-				label = 'What do you call a vegan burger?',
-				group = 'Hamburger Puns',
-				action = function(slot)
-					print('A misteak.')
-				end
-			},
-			{
-				label = 'What do frogs like to eat with their hamburgers?',
-				group = 'Hamburger Puns',
-				action = function(slot)
-					print('French flies.')
-				end
-			},
-			{
-				label = 'Why were the burger and fries running?',
-				group = 'Hamburger Puns',
-				action = function(slot)
-					print('Because they\'re fast food.')
-				end
-			}
-		},
-		consume = 0.3
-	},
+	
 
 	['bandage'] = {
 		label = 'Bandage',
@@ -68,29 +16,6 @@ return {
 		label = 'Dirty Money',
 	},
 
-	['burger'] = {
-		label = 'Burger',
-		weight = 20,
-		client = {
-			status = { hunger = 200000 },
-			anim = 'eating',
-			prop = 'burger',
-			usetime = 2500,
-			notification = 'You ate a delicious burger'
-		},
-	},
-
-	['sprunk'] = {
-		label = 'Sprunk',
-		weight = 50,
-		client = {
-			status = { thirst = 200000 },
-			anim = { dict = 'mp_player_intdrink', clip = 'loop_bottle' },
-			prop = { model = `prop_ld_can_01`, pos = vec3(0.01, 0.01, 0.06), rot = vec3(5.0, 5.0, -180.5) },
-			usetime = 2500,
-			notification = 'You quenched your thirst with a sprunk'
-		}
-	},
 
 	['parachute'] = {
 		label = 'Parachute',
@@ -174,19 +99,6 @@ return {
 		}
 	},
 
-	['water'] = {
-		label = 'Water',
-		weight = 50,
-		client = {
-			status = { thirst = 200000 },
-			anim = { dict = 'mp_player_intdrink', clip = 'loop_bottle' },
-			prop = { model = `prop_ld_flow_bottle`, pos = vec3(0.03, 0.03, 0.02), rot = vec3(0.0, 0.0, -1.5) },
-			usetime = 2500,
-			cancel = true,
-			notification = 'You drank some refreshing water'
-		}
-	},
-
 	['radio'] = {
 		label = 'Radio',
 		weight = 10,
@@ -222,4 +134,205 @@ return {
 		label = 'Scrap Metal',
 		weight = 80,
 	},
+    -- ─────────────────────────────────────────────
+    -- 🍔 FAST FOOD
+    -- ─────────────────────────────────────────────
+
+    ['burger'] = {
+        label = 'Burger',
+        weight = 2,
+        client = {
+            image = 'burger.png',
+            status = { hunger = 200000, stress = -20000 },
+            anim = 'eating',
+            prop = 'burger',
+            usetime = 2500,
+            notification = 'Tu manges un burger 🍔'
+        }
+    },
+
+    ['cheeseburger'] = {
+        label = 'Cheeseburger',
+        weight = 4,
+        client = {
+            image = 'cheeseburger.png',
+            status = { hunger = 250000, stress = -25000 },
+            anim = 'eating',
+            prop = 'burger',
+            usetime = 2500,
+            notification = 'Tu manges un cheeseburger 🧀🍔'
+        }
+    },
+
+    ['fries'] = {
+        label = 'Frites',
+        weight = 80,
+        client = {
+            image = 'fries.png',
+            status = { hunger = 150000, stress = -10000 },
+            anim = 'eating',
+            prop = 'burger',
+            usetime = 2000,
+            notification = 'Tu manges des frites 🍟'
+        }
+    },
+
+    ['pizza'] = {
+        label = 'Pizza',
+        weight = 30,
+        client = {
+            image = 'pizza.png',
+            status = { hunger = 300000, stress = -30000 },
+            anim = 'eating',
+            prop = 'pizza',
+            usetime = 3000,
+            notification = 'Tu manges une pizza 🍕'
+        }
+    },
+
+    ['donut'] = {
+        label = 'Donut',
+        weight = 80,
+        client = {
+            image = 'donut.png',
+            status = { hunger = 90000, stress = -15000 },
+            anim = 'eating',
+            prop = 'donut',
+            usetime = 1500,
+            notification = 'Tu manges un donut 🍩'
+        }
+    },
+
+    -- ─────────────────────────────────────────────
+    -- 🥤 BOISSONS
+    -- ─────────────────────────────────────────────
+
+    ['water'] = {
+        label = 'Water',
+        weight = 50,
+        client = {
+            image = 'water.png',
+            status = { thirst = 200000 },
+            anim = { dict = 'mp_player_intdrink', clip = 'loop_bottle' },
+            prop = { model = `prop_ld_flow_bottle`, pos = vec3(0.03,0.03,0.02), rot = vec3(0,0,0) },
+            usetime = 2500,
+            notification = 'Tu bois de l’eau 💧'
+        }
+    },
+
+    ['cola'] = {
+        label = 'Cola',
+        weight = 5,
+        client = {
+            image = 'cola.png',
+            status = { thirst = 180000, stress = -5000 },
+            anim = { dict = 'mp_player_intdrink', clip = 'loop_bottle' },
+            prop = { model = `prop_ecola_can`, pos = vec3(0.01,0.01,0.06), rot = vec3(5,5,-180) },
+            usetime = 2500,
+            notification = 'Tu bois un cola 🥤'
+        }
+    },
+
+    ['energy_drink'] = {
+        label = 'Energy Drink',
+        weight = 6,
+        client = {
+            image = 'energy.png',
+            status = { thirst = 150000, stress = -10000 },
+            anim = { dict = 'mp_player_intdrink', clip = 'loop_bottle' },
+            prop = { model = `prop_energy_drink`, pos = vec3(0.01,0.01,0.06), rot = vec3(0,0,0) },
+            usetime = 2000,
+            notification = 'Tu bois une energy drink ⚡'
+        }
+    },
+
+    -- ─────────────────────────────────────────────
+    -- 🍫 SNACKS
+    -- ─────────────────────────────────────────────
+
+    ['chocolate'] = {
+        label = 'Chocolate',
+        weight = 5,
+        client = {
+            image = 'chocolate.png',
+            status = { hunger = 70000, stress = -20000 },
+            anim = 'eating',
+            prop = 'chocolate',
+            usetime = 1500,
+            notification = 'Tu manges du chocolat 🍫'
+        }
+    },
+
+    ['chips'] = {
+        label = 'Chips',
+        weight = 8,
+        client = {
+            image = 'chips.png',
+            status = { hunger = 120000, stress = -8000 },
+            anim = 'eating',
+            prop = 'chips',
+            usetime = 2000,
+            notification = 'Tu manges des chips 🍟'
+        }
+    },
+
+    -- ─────────────────────────────────────────────
+    -- 🍱 CUISINE RP (IMPORTANT POUR RP)
+    -- ─────────────────────────────────────────────
+
+    ['sandwich'] = {
+        label = 'Sandwich',
+        weight = 18,
+        client = {
+            image = 'sandwich.png',
+            status = { hunger = 180000, stress = -15000 },
+            anim = 'eating',
+            prop = 'sandwich',
+            usetime = 2500,
+            notification = 'Tu manges un sandwich 🥪'
+        }
+    },
+
+    ['taco'] = {
+        label = 'Taco',
+        weight = 12,
+        client = {
+            image = 'taco.png',
+            status = { hunger = 200000, stress = -20000 },
+            anim = 'eating',
+            prop = 'taco',
+            usetime = 2500,
+            notification = 'Tu manges un taco 🌮'
+        }
+    },
+
+    ['hotdog'] = {
+        label = 'Hotdog',
+        weight = 5,
+        client = {
+            image = 'hotdog.png',
+            status = { hunger = 190000, stress = -18000 },
+            anim = 'eating',
+            prop = 'hotdog',
+            usetime = 2500,
+            notification = 'Tu manges un hotdog 🌭'
+        }
+    },
+
+    -- ─────────────────────────────────────────────
+    -- 🍺 BONUS (alcool RP si tu actives later)
+    -- ─────────────────────────────────────────────
+
+    ['beer'] = {
+        label = 'Beer',
+        weight = 25,
+        client = {
+            image = 'beer.png',
+            status = { stress = -40000 },
+            anim = { dict = 'mp_player_intdrink', clip = 'loop_bottle' },
+            prop = { model = `prop_beer_bottle`, pos = vec3(0.01,0.01,0.06), rot = vec3(0,0,0) },
+            usetime = 2500,
+            notification = 'Tu bois une bière 🍺'
+        }
+    },
 }
