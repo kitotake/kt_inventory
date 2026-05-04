@@ -1,5 +1,11 @@
 -- modules/bridge/union/server.lua
 -- Bridge kt_inventory <-> Union Framework (SERVER)
+-- FIXES STATUS:
+--   #1 : Normalisation des valeurs items avant StatusManager.add().
+--        Les items (ex: hunger = 200000) sont sur une échelle x1000 → division par 1000.
+--        StatusManager travaille en 0-100.
+--   #2 : Guard StatusManager vérifié proprement avec message clair.
+--   #3 : Validation renforcée de `values` (type + valeurs numériques).
 
 if not lib then return end
 
@@ -35,6 +41,17 @@ end
 
 local function isValidChar(char)
     return type(char) == "table" and type(char.unique_id) == "string"
+end
+
+-- FIX #1 : normalisation des valeurs items vers l'échelle 0-100
+-- Les items définissent hunger/thirst/stress sur une échelle x1000 (ex: 200000 = +20%)
+-- StatusManager.add() attend des valeurs dans le même référentiel que StatusManager (0-100)
+local ITEM_SCALE = 1000  -- 1 unité StatusManager = 1000 unités item
+local function normalizeItemValue(raw)
+    if type(raw) ~= "number" then return 0 end
+    -- Valeurs positives = bonus, négatives = malus
+    -- On arrondit à 1 décimale pour éviter les flottants parasites
+    return math.floor((raw / ITEM_SCALE) * 10 + 0.5) / 10
 end
 
 -- ─────────────────────────────────────────────
@@ -135,51 +152,78 @@ end)
 
 -- ─────────────────────────────────────────────
 -- STATUS HOOK
--- FIX: StatusManager n'est pas garanti d'exister globalement.
--- On utilise TriggerClientEvent vers le bridge client a la place,
--- ou on verifie proprement avant d'appeler StatusManager.
+-- FIX #1 : normalisation des valeurs avant StatusManager.add()
+-- FIX #2 : guard StatusManager clair
+-- FIX #3 : validation renforcée
 -- ─────────────────────────────────────────────
 
 RegisterNetEvent("union:status:actionFromItem", function(values)
     local src = source
 
-    -- ❌ On supprime totalement le fallback client
+    -- FIX #2 : guard StatusManager
     if not StatusManager then
-        print("^1[kt_inventory] StatusManager manquant !^0")
+        print("^1[kt_inventory] StatusManager introuvable — vérifier l'ordre de chargement^0")
         return
     end
 
+    -- FIX #3 : validation du type
     if type(values) ~= "table" then return end
 
     local cache = StatusManager.cache
     if not cache or not cache[src] then
+        debug(("actionFromItem: pas de cache status pour src=%d"):format(src))
         return
     end
 
-    -- DEBUG (optionnel)
     if Config and Config.debug then
-        print("^2[KT]^0 values:", json.encode(values))
+        print("^2[KT]^0 actionFromItem values:", json.encode(values))
     end
 
-    -- ✅ PAS DE DIVISION AU DEBUT
-    if values.hunger then
-        local ok, err = pcall(StatusManager.add, src, "hunger", values.hunger)
-        if not ok then
-            lib.print.warn(('[kt_inventory:union] Erreur hunger: %s'):format(tostring(err)))
+    -- FIX #1 : normalisation ITEM_SCALE → valeurs 0-100
+    if values.hunger and type(values.hunger) == "number" then
+        local normalized = normalizeItemValue(values.hunger)
+        if normalized ~= 0 then
+            local ok, err = pcall(StatusManager.add, src, "hunger", normalized)
+            if not ok then
+                lib.print.warn(('[kt_inventory:union] Erreur hunger: %s'):format(tostring(err)))
+            end
         end
     end
 
-    if values.thirst then
-        local ok, err = pcall(StatusManager.add, src, "thirst", values.thirst)
-        if not ok then
-            lib.print.warn(('[kt_inventory:union] Erreur thirst: %s'):format(tostring(err)))
+    if values.thirst and type(values.thirst) == "number" then
+        local normalized = normalizeItemValue(values.thirst)
+        if normalized ~= 0 then
+            local ok, err = pcall(StatusManager.add, src, "thirst", normalized)
+            if not ok then
+                lib.print.warn(('[kt_inventory:union] Erreur thirst: %s'):format(tostring(err)))
+            end
         end
     end
 
-    if values.stress then
-        local ok, err = pcall(StatusManager.add, src, "stress", values.stress)
-        if not ok then
-            lib.print.warn(('[kt_inventory:union] Erreur stress: %s'):format(tostring(err)))
+    if values.stress and type(values.stress) == "number" then
+        local normalized = normalizeItemValue(values.stress)
+        if normalized ~= 0 then
+            local ok, err = pcall(StatusManager.add, src, "stress", normalized)
+            if not ok then
+                lib.print.warn(('[kt_inventory:union] Erreur stress: %s'):format(tostring(err)))
+            end
+        end
+    end
+
+    -- Forcer un flush immédiat pour que le client voie le changement instantanément
+    -- (sans attendre le prochain tick de 5 secondes)
+    if StatusManager.flushPendingSends then
+        local pending = StatusManager._pendingSend
+        if pending and pending[src] then
+            local s = StatusManager.cache[src]
+            if s then
+                TriggerClientEvent("union:status:updateAll", src, {
+                    hunger = s.hunger,
+                    thirst = s.thirst,
+                    stress = s.stress,
+                })
+                pending[src] = nil
+            end
         end
     end
 end)
