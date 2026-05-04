@@ -59,9 +59,20 @@ return {
 	},
 
 	['lockpick'] = {
-		label = 'Lockpick',
-		weight = 16,
-	},
+    label       = 'Lockpick',
+    weight      = 16,
+    stack       = true,
+    close       = true,
+    description = 'Un outil pour crocheter les serrures de véhicule.',
+},
+
+['vehicle_key'] = {
+    label       = 'Clé de véhicule',
+    weight      = 50,
+    stack       = false,   -- chaque clé est unique (metadata différente)
+    close       = false,
+    description = 'Clé associée à une plaque d\'immatriculation.',
+},
 
 	['phone'] = {
 		label = 'Phone',
@@ -141,7 +152,7 @@ return {
 
     ['burger'] = {
         label = 'Burger',
-        weight = 200,
+        weight = 20,
         client = {
             image = 'burger.png',
             status = { hunger = 200000, stress = -20000 },
@@ -154,7 +165,7 @@ return {
 
     ['cheeseburger'] = {
         label = 'Cheeseburger',
-        weight = 220,
+        weight = 22,
         client = {
             image = 'cheeseburger.png',
             status = { hunger = 250000, stress = -25000 },
@@ -167,7 +178,7 @@ return {
 
     ['fries'] = {
         label = 'Frites',
-        weight = 80,
+        weight = 8,
         client = {
             image = 'fries.png',
             status = { hunger = 150000, stress = -10000 },
@@ -181,7 +192,7 @@ return {
 
     ['pizza'] = {
         label = 'Pizza',
-        weight = 300,
+        weight = 30,
         client = {
             image = 'pizza.png',
             status = { hunger = 300000, stress = -30000 },
@@ -195,7 +206,7 @@ return {
 
     ['donut'] = {
         label = 'Donut',
-        weight = 80,
+        weight = 8,
         client = {
             image = 'donut.png',
             status = { hunger = 90000, stress = -15000 },
@@ -213,7 +224,7 @@ return {
 
     ['water'] = {
         label = 'Water',
-        weight = 500,
+        weight = 5,
         client = {
             image = 'water.png',
             status = { thirst = 200000 },
@@ -227,7 +238,7 @@ return {
 
     ['cola'] = {
         label = 'Cola',
-        weight = 350,
+        weight = 3,
         client = {
             image = 'cola.png',
             status = { thirst = 180000, stress = -5000 },
@@ -240,7 +251,7 @@ return {
 
     ['energy_drink'] = {
         label = 'Energy Drink',
-        weight = 330,
+        weight = 3,
         client = {
             image = 'energy.png',
             status = { thirst = 150000, stress = -10000 },
@@ -257,7 +268,7 @@ return {
 
     ['chocolate'] = {
         label = 'Chocolate',
-        weight = 100,
+        weight = 10,
         client = {
             image = 'chocolate.png',
             status = { hunger = 70000, stress = -20000 },
@@ -271,7 +282,7 @@ return {
 
     ['chips'] = {
         label = 'Chips',
-        weight = 120,
+        weight = 12,
         client = {
             image = 'chips.png',
             status = { hunger = 120000, stress = -8000 },
@@ -289,7 +300,7 @@ return {
 
     ['sandwich'] = {
         label = 'Sandwich',
-        weight = 180,
+        weight = 18,
         client = {
             image = 'sandwich.png',
             status = { hunger = 180000, stress = -15000 },
@@ -303,7 +314,7 @@ return {
 
     ['taco'] = {
         label = 'Taco',
-        weight = 120,
+        weight = 12,
         client = {
             image = 'taco.png',
             status = { hunger = 200000, stress = -20000 },
@@ -317,7 +328,7 @@ return {
 
     ['hotdog'] = {
         label = 'Hotdog',
-        weight = 150,
+        weight = 15,
         client = {
             image = 'hotdog.png',
             status = { hunger = 190000, stress = -18000 },
@@ -335,7 +346,7 @@ return {
 
     ['beer'] = {
         label = 'Beer',
-        weight = 500,
+        weight = 50,
         client = {
             image = 'beer.png',
             status = { stress = -40000 },

@@ -143,37 +143,43 @@ end)
 RegisterNetEvent("union:status:actionFromItem", function(values)
     local src = source
 
-    -- FIX: Verification defensive de StatusManager avant utilisation
+    -- ❌ On supprime totalement le fallback client
     if not StatusManager then
-        -- Fallback: transmettre au client pour qu'il gere lui-meme
-        TriggerClientEvent("union:status:applyFromItem", src, values)
+        print("^1[kt_inventory] StatusManager manquant !^0")
         return
     end
+
+    if type(values) ~= "table" then return end
 
     local cache = StatusManager.cache
     if not cache or not cache[src] then
-        TriggerClientEvent("union:status:applyFromItem", src, values)
         return
     end
 
+    -- DEBUG (optionnel)
+    if Config and Config.debug then
+        print("^2[KT]^0 values:", json.encode(values))
+    end
+
+    -- ✅ PAS DE DIVISION AU DEBUT
     if values.hunger then
-        local ok, err = pcall(StatusManager.add, src, "hunger", values.hunger / 10000)
+        local ok, err = pcall(StatusManager.add, src, "hunger", values.hunger)
         if not ok then
-            lib.print.warn(('[kt_inventory:union] Erreur StatusManager.add hunger: %s'):format(tostring(err)))
+            lib.print.warn(('[kt_inventory:union] Erreur hunger: %s'):format(tostring(err)))
         end
     end
 
     if values.thirst then
-        local ok, err = pcall(StatusManager.add, src, "thirst", values.thirst / 10000)
+        local ok, err = pcall(StatusManager.add, src, "thirst", values.thirst)
         if not ok then
-            lib.print.warn(('[kt_inventory:union] Erreur StatusManager.add thirst: %s'):format(tostring(err)))
+            lib.print.warn(('[kt_inventory:union] Erreur thirst: %s'):format(tostring(err)))
         end
     end
 
     if values.stress then
-        local ok, err = pcall(StatusManager.add, src, "stress", values.stress / 10000)
+        local ok, err = pcall(StatusManager.add, src, "stress", values.stress)
         if not ok then
-            lib.print.warn(('[kt_inventory:union] Erreur StatusManager.add stress: %s'):format(tostring(err)))
+            lib.print.warn(('[kt_inventory:union] Erreur stress: %s'):format(tostring(err)))
         end
     end
 end)

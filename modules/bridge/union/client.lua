@@ -53,18 +53,7 @@ RegisterNetEvent("union:status:updateAll", function(s)
     client.setPlayerStatus(s)
 end)
 
--- FIX: Handler pour le fallback serveur quand StatusManager n'est pas disponible
--- Le serveur envoie cet event si StatusManager est absent
-RegisterNetEvent("union:status:applyFromItem", function(values)
-    if type(values) ~= "table" then return end
-    client.setPlayerStatus(values)
-end)
 
--- ────────────────────────────────────────────────────────────
--- GROUP CHECK
--- ────────────────────────────────────────────────────────────
-
----@diagnostic disable-next-line: duplicate-set-field
 function client.hasGroup(group)
     if not PlayerData.loaded then return end
 
