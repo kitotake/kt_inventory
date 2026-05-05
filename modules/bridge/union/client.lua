@@ -1,9 +1,4 @@
 -- modules/bridge/union/client.lua
--- Bridge kt_inventory <-> Union Framework (CLIENT)
-
--- ────────────────────────────────────────────────────────────
--- LOGOUT / RESET
--- ────────────────────────────────────────────────────────────
 
 RegisterNetEvent('union:character:deselected', client.onLogout)
 
@@ -13,46 +8,37 @@ RegisterNetEvent('union:character:selected', function(success)
     end
 end)
 
--- ────────────────────────────────────────────────────────────
--- GROUPES
--- ────────────────────────────────────────────────────────────
-
 RegisterNetEvent('union:job:updated', function(job, grade)
     if not PlayerData.groups then PlayerData.groups = {} end
     PlayerData.groups[job] = grade
     OnPlayerData('groups', PlayerData.groups)
 end)
 
--- ────────────────────────────────────────────────────────────
--- PLAYER DATA
--- FIX: Suppression de la redefinition de client.setPlayerData
--- La version dans modules/bridge/client.lua est identique et suffit.
--- Redefinir ici causait une double ecriture sans valeur ajoutee.
--- ────────────────────────────────────────────────────────────
-
--- ────────────────────────────────────────────────────────────
--- STATUS
--- ────────────────────────────────────────────────────────────
-
 ---@diagnostic disable-next-line: duplicate-set-field
 function client.setPlayerStatus(values)
-    local state = LocalPlayer.state
+    -- Passe par le serveur → StatusManager.add() → flush → updateAll
+    TriggerServerEvent("union:status:actionFromItem", values)
+end
 
-    for k, v in pairs(values) do
+RegisterNetEvent("union:status:init", function(s)
+    if not s then return end
+    local state = LocalPlayer.state
+    for k, v in pairs(s) do
         if type(v) == "number" then
             state:set(k, v, true)
         end
     end
-end
-
-RegisterNetEvent("union:status:init", function(s)
-    client.setPlayerStatus(s)
 end)
 
 RegisterNetEvent("union:status:updateAll", function(s)
-    client.setPlayerStatus(s)
+    if not s then return end
+    local state = LocalPlayer.state
+    for k, v in pairs(s) do
+        if type(v) == "number" then
+            state:set(k, v, true)
+        end
+    end
 end)
-
 
 function client.hasGroup(group)
     if not PlayerData.loaded then return end

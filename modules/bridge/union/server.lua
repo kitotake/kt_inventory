@@ -136,67 +136,45 @@ AddEventHandler("union:job:updated", function(src, job, grade)
     debug(("job update %s => %s"):format(src, job))
 end)
 
--- ─────────────────────────────────────────────
--- STATUS HOOK
--- FIX #1 : suppression de la division par 10000
--- Les valeurs venant des items Union sont déjà en 0-100
--- FIX #2 : vérification défensive complète
--- ─────────────────────────────────────────────
+
 RegisterNetEvent("union:status:actionFromItem", function(values)
     local src = source
 
-    print(("^2[kt_inventory:union] actionFromItem reçu src=%d values=%s^0"):format(
-        src,
-        json.encode(values)
-    ))
-
-    local sm = _G.StatusManager
-    if not sm or type(sm.cache) ~= "table" or not sm.cache[src] then
-        print(("^3[kt_inventory:union] StatusManager non dispo ou pas en cache — fallback applyFromItem src=%d^0"):format(src))
-        TriggerClientEvent("union:status:applyFromItem", src, values)
-        return
-    end
+    print(("^2[kt_inventory:union] actionFromItem reçu src=%d values=%s^0"):format(src, json.encode(values)))
 
     if values.hunger and type(values.hunger) == "number" then
-        local ok, err = pcall(sm.add, src, "hunger", values.hunger)
+        local ok, err = pcall(exports["union"].AddStat, nil, src, "hunger", values.hunger)
         if not ok then
-            lib.print.warn(("[kt_inventory:union] Erreur StatusManager.add hunger: %s"):format(tostring(err)))
+            lib.print.warn(("[kt_inventory:union] Erreur hunger: %s"):format(tostring(err)))
         else
-            print(("^2[kt_inventory:union] hunger +%d → %d^0"):format(values.hunger, sm.cache[src].hunger))
+            print(("^2[kt_inventory:union] hunger +%d envoyé^0"):format(values.hunger))
         end
     end
 
     if values.thirst and type(values.thirst) == "number" then
-        local ok, err = pcall(sm.add, src, "thirst", values.thirst)
+        local ok, err = pcall(exports["union"].AddStat, nil, src, "thirst", values.thirst)
         if not ok then
-            lib.print.warn(("[kt_inventory:union] Erreur StatusManager.add thirst: %s"):format(tostring(err)))
+            lib.print.warn(("[kt_inventory:union] Erreur thirst: %s"):format(tostring(err)))
         else
-            print(("^2[kt_inventory:union] thirst +%d → %d^0"):format(values.thirst, sm.cache[src].thirst))
+            print(("^2[kt_inventory:union] thirst +%d envoyé^0"):format(values.thirst))
         end
     end
 
     if values.stress and type(values.stress) == "number" then
-        local ok, err = pcall(sm.add, src, "stress", values.stress)
+        local ok, err = pcall(exports["union"].AddStat, nil, src, "stress", values.stress)
         if not ok then
-            lib.print.warn(("[kt_inventory:union] Erreur StatusManager.add stress: %s"):format(tostring(err)))
+            lib.print.warn(("[kt_inventory:union] Erreur stress: %s"):format(tostring(err)))
         else
-            print(("^2[kt_inventory:union] stress +%d → %d^0"):format(values.stress, sm.cache[src].stress))
+            print(("^2[kt_inventory:union] stress %d envoyé^0"):format(values.stress))
         end
     end
-
-    local s = sm.cache[src]
-    if s and GetPlayerEndpoint(src) then
-        print(("^2[kt_inventory:union] flush → client src=%d h=%d t=%d s=%d^0"):format(
-            src, s.hunger, s.thirst, s.stress
-        ))
-        TriggerClientEvent("union:status:updateAll", src, {
-            hunger = s.hunger,
-            thirst = s.thirst,
-            stress = s.stress,
-        })
-        s._pendingSend = false
-    end
 end)
+
+print(("^3[DEBUG] StatusManager=%s cache=%s cache[src]=%s^0"):format(
+    tostring(_G.StatusManager),
+    _G.StatusManager and tostring(type(_G.StatusManager.cache)) or "nil",
+    _G.StatusManager and _G.StatusManager.cache and tostring(_G.StatusManager.cache[src]) or "nil"
+))
 -- ─────────────────────────────────────────────
 -- LICENSE SYSTEM
 -- ─────────────────────────────────────────────
