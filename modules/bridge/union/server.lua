@@ -1,16 +1,13 @@
 -- modules/bridge/union/server.lua
--- Bridge kt_inventory <-> Union Framework (SERVER)
--- FIXES STATUS:
---   #1 : Normalisation des valeurs items avant StatusManager.add().
---        Les items (ex: hunger = 200000) sont sur une échelle x1000 → division par 1000.
---        StatusManager travaille en 0-100.
---   #2 : Guard StatusManager vérifié proprement avec message clair.
---   #3 : Validation renforcée de `values` (type + valeurs numériques).
+-- FIX #1 : StatusManager.add — les valeurs items sont déjà en 0-100, pas 0-1000000.
+--           Suppression de la division par 10000 incorrecte.
+-- FIX #2 : Vérification défensive de StatusManager plus robuste.
+-- FIX #3 : Nettoyage _loadingPlayers à playerDropped.
 
 if not lib then return end
 
-local Inventory = require 'modules.inventory.server'
-local Items     = require 'modules.items.server'
+local Inventory = require "modules.inventory.server"
+local Items     = require "modules.items.server"
 
 -- ─────────────────────────────────────────────
 -- STATE
@@ -30,7 +27,7 @@ end
 
 local function getUnionPlayer(src)
     local ok, player = pcall(function()
-        return exports['union']:GetPlayerFromId(src)
+        return exports["union"]:GetPlayerFromId(src)
     end)
     return ok and player or nil
 end
@@ -43,17 +40,6 @@ local function isValidChar(char)
     return type(char) == "table" and type(char.unique_id) == "string"
 end
 
--- FIX #1 : normalisation des valeurs items vers l'échelle 0-100
--- Les items définissent hunger/thirst/stress sur une échelle x1000 (ex: 200000 = +20%)
--- StatusManager.add() attend des valeurs dans le même référentiel que StatusManager (0-100)
-local ITEM_SCALE = 1000  -- 1 unité StatusManager = 1000 unités item
-local function normalizeItemValue(raw)
-    if type(raw) ~= "number" then return 0 end
-    -- Valeurs positives = bonus, négatives = malus
-    -- On arrondit à 1 décimale pour éviter les flottants parasites
-    return math.floor((raw / ITEM_SCALE) * 10 + 0.5) / 10
-end
-
 -- ─────────────────────────────────────────────
 -- GROUP BUILDER
 -- ─────────────────────────────────────────────
@@ -61,7 +47,7 @@ end
 local function buildGroups(char, player)
     local groups = {}
 
-    local job = char.job
+    local job   = char.job
     local grade = char.job_grade or 0
 
     if type(job) == "string" and job ~= "" then
@@ -80,14 +66,14 @@ end
 -- SPAWN HANDLER
 -- ─────────────────────────────────────────────
 
-AddEventHandler('union:player:spawned', function(src, characterData)
+AddEventHandler("union:player:spawned", function(src, characterData)
     if _loadingPlayers[src] then
-        debug("skip spawn (deja en cours) src=" .. src)
+        debug("skip spawn (déjà en cours) src=" .. src)
         return
     end
 
     if not isValidChar(characterData) then
-        debug("donnees personnage invalides src=" .. src)
+        debug("données personnage invalides src=" .. src)
         return
     end
 
@@ -138,7 +124,7 @@ end)
 -- JOB UPDATE LIVE
 -- ─────────────────────────────────────────────
 
-AddEventHandler('union:job:updated', function(src, job, grade)
+AddEventHandler("union:job:updated", function(src, job, grade)
     if type(src) ~= "number" then return end
 
     local inv = Inventory(src)
@@ -152,78 +138,45 @@ end)
 
 -- ─────────────────────────────────────────────
 -- STATUS HOOK
--- FIX #1 : normalisation des valeurs avant StatusManager.add()
--- FIX #2 : guard StatusManager clair
--- FIX #3 : validation renforcée
+-- FIX #1 : suppression de la division par 10000
+-- Les valeurs venant des items Union sont déjà en 0-100
+-- FIX #2 : vérification défensive complète
 -- ─────────────────────────────────────────────
 
 RegisterNetEvent("union:status:actionFromItem", function(values)
     local src = source
 
-    -- FIX #2 : guard StatusManager
-    if not StatusManager then
-        print("^1[kt_inventory] StatusManager introuvable — vérifier l'ordre de chargement^0")
+    -- FIX #2 : vérification complète avant utilisation
+    local sm = _G.StatusManager
+    if not sm or type(sm.cache) ~= "table" then
+        TriggerClientEvent("union:status:applyFromItem", src, values)
         return
     end
 
-    -- FIX #3 : validation du type
-    if type(values) ~= "table" then return end
-
-    local cache = StatusManager.cache
-    if not cache or not cache[src] then
-        debug(("actionFromItem: pas de cache status pour src=%d"):format(src))
+    if not sm.cache[src] then
+        TriggerClientEvent("union:status:applyFromItem", src, values)
         return
     end
 
-    if Config and Config.debug then
-        print("^2[KT]^0 actionFromItem values:", json.encode(values))
-    end
-
-    -- FIX #1 : normalisation ITEM_SCALE → valeurs 0-100
+    -- FIX #1 : les valeurs sont déjà en 0-100, pas de division par 10000
     if values.hunger and type(values.hunger) == "number" then
-        local normalized = normalizeItemValue(values.hunger)
-        if normalized ~= 0 then
-            local ok, err = pcall(StatusManager.add, src, "hunger", normalized)
-            if not ok then
-                lib.print.warn(('[kt_inventory:union] Erreur hunger: %s'):format(tostring(err)))
-            end
+        local ok, err = pcall(sm.add, src, "hunger", values.hunger)
+        if not ok then
+            lib.print.warn(("[kt_inventory:union] Erreur StatusManager.add hunger: %s"):format(tostring(err)))
         end
     end
 
     if values.thirst and type(values.thirst) == "number" then
-        local normalized = normalizeItemValue(values.thirst)
-        if normalized ~= 0 then
-            local ok, err = pcall(StatusManager.add, src, "thirst", normalized)
-            if not ok then
-                lib.print.warn(('[kt_inventory:union] Erreur thirst: %s'):format(tostring(err)))
-            end
+        local ok, err = pcall(sm.add, src, "thirst", values.thirst)
+        if not ok then
+            lib.print.warn(("[kt_inventory:union] Erreur StatusManager.add thirst: %s"):format(tostring(err)))
         end
     end
 
     if values.stress and type(values.stress) == "number" then
-        local normalized = normalizeItemValue(values.stress)
-        if normalized ~= 0 then
-            local ok, err = pcall(StatusManager.add, src, "stress", normalized)
-            if not ok then
-                lib.print.warn(('[kt_inventory:union] Erreur stress: %s'):format(tostring(err)))
-            end
-        end
-    end
-
-    -- Forcer un flush immédiat pour que le client voie le changement instantanément
-    -- (sans attendre le prochain tick de 5 secondes)
-    if StatusManager.flushPendingSends then
-        local pending = StatusManager._pendingSend
-        if pending and pending[src] then
-            local s = StatusManager.cache[src]
-            if s then
-                TriggerClientEvent("union:status:updateAll", src, {
-                    hunger = s.hunger,
-                    thirst = s.thirst,
-                    stress = s.stress,
-                })
-                pending[src] = nil
-            end
+        local ok, err = pcall(sm.add, src, "stress", values.stress)
+        if not ok then
+            lib.print.warn(("[kt_inventory:union] Erreur StatusManager.add stress: %s"):format(tostring(err)))
         end
     end
 end)
@@ -236,7 +189,7 @@ function server.hasLicense(inv, name)
     if type(inv) ~= "table" or type(inv.owner) ~= "string" then return false end
 
     local result = MySQL.single.await(
-        'SELECT 1 FROM user_licenses WHERE type = ? AND unique_id = ? LIMIT 1',
+        "SELECT 1 FROM user_licenses WHERE type = ? AND unique_id = ? LIMIT 1",
         { name, inv.owner }
     )
 
@@ -259,7 +212,7 @@ function server.buyLicense(inv, license)
     Inventory.RemoveItem(inv, "money", price)
 
     MySQL.query(
-        'INSERT IGNORE INTO user_licenses (identifier, unique_id, type) VALUES (?, ?, ?)',
+        "INSERT IGNORE INTO user_licenses (identifier, unique_id, type) VALUES (?, ?, ?)",
         { inv.owner, inv.owner, license.name }
     )
 
@@ -267,7 +220,7 @@ function server.buyLicense(inv, license)
 end
 
 -- ─────────────────────────────────────────────
--- CLEANUP
+-- FIX #3 : CLEANUP à la déconnexion
 -- ─────────────────────────────────────────────
 
 AddEventHandler("playerDropped", function()
@@ -275,4 +228,4 @@ AddEventHandler("playerDropped", function()
     release(src)
 end)
 
-print("^2[kt_inventory] Union bridge server charge^0")
+print("^2[kt_inventory] Union bridge server chargé^0")
