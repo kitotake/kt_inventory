@@ -1,5 +1,39 @@
 return {
 
+['bank_card'] = {
+    label = 'Carte Bancaire Basique',
+    weight = 10,
+    stack = false,
+    close = true,
+    description = 'Carte bancaire standard. Dépôt max: $5 000 | Retrait max: $20 000',
+    client = {
+        image = 'card_bank.png'
+    }
+},
+
+['bank_gold_card'] = {
+    label = 'Carte Bancaire Or',
+    weight = 10,
+    stack = false,
+    close = true,
+    description = 'Carte bancaire Or. Dépôt max: $10 000 | Retrait max: $10 000',
+    client = {
+        image = 'card_gold.png'
+    }
+},
+
+['bank_diamond_card'] = {
+    label = 'Carte Bancaire Diamant',
+    weight = 10,
+    stack = false,
+    close = true,
+    description = 'Carte bancaire Diamant. Dépôt max: $50 000 | Retrait max: $25 000',
+    client = {
+        image = 'card_diamond.png'
+    }
+},
+
+
     ['bandage'] = {
         label = 'Bandage',
         weight = 115,
@@ -127,15 +161,6 @@ return {
     ['clothing'] = {
         label = 'Clothing',
         consume = 0,
-    },
-
-    ['mastercard'] = {
-        label = 'Fleeca Card',
-        stack = false,
-        weight = 10,
-        client = {
-            image = 'card_bank.png'
-        }
     },
 
     ['scrapmetal'] = {
