@@ -7,7 +7,7 @@ return {
     close = true,
     description = 'Carte bancaire standard. Dépôt max: $5 000 | Retrait max: $20 000',
     client = {
-        image = 'card_bank.png'
+        image = 'bank_card.png'
     }
 },
 
@@ -18,7 +18,7 @@ return {
     close = true,
     description = 'Carte bancaire Or. Dépôt max: $10 000 | Retrait max: $10 000',
     client = {
-        image = 'card_gold.png'
+        image = 'bank_gold_card.png'
     }
 },
 
@@ -29,8 +29,83 @@ return {
     close = true,
     description = 'Carte bancaire Diamant. Dépôt max: $50 000 | Retrait max: $25 000',
     client = {
-        image = 'card_diamond.png'
+        image = 'bank_diamond_card.png'
     }
+},
+
+ ["identity_card"] = {
+     label       = "Carte d'identité",
+     weight      = 0,
+     stack       = false,
+     close       = true,
+     description = "Carte nationale d'identité officielle.",
+     server      = {
+         export = "kt_idcard_ui.UseIdentityCard"   -- voir ci-dessous
+     }
+ },
+
+['license_card'] = {
+    label = 'Permis de conduire',
+    weight = 0,
+    stack = false,
+    close = true,
+    description = 'Permis de conduire',
+},
+
+['weapon_permit'] = {
+    label = 'Permis de port d’arme',
+    weight = 0,
+    stack = false,
+    close = true,
+    description = 'Autorisation de port d’arme',
+},
+
+['police_badge'] = {
+    label = 'Badge de police',
+    weight = 0,
+    stack = false,
+    close = true,
+    description = 'Badge officiel de police',
+},
+
+['mairie_card'] = {
+    label = 'Carte mairie',
+    weight = 0,
+    stack = false,
+    close = true,
+    description = 'Carte de mairie',
+},
+
+['gov_card'] = {
+    label = 'Carte gouvernement',
+    weight = 0,
+    stack = false,
+    close = true,
+    description = 'Carte gouvernementale',
+},
+
+['ems_card'] = {
+    label = 'Carte EMS',
+    weight = 0,
+    stack = false,
+    close = true,
+    description = 'Carte des services médicaux',
+},
+
+['company_badge'] = {
+    label = 'Badge entreprise',
+    weight = 0,
+    stack = false,
+    close = true,
+    description = 'Badge professionnel',
+},
+
+['passport'] = {
+    label = 'Passeport',
+    weight = 0,
+    stack = false,
+    close = true,
+    description = 'Passeport officiel',
 },
 
 
