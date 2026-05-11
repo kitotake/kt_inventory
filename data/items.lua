@@ -33,79 +33,94 @@ return {
     }
 },
 
- ["identity_card"] = {
-     label       = "Carte d'identité",
-     weight      = 0,
-     stack       = false,
-     close       = true,
-     description = "Carte nationale d'identité officielle.",
-     server      = {
-         export = "kt_idcard_ui.UseIdentityCard"   -- voir ci-dessous
-     }
- },
-
-['license_card'] = {
-    label = 'Permis de conduire',
+["identity_card"] = {
+    label = "Carte d'identité",
     weight = 0,
     stack = false,
     close = true,
-    description = 'Permis de conduire',
+    description = "Carte nationale d'identité officielle.",
+    server = {
+        export = "kt_idcard_ui.UseIdentityCard"
+    }
 },
 
-['weapon_permit'] = {
-    label = 'Permis de port d’arme',
+["license_card"] = {
+    label = "Permis de conduire",
     weight = 0,
     stack = false,
     close = true,
-    description = 'Autorisation de port d’arme',
+    description = "Permis de conduire",
+    server = {
+        export = "kt_idcard_ui.UseLicenseCard"
+    }
 },
 
-['police_badge'] = {
-    label = 'Badge de police',
+["weapon_permit"] = {
+    label = "Permis de port d’arme",
     weight = 0,
     stack = false,
     close = true,
-    description = 'Badge officiel de police',
+    description = "Autorisation de port d’arme",
+    server = {
+        export = "kt_idcard_ui.UseWeaponCard"
+    }
 },
 
-['mairie_card'] = {
-    label = 'Carte mairie',
+["police_badge"] = {
+    label = "Badge de police",
     weight = 0,
     stack = false,
     close = true,
-    description = 'Carte de mairie',
+    description = "Badge officiel de police",
+    server = {
+        export = "kt_idcard_ui.UsePoliceCard"
+    }
 },
 
-['gov_card'] = {
-    label = 'Carte gouvernement',
+["mairie_card"] = {
+    label = "Carte mairie",
     weight = 0,
     stack = false,
     close = true,
-    description = 'Carte gouvernementale',
+    description = "Carte de mairie"
 },
 
-['ems_card'] = {
-    label = 'Carte EMS',
+["gov_card"] = {
+    label = "Carte gouvernement",
     weight = 0,
     stack = false,
     close = true,
-    description = 'Carte des services médicaux',
+    description = "Carte gouvernementale"
 },
 
-['company_badge'] = {
-    label = 'Badge entreprise',
+["ems_card"] = {
+    label = "Carte EMS",
     weight = 0,
     stack = false,
     close = true,
-    description = 'Badge professionnel',
+    description = "Carte des services médicaux",
+    server = {
+        export = "kt_idcard_ui.UseEMSCard"
+    }
 },
 
-['passport'] = {
-    label = 'Passeport',
+["company_badge"] = {
+    label = "Badge entreprise",
     weight = 0,
     stack = false,
     close = true,
-    description = 'Passeport officiel',
+    description = "Badge professionnel"
+},
+
+["passport"] = {
+    label = "Passeport",
+    weight = 0,
+    stack = false,
+    close = true,
+    description = "Passeport officiel",
+    server = {
+        export = "kt_idcard_ui.UsePassport"
+    }
 },
 
 
@@ -438,6 +453,19 @@ return {
         client = {
             image = 'beer.png',
             status = { stress = -15 },
+            anim = { dict = 'mp_player_intdrink', clip = 'loop_bottle' },
+            prop = { model = `prop_beer_bottle`, pos = vec3(0.01, 0.01, 0.06), rot = vec3(0, 0, 0) },
+            usetime = 2500,
+            notification = 'Tu bois une biere'
+        }
+    },
+
+    ['fd'] = {
+        label = 'fd',
+        weight = 0,
+        client = {
+            image = 'beer.png',
+            status = { hunger = 250, stress = -50, thirst = 150 },
             anim = { dict = 'mp_player_intdrink', clip = 'loop_bottle' },
             prop = { model = `prop_beer_bottle`, pos = vec3(0.01, 0.01, 0.06), rot = vec3(0, 0, 0) },
             usetime = 2500,
