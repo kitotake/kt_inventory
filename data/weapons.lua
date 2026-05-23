@@ -734,6 +734,17 @@ return {
 				usetime = 2500
 			}
 		},
+		['at_flashlight_2'] = {
+			label = 'Tactical Flashlight 2',
+			weight = 120,
+			type = 'flashlight',
+			client = {
+				component = {
+					`COMPONENT_AT_PI_SNSMK2_FLSH_1`
+				},
+				usetime = 2500
+			}
+		},
 
 		['at_suppressor_light'] = {
 			label = 'Suppressor',
@@ -962,13 +973,34 @@ return {
 			weight = 280,
 			client = {
 				component = {
-					`COMPONENT_AT_PI_COMP`,
-					`COMPONENT_AT_PI_COMP_02`,
+					`COMPONENT_AT_PI_COMP`
+				},
+				usetime = 2500
+			}
+		},
+		['at_compensator_2'] = {
+			label = 'Compensator',
+			type = 'muzzle',
+			weight = 280,
+			client = {
+				component = {
+					`COMPONENT_AT_PI_COMP_02`
+				},
+				usetime = 2500
+			}
+		},
+		['at_compensator_3'] = {
+			label = 'Compensator',
+			type = 'muzzle',
+			weight = 280,
+			client = {
+				component = {
 					`COMPONENT_AT_PI_COMP_03`
 				},
 				usetime = 2500
 			}
 		},
+
 
 		['at_scope_macro'] = {
 			label = 'Macro Scope',
@@ -1069,6 +1101,18 @@ return {
 			client = {
 				component = {
 					`COMPONENT_AT_PI_RAIL`,
+					`COMPONENT_AT_SIGHTS`,
+					`COMPONENT_AT_SIGHTS_SMG`
+				},
+				usetime = 2500
+			}
+		},
+		['at_scope_holo_2'] = {
+			label = 'Holographic Sight',
+			type = 'sight',
+			weight = 280,
+			client = {
+				component = {
 					`COMPONENT_AT_PI_RAIL_02`,
 					`COMPONENT_AT_SIGHTS`,
 					`COMPONENT_AT_SIGHTS_SMG`
@@ -1076,6 +1120,7 @@ return {
 				usetime = 2500
 			}
 		},
+
 
 		['at_muzzle_flat'] = {
 			label = 'Flat Muzzle',

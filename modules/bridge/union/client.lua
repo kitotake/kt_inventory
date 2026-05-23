@@ -8,6 +8,14 @@ RegisterNetEvent('union:character:selected', function(success)
     end
 end)
 
+
+RegisterNetEvent("union:character:reload", function(success)
+    if not success then
+        client.onLogout()
+    end
+end)
+
+
 RegisterNetEvent('union:job:updated', function(job, grade)
     if not PlayerData.groups then PlayerData.groups = {} end
     PlayerData.groups[job] = grade

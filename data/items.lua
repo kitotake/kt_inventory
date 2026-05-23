@@ -1,5 +1,60 @@
 return {
 
+    -- ─────────────────────────────────────────────────────────────
+--  kt_illegal — Items ox_inventory
+-- ─────────────────────────────────────────────────────────────
+
+-- ── Cannabis ─────────────────────────────────────────────────
+['weed_seed'] = {
+    label       = 'Graine de cannabis',
+    weight      = 10,
+    stack       = true,
+    close       = true,
+    description = 'Une graine à planter.',
+},
+
+['weed_raw'] = {
+    label       = 'Cannabis brut',
+    weight      = 50,
+    stack       = true,
+    close       = true,
+    description = 'Récolte brute non traitée.',
+},
+
+['weed_packaged'] = {
+    label       = 'Cannabis emballé',
+    weight      = 30,
+    stack       = true,
+    close       = true,
+    description = 'Prêt à la vente.',
+},
+
+-- ── Consommables culture ──────────────────────────────────────
+['fertilizer'] = {
+    label       = 'Engrais',
+    weight      = 200,
+    stack       = true,
+    close       = true,
+    description = 'Accélère la croissance des plantes.',
+},
+
+['water_bottle'] = {
+    label       = "Bouteille d\'eau",
+    weight      = 100,
+    stack       = true,
+    close       = true,
+    description = 'Pour arroser les plantes.',
+},
+
+-- ── Équipement ────────────────────────────────────────────────
+['uv_lamp'] = {
+    label       = 'Lampe UV',
+    weight      = 500,
+    stack       = false,
+    close       = true,
+    description = 'Accélère la croissance en intérieur.',
+},
+
 ['bank_card'] = {
     label = 'Carte Bancaire Basique',
     weight = 10,
@@ -31,6 +86,12 @@ return {
     client = {
         image = 'bank_diamond_card.png'
     }
+},
+['bank_receipt'] ={
+    label = 'Reçu bancaire',
+    weight = 1,
+    stack = false,
+    close = true,
 },
 
 ["identity_card"] = {
