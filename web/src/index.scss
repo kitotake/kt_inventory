@@ -224,37 +224,6 @@ button:active {
   background-color: rgba(255, 255, 255, 0.12);
 }
 
-.useful-controls-button {
-  position: absolute !important;
-  bottom: 25px;
-  right: 25px;
-  transition: 200ms !important;
-  border: none;
-  color: white;
-  width: 52px;
-  height: 52px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  fill: white;
-  border-radius: 5% !important;
-  background-color: $secondaryColor !important;
-  &:hover {
-    background-color: $secondaryColorDark !important;
-    cursor: pointer;
-  }
-}
-
-.useful-controls-exit-button {
-  position: absolute !important;
-  right: 8px;
-  top: 8px;
-  border-radius: 2.5% !important;
-  color: grey !important;
-}
-
-// Dialog is used fro useful controls window
-
 
 // inventory grids
 .inventory-grid-wrapper {

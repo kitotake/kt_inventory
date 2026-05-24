@@ -1,0 +1,33 @@
+Structure du dossier pour le volume New Volume
+Le numéro de série du volume est A0EE-043F
+D:\NEW\FIVEM\UNION_FIVEM\RESOURCES\[SERVER]\[OX]\KT_INVENTORY\WEB\SRC\COMPONENTS
++---inventory
+|       index.tsx
+|       InventoryContext.tsx
+|       InventoryControl.tsx
+|       InventoryGrid.tsx
+|       InventoryHotbar.tsx
+|       InventorySlot.tsx
+|       LeftInventory.tsx
+|       RightInventory.tsx
+|       SlotTooltip.tsx
+|       UsefulControls.tsx
+|       
+\---utils
+    |   Divider.tsx
+    |   DragPreview.tsx
+    |   ItemNotifications.tsx
+    |   KeyPress.tsx
+    |   Tooltip.tsx
+    |   WeightBar.tsx
+    |   
+    +---icons
+    |       ClockIcon.tsx
+    |       
+    +---menu
+    |       Menu.tsx
+    |       
+    \---transitions
+            Fade.tsx
+            SlideUp.tsx
+            
