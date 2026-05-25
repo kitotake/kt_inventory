@@ -1,4 +1,5 @@
-// store/clothing.ts
+// web/src/store/clothing.ts
+// IMPORTANT : ce fichier doit s'appeler clothing.ts (pas clothingStore.ts)
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ClothingCategory, EquippedClothing } from '../typings/clothing';
 import { RootState } from './index';
@@ -44,7 +45,7 @@ export const clothingSlice = createSlice({
 
 export const { equipClothing, removeClothing, setSelectedSlot, setAllEquipped } = clothingSlice.actions;
 
-export const selectEquipped    = (state: RootState) => state.clothing.equipped;
+export const selectEquipped     = (state: RootState) => state.clothing.equipped;
 export const selectSelectedSlot = (state: RootState) => state.clothing.selectedSlot;
 
 export default clothingSlice.reducer;

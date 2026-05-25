@@ -1,14 +1,17 @@
+// web/src/store/index.ts
 import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import inventoryReducer from './inventory';
 import tooltipReducer from './tooltip';
 import contextMenuReducer from './contextMenu';
+import clothingReducer from './clothing'; // ← AJOUTÉ
 
 export const store = configureStore({
   reducer: {
     inventory: inventoryReducer,
     tooltip: tooltipReducer,
     contextMenu: contextMenuReducer,
+    clothing: clothingReducer, // ← AJOUTÉ
   },
 });
 
