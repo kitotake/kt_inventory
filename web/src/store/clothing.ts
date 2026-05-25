@@ -1,7 +1,6 @@
-// web/src/store/clothing.ts
-// IMPORTANT : ce fichier doit s'appeler clothing.ts (pas clothingStore.ts)
+// store/clothing.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ClothingCategory, EquippedClothing } from '../typings/clothing';
+import { ClothingCategory, EquippedClothing, EquippedClothingItem } from '../typings/clothing';
 import { RootState } from './index';
 
 interface ClothingState {
@@ -22,14 +21,11 @@ export const clothingSlice = createSlice({
       state,
       action: PayloadAction<{
         category: ClothingCategory;
-        name: string;
-        label: string;
-        drawable: number;
-        texture: number;
+        item: EquippedClothingItem;
       }>
     ) {
-      const { category, name, label, drawable, texture } = action.payload;
-      state.equipped[category] = { name, label, drawable, texture };
+      const { category, item } = action.payload;
+      state.equipped[category] = item;
     },
     removeClothing(state, action: PayloadAction<ClothingCategory>) {
       state.equipped[action.payload] = null;

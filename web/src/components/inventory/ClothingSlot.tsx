@@ -29,84 +29,54 @@ interface Props {
   item?: EquippedClothingItem | null;
 }
 
-const ClothingSlot: React.FC<Props> = ({
-  category,
-  label,
-  icon,
-  item,
-}) => {
+const ClothingSlot: React.FC<Props> = ({ category, label, icon, item }) => {
   const dispatch = useAppDispatch();
-
   const selected = useAppSelector(selectSelectedSlot);
 
   const isSelected = selected === category;
   const isEquipped = !!item;
 
-  // =====================================================
-  // DROP SYSTEM
-  // =====================================================
+  const [{ isOver }, drop] = useDrop<DragSource, void, { isOver: boolean }>(
+    () => ({
+      accept: 'SLOT',
+      collect: (monitor) => ({
+        isOver: monitor.isOver(),
+      }),
+      canDrop: (source) => source.inventory === InventoryType.PLAYER,
+      drop: (source) => {
+        if (!source.item) return;
 
-  const [{ isOver }, drop] = useDrop<
-    DragSource,
-    void,
-    { isOver: boolean }
-  >(() => ({
-    accept: 'SLOT',
-
-    collect: (monitor) => ({
-      isOver: monitor.isOver(),
-    }),
-
-    canDrop: (source) => {
-      return source.inventory === InventoryType.PLAYER;
-    },
-
-    drop: (source) => {
-      if (!source.item) return;
-
-      fetchNui('equipClothing', {
-        slot: source.item.slot,
-        category,
-      });
-
-      dispatch(
-        equipClothing({
+        fetchNui('equipClothing', {
+          slot: source.item.slot,
           category,
-          item: {
-            name: source.item.name,
-            label: source.item.name,
-          },
-        })
-      );
+        });
 
-      dispatch(closeTooltip());
-    },
-  }));
+        dispatch(
+          equipClothing({
+            category,
+            item: {
+              name: source.item.name,
+              label: source.item.name,
+            },
+          })
+        );
 
-  // =====================================================
-  // CLICK
-  // =====================================================
+        dispatch(closeTooltip());
+      },
+    }),
+    [category]
+  );
 
   const handleClick = () => {
     dispatch(setSelectedSlot(isSelected ? null : category));
   };
 
-  // =====================================================
-  // REMOVE
-  // =====================================================
-
-  const handleRightClick = (
-    e: React.MouseEvent<HTMLDivElement>
-  ) => {
+  const handleRightClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
-
     if (!item) return;
 
     dispatch(removeClothing(category));
-
-    fetchNui('removeClothing', {
-      category,
-    });
+    fetchNui('removeClothing', { category });
   };
 
   return (
@@ -117,12 +87,13 @@ const ClothingSlot: React.FC<Props> = ({
         'clothing-slot',
         isSelected ? 'clothing-slot--selected' : '',
         isEquipped ? 'clothing-slot--equipped' : '',
-      ].join(' ')}
+      ]
+        .filter(Boolean)
+        .join(' ')}
       onClick={handleClick}
       onContextMenu={handleRightClick}
       onMouseEnter={() => {
         if (!item) return;
-
         dispatch(
           openTooltip({
             item: item as any,
@@ -130,19 +101,11 @@ const ClothingSlot: React.FC<Props> = ({
           })
         );
       }}
-      onMouseLeave={() => {
-        dispatch(closeTooltip());
-      }}
+      onMouseLeave={() => dispatch(closeTooltip())}
       style={{
         opacity: 1,
-        border: isOver
-          ? '1px dashed rgba(255,255,255,0.4)'
-          : '',
-
-        backgroundImage: item
-          ? `url(${getItemUrl(item.name)})`
-          : 'none',
-
+        border: isOver ? '1px dashed rgba(255,255,255,0.4)' : '',
+        backgroundImage: item ? `url(${getItemUrl(item.name)})` : 'none',
         backgroundSize: '70%',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
@@ -150,13 +113,11 @@ const ClothingSlot: React.FC<Props> = ({
     >
       {!item && (
         <>
-          <i
-            className={`ti ${icon} clothing-slot__icon`}
-            aria-hidden="true"
-          />
-
+          <i className={`ti ${icon} clothing-slot__icon`} aria-hidden="true" />
           <span className="clothing-slot__label">
-            {label}
+            <div className="inventory-slot-label-box">
+              <div className="inventory-slot-label-text">{label}</div>
+            </div>
           </span>
         </>
       )}
@@ -164,9 +125,7 @@ const ClothingSlot: React.FC<Props> = ({
       {item && (
         <div className="item-slot-wrapper">
           <div className="inventory-slot-label-box">
-            <div className="inventory-slot-label-text">
-              {item.label}
-            </div>
+            <div className="inventory-slot-label-text">{item.label}</div>
           </div>
         </div>
       )}

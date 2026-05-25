@@ -1,39 +1,22 @@
 // components/inventory/ClothingGrid.tsx
 
 import React from 'react';
-
 import { useAppSelector } from '../../store';
-
-import {
-  ClothingSlotData,
-} from '../../typings/clothing';
-
-import {
-  selectEquipped,
-} from '../../store/clothing';
-
+import { ClothingSlotData } from '../../typings/clothing';
+import { selectEquipped } from '../../store/clothing';
 import ClothingSlot from './ClothingSlot';
 
 interface Props {
-  title: string;
   side?: 'left' | 'right';
   slots: ClothingSlotData[];
 }
 
-const ClothingGrid: React.FC<Props> = ({
-  title,
-  side = 'left',
-  slots,
-}) => {
+const ClothingGrid: React.FC<Props> = ({  side = 'left', slots }) => {
   const equipped = useAppSelector(selectEquipped);
 
   return (
-    <div
-      className={`clothing-panel clothing-panel--${side}`}
-    >
-      <div className="clothing-panel__title">
-        {title}
-      </div>
+    <div className={`clothing-panel clothing-panel--${side}`}>
+      
 
       <div className="clothing-panel__slots">
         {slots.map((slot) => (

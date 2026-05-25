@@ -11,7 +11,7 @@ import {
 const RightInventoryClothing: React.FC = () => {
   return (
     <ClothingGrid
-      title="Vêtements"
+      
       side="right"
       slots={RIGHT_CLOTHING_SLOTS}
     />
