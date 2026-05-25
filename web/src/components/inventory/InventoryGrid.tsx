@@ -1,9 +1,4 @@
-import React, {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import { Inventory } from '../../typings';
 
@@ -26,21 +21,13 @@ const InventoryGrid: React.FC<{
   // ======================================================
 
   const weight = useMemo(
-    () =>
-      inventory.maxWeight !== undefined
-        ? Math.floor(
-            getTotalWeight(inventory.items) * 1000
-          ) / 1000
-        : 0,
+    () => (inventory.maxWeight !== undefined ? Math.floor(getTotalWeight(inventory.items) * 1000) / 1000 : 0),
 
     [inventory.maxWeight, inventory.items]
   );
 
   const weightPercent = useMemo(
-    () =>
-      inventory.maxWeight
-        ? (weight / inventory.maxWeight) * 100
-        : 0,
+    () => (inventory.maxWeight ? (weight / inventory.maxWeight) * 100 : 0),
 
     [weight, inventory.maxWeight]
   );
@@ -57,9 +44,7 @@ const InventoryGrid: React.FC<{
     threshold: 0.5,
   });
 
-  const isBusy = useAppSelector(
-    (state) => state.inventory.isBusy
-  );
+  const isBusy = useAppSelector((state) => state.inventory.isBusy);
 
   useEffect(() => {
     if (entry && entry.isIntersecting) {
@@ -75,72 +60,39 @@ const InventoryGrid: React.FC<{
     <div
       className="inventory-grid-wrapper"
       style={{
-        pointerEvents: isBusy
-          ? 'none'
-          : 'auto',
+        pointerEvents: isBusy ? 'none' : 'auto',
       }}
     >
       {/* HEADER */}
       <div>
-
         <div className="inventory-grid-header-wrapper">
-
           <p>{inventory.label}</p>
 
           {inventory.maxWeight && (
             <div className="inventory-header-weight">
+             
 
-              <span className="inventory-header-weight__text">
-                {weight / 1000}/
-                {inventory.maxWeight / 1000}
-                kg
+              <WeightBar percent={weightPercent} />
+               <span className="inventory-header-weight__text">
+                {weight / 1000}/{inventory.maxWeight / 1000}kg
               </span>
-
-              <WeightBar
-                percent={weightPercent}
-              />
-
             </div>
           )}
-
         </div>
-
       </div>
 
       {/* GRID */}
-      <div
-        className="inventory-grid-container"
-        ref={containerRef}
-      >
-        {inventory.items
-          .slice(
-            0,
-            (page + 1) * PAGE_SIZE
-          )
-          .map((item, index) => (
-            <InventorySlot
-              key={`${inventory.type}-${inventory.id}-${item.slot}`}
-
-              item={item}
-
-              ref={
-                index ===
-                (page + 1) * PAGE_SIZE - 1
-                  ? ref
-                  : null
-              }
-
-              inventoryType={
-                inventory.type
-              }
-
-              inventoryGroups={
-                inventory.groups
-              }
-
-              inventoryId={inventory.id}
-            />
-          ))}
+      <div className="inventory-grid-container" ref={containerRef}>
+        {inventory.items.slice(0, (page + 1) * PAGE_SIZE).map((item, index) => (
+          <InventorySlot
+            key={`${inventory.type}-${inventory.id}-${item.slot}`}
+            item={item}
+            ref={index === (page + 1) * PAGE_SIZE - 1 ? ref : null}
+            inventoryType={inventory.type}
+            inventoryGroups={inventory.groups}
+            inventoryId={inventory.id}
+          />
+        ))}
       </div>
     </div>
   );
