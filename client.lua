@@ -1214,15 +1214,19 @@ RegisterNetEvent('kt_inventory:setPlayerInventory', function(currentDrops, inven
 		end
 
 		ItemData[v.name] = {
-			label = v.label,
-			stack = v.stack,
-			close = v.close,
-			count = 0,
-			description = v.description,
-			buttons = buttons,
-			ammoName = v.ammoname,
-			image = v.client?.image
-		}
+	label = v.label,
+	stack = v.stack,
+	close = v.close,
+	count = 0,
+	description = v.description,
+	buttons = buttons,
+	ammoName = v.ammoname,
+	image = v.client?.image,
+
+	-- Clothing System
+	category = v.category,
+	clothingSlot = v.clothingSlot,
+}
 	end
 
 	for _, data in pairs(inventory) do

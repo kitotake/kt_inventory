@@ -383,6 +383,19 @@ button:active {
     transition: color 120ms ease;
 }
 
+// ──────────────────────────────────────────────
+// CLOTHING SLOT — état rejeté (drop refusé)
+// ──────────────────────────────────────────────
+
+.inventory-slot.clothing-slot.clothing-slot--rejected {
+  background-color: rgba(231, 76, 60, 0.08);
+  border-color: rgba(231, 76, 60, 0.6) !important;
+
+  .clothing-slot__icon {
+    color: rgba(231, 76, 60, 0.7);
+  }
+}
+
 .clothing-slot__label {
     position: absolute;
 

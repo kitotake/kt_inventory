@@ -127,4 +127,60 @@ return {
             image = 'clothing_tenu_mechanic.png',
         },
     },
+
+    -- Remplace les deux lignes existantes :
+['clothing'] = {
+    label = 'Clothing',
+    consume = 0,
+},
+['clothing_tenue'] = {
+    label = 'clothing tenue',
+    consume = 0,
+},
+
+-- Par :
+['clothing_hat_001'] = {
+    label       = 'Bonnet noir',
+    weight      = 50,
+    stack       = false,
+    close       = false,
+    category    = 'clothing',      -- ← lu par le NUI via Items[name].category
+    clothingSlot = 'hat',          -- ← lu par le NUI via Items[name].clothingSlot
+},
+
+['clothing_pants_001'] = {
+    label       = 'Jean noir',
+    weight      = 200,
+    stack       = false,
+    close       = false,
+    category    = 'clothing',
+    clothingSlot = 'pants',
+},
+
+['clothing_shoes_001'] = {
+    label       = 'Baskets blanches',
+    weight      = 150,
+    stack       = false,
+    close       = false,
+    category    = 'clothing',
+    clothingSlot = 'shoes',
+},
+
+['clothing_top_001'] = {
+    label       = 'Hoodie',
+    weight      = 200,
+    stack       = false,
+    close       = false,
+    category    = 'clothing',
+    clothingSlot = 'top',
+},
+
+['clothing_tenu_police'] = {
+    label       = 'Tenue Police',
+    weight      = 500,
+    stack       = false,
+    close       = false,
+    category    = 'clothing_tenu',  -- ← accepté dans tous les slots clothing
+    -- pas de clothingSlot : la tenue est distribuée sur tous les slots par le Lua
+},
 }

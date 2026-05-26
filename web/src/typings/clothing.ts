@@ -1,5 +1,4 @@
 // typings/clothing.ts
-
 export type ClothingCategory =
   | 'hat'
   | 'mask'
@@ -18,67 +17,91 @@ export type ClothingCategory =
   | 'bracelet'
   | 'shoes';
 
-// Type d'item clothing : pièce individuelle ou tenue complète
 export type ClothingItemType = 'clothing' | 'clothing_tenu';
 
 export interface EquippedClothingItem {
-  name: string;
-  label: string;
-  /** Type de l'item : pièce ou tenue complète */
+  name:      string;
+  label:     string;
   itemType?: ClothingItemType;
-  /** Pour clothing_tenu : dictionnaire catégorie → drawable/texture */
-  outfitData?: Partial<Record<ClothingCategory, { drawable: number; texture: number; palette?: number }>>;
+  outfitData?: Partial<Record<ClothingCategory, {
+    drawable: number;
+    texture:  number;
+    palette?: number;
+  }>>;
 }
 
 export interface ClothingSlotData {
   category: ClothingCategory;
-  label: string;
-  icon: string;
-  side: 'left' | 'right';
+  label:    string;
+  icon:     string;
+  side:     'left' | 'right';
+  /**
+   * Liste des catégories d'items acceptées dans ce slot.
+   * Un slot 'hat' n'accepte QUE les items dont `clothingSlot === 'hat'`
+   * (ou une tenue complète via 'clothing_tenu').
+   */
+  accepts:  ClothingCategory[];
 }
 
 export interface EquippedClothing {
   [category: string]: EquippedClothingItem | null;
 }
 
-// ======================================================
-// SLOT DEFINITIONS
-// ======================================================
+// ──────────────────────────────────────────────
+// SLOT DEFINITIONS avec accepts strict
+// ──────────────────────────────────────────────
 
 export const LEFT_CLOTHING_SLOTS: ClothingSlotData[] = [
-  { category: 'hat',     label: 'Chapeau',   icon: 'ti-hat',        side: 'left' },
-  { category: 'mask',    label: 'Masque',    icon: 'ti-mask',       side: 'left' },
-  { category: 'glasses', label: 'Lunettes',  icon: 'ti-eyeglass',   side: 'left' },
-  { category: 'chain',   label: 'Écharpe',   icon: 'ti-scarf',      side: 'left' },
-  { category: 'gloves',  label: 'Gants',     icon: 'ti-glove',      side: 'left' },
-  { category: 'top',     label: 'Veste',     icon: 'ti-shirt',      side: 'left' },
-  { category: 'watch',   label: 'Montre',    icon: 'ti-watch',      side: 'left' },
-  { category: 'pants',   label: 'Pantalon',  icon: 'ti-git-branch', side: 'left' },
+  { category: 'hat',     label: 'Chapeau',  icon: 'ti-hat',        side: 'left',  accepts: ['hat']       },
+  { category: 'mask',    label: 'Masque',   icon: 'ti-mask',       side: 'left',  accepts: ['mask']      },
+  { category: 'glasses', label: 'Lunettes', icon: 'ti-eyeglass',   side: 'left',  accepts: ['glasses']   },
+  { category: 'chain',   label: 'Écharpe',  icon: 'ti-scarf',      side: 'left',  accepts: ['chain']     },
+  { category: 'gloves',  label: 'Gants',    icon: 'ti-glove',      side: 'left',  accepts: ['gloves']    },
+  { category: 'top',     label: 'Veste',    icon: 'ti-shirt',      side: 'left',  accepts: ['top']       },
+  { category: 'watch',   label: 'Montre',   icon: 'ti-watch',      side: 'left',  accepts: ['watch']     },
+  { category: 'pants',   label: 'Pantalon', icon: 'ti-git-branch', side: 'left',  accepts: ['pants']     },
 ];
 
 export const RIGHT_CLOTHING_SLOTS: ClothingSlotData[] = [
-  { category: 'cap',        label: 'Casquette',  icon: 'ti-cap',      side: 'right' },
-  { category: 'hair',       label: 'Coiffure',   icon: 'ti-scissors', side: 'right' },
-  { category: 'bracelet',   label: 'Bracelet',   icon: 'ti-diamond',  side: 'right' },
-  { category: 'bag',        label: 'Sac',        icon: 'ti-backpack', side: 'right' },
-  { category: 'shoes',      label: 'Chaussures', icon: 'ti-shoe',     side: 'right' },
-  { category: 'armor',      label: 'Gilet',      icon: 'ti-shield',   side: 'right' },
-  { category: 'undershirt', label: 'Sous-vêt.',  icon: 'ti-shirt',    side: 'right' },
-  { category: 'ears',       label: 'Boucles',    icon: 'ti-ear',      side: 'right' },
+  { category: 'cap',        label: 'Casquette',  icon: 'ti-cap',      side: 'right', accepts: ['cap']        },
+  { category: 'hair',       label: 'Coiffure',   icon: 'ti-scissors', side: 'right', accepts: ['hair']       },
+  { category: 'bracelet',   label: 'Bracelet',   icon: 'ti-diamond',  side: 'right', accepts: ['bracelet']   },
+  { category: 'bag',        label: 'Sac',        icon: 'ti-backpack', side: 'right', accepts: ['bag']        },
+  { category: 'shoes',      label: 'Chaussures', icon: 'ti-shoe',     side: 'right', accepts: ['shoes']      },
+  { category: 'armor',      label: 'Gilet',      icon: 'ti-shield',   side: 'right', accepts: ['armor']      },
+  { category: 'undershirt', label: 'Sous-vêt.',  icon: 'ti-shirt',    side: 'right', accepts: ['undershirt'] },
+  { category: 'ears',       label: 'Boucles',    icon: 'ti-ear',      side: 'right', accepts: ['ears']       },
 ];
 
-// ======================================================
+// ──────────────────────────────────────────────
 // HELPERS
-// ======================================================
+// ──────────────────────────────────────────────
 
-/**
- * Retourne true si le nom d'item correspond à une tenue complète (clothing_tenu)
- */
 export const isOutfitItem = (itemName: string): boolean =>
-  itemName?.startsWith('clothing_tenu') || itemName?.includes('_tenu') || false;
+  Boolean(itemName?.startsWith('clothing_tenu') || itemName?.includes('_tenu'));
 
-/**
- * Retourne le type d'item clothing
- */
 export const getClothingItemType = (itemName: string): ClothingItemType =>
   isOutfitItem(itemName) ? 'clothing_tenu' : 'clothing';
+
+/**
+ * Retourne true si l'item peut être déposé dans le slot donné.
+ * Règles :
+ *  1. L'item doit venir de l'inventaire joueur.
+ *  2. category doit être 'clothing' ou 'clothing_tenu'.
+ *  3. Pour 'clothing'      : Items[name].clothingSlot doit matcher slot.accepts.
+ *  4. Pour 'clothing_tenu' : accepté dans tous les slots (ou refusé selon config).
+ */
+export const canDropInSlot = (
+  itemName: string,
+  itemCategory: string | undefined,
+  slotAccepts: ClothingCategory[],
+  itemClothingSlot: ClothingCategory | undefined,
+): boolean => {
+  if (!itemCategory) return false;
+  if (itemCategory !== 'clothing' && itemCategory !== 'clothing_tenu') return false;
+  // Tenue complète : acceptée partout (le Lua distribue sur tous les slots)
+  if (itemCategory === 'clothing_tenu') return true;
+  // Pièce individuelle : le clothingSlot de l'item doit correspondre
+  if (!itemClothingSlot) return false;
+  return slotAccepts.includes(itemClothingSlot);
+};

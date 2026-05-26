@@ -241,6 +241,9 @@ return {
         }
     },
 
+
+
+
     ['lockpick'] = {
         label = 'Lockpick',
         weight = 16,
@@ -307,15 +310,6 @@ return {
             anim = { dict = 'clothingshirt', clip = 'try_shirt_positive_d' },
             usetime = 2500
         }
-    },
-
-    ['clothing'] = {
-        label = 'Clothing',
-        consume = 0,
-    },
-        ['clothing_tenue'] = {
-        label = 'clothing tenue',
-        consume = 0,
     },
 
     ['scrapmetal'] = {
