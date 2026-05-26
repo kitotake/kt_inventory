@@ -88,9 +88,9 @@ const InventoryGrid: React.FC<{
                 currentWeight={weight * 1000}
                 maxWeight={inventory.maxWeight}
               />
-              <span className="inventory-header-weight__text">
+              {/* <span className="inventory-header-weight__text">
                 {weight / 1000}/{inventory.maxWeight / 1000}kg
-              </span>
+              </span> */}
             </div>
           )}
         </div>

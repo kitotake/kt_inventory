@@ -22,7 +22,7 @@ debugData([
         slots: 50,
         label: 'Bob Smith',
         weight: 3000,
-        maxWeight: 5000,
+        maxWeight: 25000,
         items: [
           {
             slot: 1,
@@ -37,8 +37,17 @@ debugData([
             },
             count: 5,
           },
-          { slot: 2, name: 'powersaw', weight: 0, count: 1, metadata: { durability: 75 } },
-          { slot: 3, name: 'copper', weight: 100, count: 12, metadata: { type: 'Special' } },
+          { slot: 2,
+            name: 'powersaw',
+            weight: 0,
+            count: 1,
+            metadata: { durability: 75 }
+          },
+          { slot: 3,
+            name: 'copper',
+            weight: 100,
+            count: 12,
+            metadata: { type: 'Special' } },
           {
             slot: 4,
             name: 'water',
@@ -46,7 +55,9 @@ debugData([
             count: 1,
             metadata: { description: 'Generic item description' },
           },
-          { slot: 5, name: 'water', weight: 100, count: 1 },
+          { slot: 5, name: 'water', weight: 15000, count: 1 },
+          { slot: 7, name: 'clothing', weight: 100, count: 1 },
+          { slot: 8, name: 'Masque', weight: 0, count: 1 },
           {
             slot: 6,
             name: 'backwoods',
@@ -56,6 +67,7 @@ debugData([
               label: 'Russian Cream',
               imageurl: 'https://i.imgur.com/2xHhTTz.png',
             },
+            
           },
         ],
       },
@@ -65,7 +77,7 @@ debugData([
         slots: 5000,
         label: 'Bob Smith',
         weight: 3000,
-        maxWeight: 5000,
+        maxWeight: 25000,
         items: [
           {
             slot: 1,
@@ -113,15 +125,15 @@ const App: React.FC = () => {
   return (
     <div className="app-wrapper">
       <InventoryComponent />
-      
+
       <DragPreview />
       <KeyPress />
     </div>
   );
 };
 
-addEventListener("dragstart", function(event) {
-  event.preventDefault()
-})
+addEventListener('dragstart', function (event) {
+  event.preventDefault();
+});
 
 export default App;
