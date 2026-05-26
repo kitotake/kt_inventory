@@ -11,6 +11,7 @@ import DragPreview from './components/utils/DragPreview';
 import { fetchNui } from './utils/fetchNui';
 import { useDragDropManager } from 'react-dnd';
 import KeyPress from './components/utils/KeyPress';
+import { useEffect } from 'react';
 
 debugData([
   {
@@ -37,17 +38,8 @@ debugData([
             },
             count: 5,
           },
-          { slot: 2,
-            name: 'powersaw',
-            weight: 0,
-            count: 1,
-            metadata: { durability: 75 }
-          },
-          { slot: 3,
-            name: 'copper',
-            weight: 100,
-            count: 12,
-            metadata: { type: 'Special' } },
+          { slot: 2, name: 'powersaw', weight: 0, count: 1, metadata: { durability: 75 } },
+          { slot: 3, name: 'copper', weight: 100, count: 12, metadata: { type: 'Special' } },
           {
             slot: 4,
             name: 'water',
@@ -67,7 +59,6 @@ debugData([
               label: 'Russian Cream',
               imageurl: 'https://i.imgur.com/2xHhTTz.png',
             },
-            
           },
         ],
       },
@@ -103,6 +94,11 @@ const App: React.FC = () => {
   const dispatch = useAppDispatch();
   const manager = useDragDropManager();
 
+  // Signal to FiveM that the UI is ready — must be in useEffect, not render body
+  useEffect(() => {
+    fetchNui('uiLoaded', {});
+  }, []);
+
   useNuiEvent<{
     locale: { [key: string]: string };
     items: typeof Items;
@@ -115,8 +111,6 @@ const App: React.FC = () => {
     setImagePath(imagepath);
     dispatch(setupInventory({ leftInventory }));
   });
-
-  fetchNui('uiLoaded', {});
 
   useNuiEvent('closeInventory', () => {
     manager.dispatch({ type: 'dnd-core/END_DRAG' });

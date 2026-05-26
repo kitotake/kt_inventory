@@ -1594,8 +1594,11 @@ RegisterNetEvent('kt_inventory:viewInventory', function(left, right)
 end)
 
 RegisterNUICallback('uiLoaded', function(_, cb)
-	client.uiLoaded = true
-	cb(1)
+	print('UI loaded')
+    client.uiLoaded = true
+	print('UI loaded - callback')
+    cb(1)
+	print('UI loaded - callback complete')
 end)
 
 RegisterNUICallback('getItemData', function(itemName, cb)
