@@ -13,13 +13,23 @@ const SlotTooltip: React.ForwardRefRenderFunction<
   { item: SlotWithItem; inventoryType: Inventory['type']; style: React.CSSProperties }
 > = ({ item, inventoryType, style }, ref) => {
   const additionalMetadata = useAppSelector((state) => state.inventory.additionalMetadata);
-  const itemData = useMemo(() => Items[item.name], [item]);
+  const itemData   = useMemo(() => Items[item.name], [item]);
   const ingredients = useMemo(() => {
     if (!item.ingredients) return null;
     return Object.entries(item.ingredients).sort((a, b) => a[1] - b[1]);
   }, [item]);
+
+  // Description : priorité metadata.description → itemData.description
   const description = item.metadata?.description || itemData?.description;
-  const ammoName = itemData?.ammoName && Items[itemData?.ammoName]?.label;
+  const ammoName    = itemData?.ammoName && Items[itemData?.ammoName]?.label;
+
+  // Poids formaté pour affichage dans tooltip
+  const weightLabel = useMemo(() => {
+    if (!item.weight || item.weight === 0) return null;
+    return item.weight >= 1000
+      ? `${(item.weight / 1000).toFixed(2)} kg`
+      : `${item.weight} g`;
+  }, [item.weight]);
 
   return (
     <>
@@ -44,13 +54,23 @@ const SlotTooltip: React.ForwardRefRenderFunction<
             )}
           </div>
           <Divider />
+
+          {/* Description depuis metadata en priorité */}
           {description && (
             <div className="tooltip-description">
               <ReactMarkdown className="tooltip-markdown">{description}</ReactMarkdown>
             </div>
           )}
+
           {inventoryType !== 'crafting' ? (
             <>
+              {/* Poids de l'item (depuis metadata si dispo, sinon weight brut) */}
+              {weightLabel && (
+                <p style={{ color: 'rgba(193,194,197,0.6)', fontSize: '11px' }}>
+                  ⚖ {weightLabel}
+                </p>
+              )}
+
               {item.durability !== undefined && (
                 <p>
                   {Locale.ui_durability}: {Math.trunc(item.durability)}
@@ -98,16 +118,16 @@ const SlotTooltip: React.ForwardRefRenderFunction<
             <div className="tooltip-ingredients">
               {ingredients &&
                 ingredients.map((ingredient) => {
-                  const [item, count] = [ingredient[0], ingredient[1]];
+                  const [ingredientName, count] = [ingredient[0], ingredient[1]];
                   return (
-                    <div className="tooltip-ingredient" key={`ingredient-${item}`}>
-                      <img src={item ? getItemUrl(item) : 'none'} alt="item-image" />
+                    <div className="tooltip-ingredient" key={`ingredient-${ingredientName}`}>
+                      <img src={ingredientName ? getItemUrl(ingredientName) : 'none'} alt="item-image" />
                       <p>
                         {count >= 1
-                          ? `${count}x ${Items[item]?.label || item}`
+                          ? `${count}x ${Items[ingredientName]?.label || ingredientName}`
                           : count === 0
-                          ? `${Items[item]?.label || item}`
-                          : count < 1 && `${count * 100}% ${Items[item]?.label || item}`}
+                          ? `${Items[ingredientName]?.label || ingredientName}`
+                          : count < 1 && `${count * 100}% ${Items[ingredientName]?.label || ingredientName}`}
                       </p>
                     </div>
                   );

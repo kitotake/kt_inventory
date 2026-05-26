@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 
 const colorChannelMixer = (a: number, b: number, amount: number) =>
   a * amount + b * (1 - amount);
@@ -15,9 +15,23 @@ const COLORS = {
 interface Props {
   percent: number;
   durability?: boolean;
+  /** Texte à afficher dans le tooltip au survol de l'icône poids */
+  weightDescription?: string;
+  /** Poids courant en grammes (affiché dans tooltip) */
+  currentWeight?: number;
+  /** Poids max en grammes (affiché dans tooltip) */
+  maxWeight?: number;
 }
 
-const WeightBar: React.FC<Props> = ({ percent, durability }) => {
+const WeightBar: React.FC<Props> = ({
+  percent,
+  durability,
+  weightDescription,
+  currentWeight,
+  maxWeight,
+}) => {
+  const [tooltipVisible, setTooltipVisible] = useState(false);
+
   const color = useMemo(
     () =>
       durability
@@ -49,11 +63,34 @@ const WeightBar: React.FC<Props> = ({ percent, durability }) => {
   }
 
   // ======================================================
+  // Tooltip content
+  // ======================================================
+
+  const buildTooltip = () => {
+    if (weightDescription) return weightDescription;
+    if (currentWeight !== undefined && maxWeight !== undefined) {
+      const cur = currentWeight >= 1000
+        ? `${(currentWeight / 1000).toFixed(2)} kg`
+        : `${currentWeight} g`;
+      const max = maxWeight >= 1000
+        ? `${(maxWeight / 1000).toFixed(2)} kg`
+        : `${maxWeight} g`;
+      return `${cur} / ${max}`;
+    }
+    return `${Math.round(percent)}%`;
+  };
+
+  // ======================================================
   // WEIGHT CIRCLE
   // ======================================================
 
   return (
-    <div className="weight-circle">
+    <div
+      className="weight-circle"
+      onMouseEnter={() => setTooltipVisible(true)}
+      onMouseLeave={() => setTooltipVisible(false)}
+      style={{ cursor: 'default' }}
+    >
       <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
         {/* Background track */}
         <path
@@ -69,7 +106,7 @@ const WeightBar: React.FC<Props> = ({ percent, durability }) => {
         />
       </svg>
 
-      {/* Icône poids — SVG Tabler inline, pas de dépendance FA */}
+      {/* Weight icon */}
       <div className="weight-circle__icon">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -84,12 +121,35 @@ const WeightBar: React.FC<Props> = ({ percent, durability }) => {
           aria-hidden="true"
         >
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-          {/* cercle du haut */}
           <path d="M12 6m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
-          {/* sac */}
           <path d="M6.835 9h10.33a1 1 0 0 1 .984 .821l1.637 9a1 1 0 0 1 -.984 1.179h-13.604a1 1 0 0 1 -.984 -1.179l1.637 -9a1 1 0 0 1 .984 -.821z" />
         </svg>
       </div>
+
+      {/* Tooltip */}
+      {tooltipVisible && (
+        <div
+          className="weight-circle__tooltip"
+          style={{
+            position: 'absolute',
+            bottom: 'calc(100% + 6px)',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            background: '#22232c',
+            color: '#c1c2c5',
+            fontSize: '11px',
+            padding: '4px 8px',
+            borderRadius: '4px',
+            whiteSpace: 'nowrap',
+            pointerEvents: 'none',
+            zIndex: 9999,
+            border: '1px solid rgba(0,0,0,0.3)',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
+          }}
+        >
+          {buildTooltip()}
+        </div>
+      )}
     </div>
   );
 };

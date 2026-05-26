@@ -22,15 +22,27 @@ const InventoryGrid: React.FC<{
 
   const weight = useMemo(
     () => (inventory.maxWeight !== undefined ? Math.floor(getTotalWeight(inventory.items) * 1000) / 1000 : 0),
-
     [inventory.maxWeight, inventory.items]
   );
 
   const weightPercent = useMemo(
     () => (inventory.maxWeight ? (weight / inventory.maxWeight) * 100 : 0),
-
     [weight, inventory.maxWeight]
   );
+
+  // Description du poids extraite depuis la description de l'inventaire
+  // ou construite dynamiquement
+  const weightDescription = useMemo(() => {
+    const cur = weight >= 1000
+      ? `${(weight / 1000).toFixed(2)} kg`
+      : `${weight.toFixed(0)} g`;
+    const max = inventory.maxWeight
+      ? inventory.maxWeight >= 1000
+        ? `${(inventory.maxWeight / 1000).toFixed(2)} kg`
+        : `${inventory.maxWeight} g`
+      : '?';
+    return `${cur} / ${max}`;
+  }, [weight, inventory.maxWeight]);
 
   // ======================================================
   // PAGINATION
@@ -70,10 +82,13 @@ const InventoryGrid: React.FC<{
 
           {inventory.maxWeight && (
             <div className="inventory-header-weight">
-             
-
-              <WeightBar percent={weightPercent} />
-               <span className="inventory-header-weight__text">
+              <WeightBar
+                percent={weightPercent}
+                weightDescription={weightDescription}
+                currentWeight={weight * 1000}
+                maxWeight={inventory.maxWeight}
+              />
+              <span className="inventory-header-weight__text">
                 {weight / 1000}/{inventory.maxWeight / 1000}kg
               </span>
             </div>

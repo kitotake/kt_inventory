@@ -313,6 +313,10 @@ return {
         label = 'Clothing',
         consume = 0,
     },
+        ['clothing_tenue'] = {
+        label = 'clothing tenue',
+        consume = 0,
+    },
 
     ['scrapmetal'] = {
         label = 'Scrap Metal',

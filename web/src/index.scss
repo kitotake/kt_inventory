@@ -299,41 +299,6 @@ button:active {
     pointer-events: none;
 }
 
-.player-preview__tags {
-    position: absolute;
-
-    bottom: 0.5vh;
-
-    display: flex;
-    flex-wrap: wrap;
-
-    justify-content: center;
-
-    gap: 0.3vh;
-
-    width: 100%;
-
-    z-index: 5;
-}
-
-.player-preview__tag {
-    padding:
-        0.15vh 0.5vh;
-
-    border-radius: 0.3vh;
-
-    background:
-        rgba(37, 99, 235, 0.14);
-
-    border:
-        1px solid rgba(37, 99, 235, 0.2);
-
-    color: #60a5fa;
-
-    white-space: nowrap;
-
-    font-size: 0.9vh;
-}
 
 // ======================================================
 // CLOTHING PANELS
@@ -803,4 +768,102 @@ button:active {
     font-size: 0.75vh;
 
     color: white;
+}
+
+/* ============================================================
+   PATCH SCSS — à ajouter à la fin de web/src/index.scss
+   ============================================================ */
+
+/* ──────────────────────────────────────────────
+   INVENTORY CENTER COLUMN
+   ────────────────────────────────────────────── */
+
+.inventory-center-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1vh;
+
+  flex-shrink: 0;
+}
+
+/* ──────────────────────────────────────────────
+   CLOTHING SLOT — tenue complète (outfit)
+   ────────────────────────────────────────────── */
+
+.inventory-slot.clothing-slot.clothing-slot--outfit {
+  /* Bordure violette pour distinguer tenue vs pièce */
+  border-color: rgba(167, 139, 250, 0.45) !important;
+  background-color: rgba(109, 40, 217, 0.06);
+
+  &:hover {
+    border-color: rgba(167, 139, 250, 0.8) !important;
+    background-color: rgba(109, 40, 217, 0.12);
+  }
+}
+
+/* Badge violet pour tenue complète */
+.clothing-slot__outfit-badge {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+
+  background: rgba(167, 139, 250, 1);
+  box-shadow: 0 0 6px rgba(167, 139, 250, 0.9);
+
+  pointer-events: none;
+}
+
+/* ──────────────────────────────────────────────
+   WEIGHT CIRCLE TOOLTIP
+   ────────────────────────────────────────────── */
+
+.weight-circle {
+  /* Nécessaire pour positionner le tooltip en absolute */
+  position: relative;
+}
+
+.weight-circle__tooltip {
+  /* Styles inline dans WeightBar.tsx, mais fallback ici */
+  font-family: $mainFont;
+}
+
+/* ──────────────────────────────────────────────
+   PLAYER PREVIEW — améliorations
+   ────────────────────────────────────────────── */
+
+.player-preview {
+  /* Curseur grab pour indiquer la rotation */
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+/* ──────────────────────────────────────────────
+   TOOLTIP — affichage du poids dans description
+   ────────────────────────────────────────────── */
+
+.tooltip-description {
+  margin-bottom: 4px;
+
+  p,
+  .tooltip-markdown p {
+    font-size: 12px;
+    color: $textColor;
+    line-height: 1.4;
+  }
+}
+
+/* Ligne de poids dans tooltip */
+.tooltip-wrapper p[style] {
+  margin-top: 2px;
 }

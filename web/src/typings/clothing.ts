@@ -18,9 +18,16 @@ export type ClothingCategory =
   | 'bracelet'
   | 'shoes';
 
+// Type d'item clothing : pièce individuelle ou tenue complète
+export type ClothingItemType = 'clothing' | 'clothing_tenu';
+
 export interface EquippedClothingItem {
   name: string;
   label: string;
+  /** Type de l'item : pièce ou tenue complète */
+  itemType?: ClothingItemType;
+  /** Pour clothing_tenu : dictionnaire catégorie → drawable/texture */
+  outfitData?: Partial<Record<ClothingCategory, { drawable: number; texture: number; palette?: number }>>;
 }
 
 export interface ClothingSlotData {
@@ -33,6 +40,10 @@ export interface ClothingSlotData {
 export interface EquippedClothing {
   [category: string]: EquippedClothingItem | null;
 }
+
+// ======================================================
+// SLOT DEFINITIONS
+// ======================================================
 
 export const LEFT_CLOTHING_SLOTS: ClothingSlotData[] = [
   { category: 'hat',     label: 'Chapeau',   icon: 'ti-hat',        side: 'left' },
@@ -55,3 +66,19 @@ export const RIGHT_CLOTHING_SLOTS: ClothingSlotData[] = [
   { category: 'undershirt', label: 'Sous-vêt.',  icon: 'ti-shirt',    side: 'right' },
   { category: 'ears',       label: 'Boucles',    icon: 'ti-ear',      side: 'right' },
 ];
+
+// ======================================================
+// HELPERS
+// ======================================================
+
+/**
+ * Retourne true si le nom d'item correspond à une tenue complète (clothing_tenu)
+ */
+export const isOutfitItem = (itemName: string): boolean =>
+  itemName?.startsWith('clothing_tenu') || itemName?.includes('_tenu') || false;
+
+/**
+ * Retourne le type d'item clothing
+ */
+export const getClothingItemType = (itemName: string): ClothingItemType =>
+  isOutfitItem(itemName) ? 'clothing_tenu' : 'clothing';
