@@ -1,63 +1,49 @@
 // components/inventory/PlayerPreview.tsx
+// Le rendu du ped est fait côté Lua via CreateCam + RenderScriptCams.
+// Ce composant est un conteneur transparent qui reçoit ce rendu GTA.
+
 import React, { useEffect, useRef, useState } from 'react';
-import { useAppSelector } from '../../store';
-import { selectEquipped } from '../../store/clothing';
 import { fetchNui } from '../../utils/fetchNui';
 import useNuiEvent from '../../hooks/useNuiEvent';
 
 const PlayerPreview: React.FC = () => {
-  const equipped      = useAppSelector(selectEquipped);
   const containerRef  = useRef<HTMLDivElement>(null);
-  const [pedReady, setPedReady] = useState(false);
+  const [pedReady, setPedReady]   = useState(false);
+  const [rotating, setRotating]   = useState(false);
+  const lastXRef = useRef(0);
 
-  // Informe le client Lua que la preview est montée
-  // et lui donne les dimensions pour positionner la caméra scaleform
+  // Signaler au Lua de créer le ped + caméra
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const rect = container.getBoundingClientRect();
-
-    fetchNui('pedPreviewInit', {
-      x:      rect.left,
-      y:       rect.top,
-      width:   rect.width,
-      height:  rect.height,
-    });
+    fetchNui('pedPreviewInit', {});
 
     return () => {
       fetchNui('pedPreviewDestroy', {});
+      setPedReady(false);
     };
   }, []);
 
-  // Le Lua signale que la caméra est prête
+  // Le Lua indique que tout est prêt
   useNuiEvent('pedPreviewReady', () => {
     setPedReady(true);
   });
 
-  // Rotate ped on mouse drag
-  const isDragging  = useRef(false);
-  const lastX       = useRef(0);
+  // ── Rotation du ped via drag ─────────────────────────────────────────────
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    isDragging.current = true;
-    lastX.current      = e.clientX;
+    setRotating(true);
+    lastXRef.current = e.clientX;
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging.current) return;
-    const delta = e.clientX - lastX.current;
-    lastX.current = e.clientX;
-    fetchNui('pedPreviewRotate', { delta });
+    if (!rotating) return;
+    const delta = e.clientX - lastXRef.current;
+    lastXRef.current = e.clientX;
+    if (Math.abs(delta) > 0) {
+      fetchNui('pedPreviewRotate', { delta });
+    }
   };
 
-  const handleMouseUp = () => {
-    isDragging.current = false;
-  };
-
-  const equippedEntries = Object.entries(equipped).filter(
-    ([, val]) => val !== null && val !== undefined
-  );
+  const handleMouseUp = () => setRotating(false);
 
   return (
     <div
@@ -67,43 +53,39 @@ const PlayerPreview: React.FC = () => {
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
-      style={{ cursor: isDragging.current ? 'grabbing' : 'grab' }}
+      style={{ cursor: rotating ? 'grabbing' : 'grab' }}
     >
-      {/* Zone de rendu de la caméra scaleform (transparente) */}
+      {/* Zone transparente — GTA rend la caméra ici via RenderScriptCams */}
       <div className="player-preview__camera" />
 
-      {/* Overlay de chargement */}
+      {/* Spinner de chargement tant que le ped n'est pas prêt */}
       {!pedReady && (
-        <div
-          style={{
-            position:   'absolute',
-            inset:       0,
-            display:    'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color:      'rgba(255,255,255,0.3)',
-            fontSize:   '1.2vh',
-            pointerEvents: 'none',
-          }}
-        >
+        <div className="player-preview__loading">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="32"
-            height="32"
+            width="28"
+            height="28"
             viewBox="0 0 24 24"
             strokeWidth="1.5"
-            stroke="rgba(255,255,255,0.3)"
+            stroke="rgba(255,255,255,0.25)"
             fill="none"
             strokeLinecap="round"
             strokeLinejoin="round"
           >
-            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-            <circle cx="12" cy="7" r="4"/>
-            <path d="M5.5 21v-2a7 7 0 0 1 14 0v2"/>
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <circle cx="12" cy="7" r="4" />
+            <path d="M5.5 21v-2a7 7 0 0 1 14 0v2" />
           </svg>
         </div>
       )}
-      </div>
+
+      {/* Label d'aide rotation */}
+      {pedReady && (
+        <div className="player-preview__hint">
+          ↔ Tourner
+        </div>
+      )}
+    </div>
   );
 };
 

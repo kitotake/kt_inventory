@@ -28,7 +28,11 @@ server_scripts {
     'init.lua'
 }
 
-client_script 'init.lua'
+client_scripts {
+    'init.lua',
+    'modules/bridge/union/preview.lua',
+    'modules/bridge/union/clothing_client.lua'
+}
 
 ui_page 'web/build/index.html'
 
@@ -43,5 +47,6 @@ files {
     'modules/**/shared.lua',
     'modules/**/client.lua',
     'modules/bridge/**/client.lua',
+    'modules/bridge/**/clothing_client.lua',
     'data/*.lua',
 }

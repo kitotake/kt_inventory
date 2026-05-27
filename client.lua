@@ -48,7 +48,9 @@ local function canOpenInventory()
         return shared.info('cannot open inventory', '(player inventory has not loaded)')
     end
 
-    if IsPauseMenuActive() then return end
+   if IsPauseMenuActive() and not Preview?.active then
+    return
+end
 
     if invBusy or invOpen == nil or (currentWeapon?.timer or 0) > 0 then
         return shared.info('cannot open inventory', '(is busy)')
@@ -1594,11 +1596,8 @@ RegisterNetEvent('kt_inventory:viewInventory', function(left, right)
 end)
 
 RegisterNUICallback('uiLoaded', function(_, cb)
-	print('UI loaded')
     client.uiLoaded = true
-	print('UI loaded - callback')
-    cb(1)
-	print('UI loaded - callback complete')
+	 cb(1)
 end)
 
 RegisterNUICallback('getItemData', function(itemName, cb)
