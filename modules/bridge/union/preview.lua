@@ -67,12 +67,6 @@
     end
 
     local function applyHeadFlags(ped)
-    -- SetPedConfigFlag(ped, 52, true)   -- DisableHeadBobbing
-    -- SetPedConfigFlag(ped, 17, true)   -- no look at
-    -- SetPedConfigFlag(ped, 88, true)   -- disable ambient eye tracking
-    -- SetPedConfigFlag(ped, 36, true)   -- disable react to events
-    -- SetPedConfigFlag(ped, 292, true)  -- disable head blending
-    
         SetBlockingOfNonTemporaryEvents(ped, true)
         DisablePedPainAudio(ped, true)
 
@@ -91,10 +85,7 @@
                 local target, pitch, yaw = calcPedPosition(offset)
 
                 SetEntityCoordsNoOffset(Preview.ped, target.x, target.y, target.z, false, false, false)
-              SetEntityRotation(Preview.ped, 0.0, 0.0, yaw + Preview.heading, 2, true)
-
-                -- SetEntityRotation(Preview.ped, pitch, 0.0, yaw + Preview.heading, 2, true)
-                SetEntityLodDist(Preview.ped, 0)
+                SetEntityRotation(Preview.ped, 0.0, 0.0, yaw + Preview.heading, 2, true)
 
                 Wait(0)
             end
@@ -137,7 +128,7 @@
 
             ClonePedToTarget(playerPed, ped)
 
-            SetEntityCollision(ped, false, true)
+            SetEntityCollision(ped, false, false)
             SetEntityInvincible(ped, true)
             SetEntityCanBeDamaged(ped, false)
             FreezeEntityPosition(ped, true)
@@ -155,10 +146,15 @@
             SetModelAsNoLongerNeeded(model)
             DisableIdleCamera(true)
 
+            -- FIX: SetEntityLodDist déplacé ici — inutile de l'appeler à chaque frame
+            SetEntityLodDist(ped, 0)
+
             applyHeadFlags(ped)
 
             local idleDict = 'oddjobs@assassinate@construction@'
-            local idleClip = first and 'idle_a' or 'idle_b' or 'unarmed_fold_arms'
+            -- FIX: 'idle_b' or 'unarmed_fold_arms' évaluait toujours 'idle_b' (string truthy)
+            -- 'unarmed_fold_arms' n'était jamais atteint
+            local idleClip = first and 'idle_a' or 'idle_b'
 
             if loadAnimDict(idleDict) then
                 TaskPlayAnim(ped, idleDict, idleClip, 8.0, -8.0, -1, 1, 0.0, false, false, false)
