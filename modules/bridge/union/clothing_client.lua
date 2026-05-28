@@ -4,20 +4,29 @@ if not lib then return end
 
 RegisterNUICallback('pedPreviewInit', function(_, cb)
     cb({ ok = true })
-
     Preview.Create()
 end)
 
 RegisterNUICallback('pedPreviewDestroy', function(_, cb)
     cb({ ok = true })
-
     Preview.Destroy()
 end)
 
 RegisterNUICallback('pedPreviewRotate', function(data, cb)
     cb({ ok = true })
-
     Preview.Rotate(data.delta)
+end)
+
+RegisterNUICallback('pedPreviewZoom', function(data, cb)
+    cb({ ok = true })
+    Preview.SetZoom(data.face)
+end)
+
+RegisterNUICallback('pedPreviewAnim', function(data, cb)
+    cb({ ok = true })
+    if data.dict and data.clip then
+        Preview.PlayAnim(data.dict, data.clip)
+    end
 end)
 
 AddEventHandler('kt_inventory:closedInventory', function()

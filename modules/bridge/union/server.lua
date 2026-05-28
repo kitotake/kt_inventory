@@ -1,8 +1,4 @@
 -- modules/bridge/union/server.lua
--- FIX #1 : StatusManager.add — les valeurs items sont déjà en 0-100, pas 0-1000000.
---           Suppression de la division par 10000 incorrecte.
--- FIX #2 : Vérification défensive de StatusManager plus robuste.
--- FIX #3 : Nettoyage _loadingPlayers à playerDropped.
 
 if not lib then return end
 
@@ -121,6 +117,51 @@ AddEventHandler("union:player:spawned", function(src, characterData)
 end)
 
 -- ─────────────────────────────────────────────
+-- RE-INIT ON RESOURCE RESTART (ensure fix)
+-- ─────────────────────────────────────────────
+
+AddEventHandler('onResourceStart', function(resource)
+    if resource ~= GetCurrentResourceName() then return end
+
+    Wait(500)
+
+    for _, playerId in ipairs(GetPlayers()) do
+        playerId = tonumber(playerId)
+
+        local player = getUnionPlayer(playerId)
+
+        if player and player.currentCharacter then
+            local char = player.currentCharacter
+
+            if char and char.unique_id then
+                debug(("re-init après ensure src=%d uid=%s"):format(playerId, char.unique_id))
+
+                CreateThread(function()
+                    Wait(200)
+
+                    local groups = buildGroups(char, player)
+
+                    local ktPlayer = {
+                        source     = playerId,
+                        name       = player.name or GetPlayerName(playerId),
+                        identifier = char.unique_id,
+                        groups     = groups,
+                        sex        = char.gender,
+                        dob        = char.dateofbirth
+                    }
+
+                    local ok, err = pcall(server.setPlayerInventory, ktPlayer)
+
+                    if not ok then
+                        print(("^1[kt_inventory] ERREUR re-init src=%d: %s^0"):format(playerId, tostring(err)))
+                    end
+                end)
+            end
+        end
+    end
+end)
+
+-- ─────────────────────────────────────────────
 -- JOB UPDATE LIVE
 -- ─────────────────────────────────────────────
 
@@ -136,18 +177,17 @@ AddEventHandler("union:job:updated", function(src, job, grade)
     debug(("job update %s => %s"):format(src, job))
 end)
 
+-- ─────────────────────────────────────────────
+-- STATUS FROM ITEM
+-- ─────────────────────────────────────────────
 
 RegisterNetEvent("union:status:actionFromItem", function(values)
     local src = source
-
-    print(("^2[kt_inventory:union] actionFromItem reçu src=%d values=%s^0"):format(src, json.encode(values)))
 
     if values.hunger and type(values.hunger) == "number" then
         local ok, err = pcall(exports["union"].AddStat, nil, src, "hunger", values.hunger)
         if not ok then
             lib.print.warn(("[kt_inventory:union] Erreur hunger: %s"):format(tostring(err)))
-        else
-            print(("^2[kt_inventory:union] hunger +%d envoyé^0"):format(values.hunger))
         end
     end
 
@@ -155,8 +195,6 @@ RegisterNetEvent("union:status:actionFromItem", function(values)
         local ok, err = pcall(exports["union"].AddStat, nil, src, "thirst", values.thirst)
         if not ok then
             lib.print.warn(("[kt_inventory:union] Erreur thirst: %s"):format(tostring(err)))
-        else
-            print(("^2[kt_inventory:union] thirst +%d envoyé^0"):format(values.thirst))
         end
     end
 
@@ -164,17 +202,10 @@ RegisterNetEvent("union:status:actionFromItem", function(values)
         local ok, err = pcall(exports["union"].AddStat, nil, src, "stress", values.stress)
         if not ok then
             lib.print.warn(("[kt_inventory:union] Erreur stress: %s"):format(tostring(err)))
-        else
-            print(("^2[kt_inventory:union] stress %d envoyé^0"):format(values.stress))
         end
     end
 end)
 
-print(("^3[DEBUG] StatusManager=%s cache=%s cache[src]=%s^0"):format(
-    tostring(_G.StatusManager),
-    _G.StatusManager and tostring(type(_G.StatusManager.cache)) or "nil",
-    _G.StatusManager and _G.StatusManager.cache and tostring(_G.StatusManager.cache[src]) or "nil"
-))
 -- ─────────────────────────────────────────────
 -- LICENSE SYSTEM
 -- ─────────────────────────────────────────────
@@ -214,7 +245,7 @@ function server.buyLicense(inv, license)
 end
 
 -- ─────────────────────────────────────────────
--- FIX #3 : CLEANUP à la déconnexion
+-- CLEANUP À LA DÉCONNEXION
 -- ─────────────────────────────────────────────
 
 AddEventHandler("playerDropped", function()
