@@ -1,13 +1,12 @@
 -- modules/bridge/union/clothing_client.lua
+-- Gestion des callbacks NUI vêtements + zoom anatomique sur sélection slot
 
 if not lib then return end
 
--- Cache local pour éviter d'appeler l'export à chaque slot changé
--- (l'export était appelé N fois en cas de swap multi-items)
+-- Cache local pour éviter N appels exports par slot
 local ItemsCache = nil
 local function getItems()
     if not ItemsCache then
-        -- On tente de récupérer la table Items exposée par kt_inventory
         local ok, result = pcall(function()
             return exports.kt_inventory:getItemsTable()
         end)
@@ -24,7 +23,7 @@ end
 
 RegisterNUICallback('pedPreviewInit', function(_, cb)
     cb({ ok = true })
-    Preview.Create(true)
+    Preview.Create()
 end)
 
 RegisterNUICallback('pedPreviewDestroy', function(_, cb)
@@ -63,12 +62,45 @@ RegisterNUICallback('pedPreviewAnim', function(data, cb)
     end
 end)
 
+-- Zoom vers une zone anatomique quand l'utilisateur clique un slot clothing
+RegisterNUICallback('pedPreviewZoomCategory', function(data, cb)
+    cb({ ok = true })
+    if data.category then
+        Preview.ZoomToCategory(data.category)
+    end
+end)
+
+-- Équiper un vêtement : refresh + zoom + son
+RegisterNUICallback('equipClothing', function(data, cb)
+    cb({ ok = true })
+    -- Rafraîchir le ped après équipement
+    SetTimeout(120, function()
+        if Preview.active then Preview.Refresh() end
+    end)
+    -- Zoom vers la zone concernée
+    if data.category then
+        SetTimeout(200, function()
+            if Preview.active then Preview.ZoomToCategory(data.category) end
+        end)
+    end
+    -- Son d'équipement
+    PlaySoundFrontend(-1, 'PURCHASE', 'HUD_LIQUOR_STORE_SOUNDSET', true)
+end)
+
+-- Retirer un vêtement
+RegisterNUICallback('removeClothing', function(data, cb)
+    cb({ ok = true })
+    SetTimeout(120, function()
+        if Preview.active then Preview.Refresh() end
+    end)
+    PlaySoundFrontend(-1, 'BACK', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
+end)
+
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 -- EVENTS — Sync tenue & inventaire
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
--- Refresh automatique dès qu'un vêtement change dans l'inventaire.
--- On utilise le cache local pour éviter N appels exports par slot.
+-- Refresh automatique dès qu'un vêtement change dans l'inventaire
 AddEventHandler('kt_inventory:updateInventory', function(changes)
     if not Preview or not Preview.active then return end
 
@@ -83,22 +115,19 @@ AddEventHandler('kt_inventory:updateInventory', function(changes)
                 SetTimeout(150, function()
                     if Preview.active then Preview.Refresh() end
                 end)
-                -- Un seul refresh suffit même si plusieurs clothing slots changent
                 return
             end
         end
     end
 end)
 
--- FIX : l'event émis dans client.lua est 'kt_inventory:closeInventory' (via NUI callback 'exit')
--- et non 'kt_inventory:closedInventory'. On écoute les deux pour la rétrocompatibilité.
+-- Fermeture inventaire → détruire preview
 AddEventHandler('kt_inventory:closeInventory', function()
     if Preview and Preview.active then
         Preview.Destroy()
     end
 end)
 
--- Sécurité : si le NUI envoie l'ancien event (au cas où d'autres scripts l'émettent)
 AddEventHandler('kt_inventory:closedInventory', function()
     if Preview and Preview.active then
         Preview.Destroy()
