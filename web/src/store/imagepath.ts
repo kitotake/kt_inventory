@@ -1,3 +1,4 @@
+// store/imagepath.ts
 export let imagepath = 'images';
 
 export function setImagePath(path: string) {

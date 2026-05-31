@@ -1,3 +1,4 @@
+// reducers/swapSlots.ts
 import { CaseReducer, PayloadAction } from '@reduxjs/toolkit';
 import { getTargetInventory, itemDurability } from '../helpers';
 import { Inventory, SlotWithItem, State } from '../typings';
@@ -7,8 +8,8 @@ export const swapSlotsReducer: CaseReducer<
   PayloadAction<{
     fromSlot: SlotWithItem;
     fromType: Inventory['type'];
-    toSlot: SlotWithItem;
-    toType: Inventory['type'];
+    toSlot:   SlotWithItem;
+    toType:   Inventory['type'];
   }>
 > = (state, action) => {
   const { fromSlot, fromType, toSlot, toType } = action.payload;
@@ -18,12 +19,12 @@ export const swapSlotsReducer: CaseReducer<
   [sourceInventory.items[fromSlot.slot - 1], targetInventory.items[toSlot.slot - 1]] = [
     {
       ...targetInventory.items[toSlot.slot - 1],
-      slot: fromSlot.slot,
+      slot:       fromSlot.slot,
       durability: itemDurability(toSlot.metadata, curTime),
     },
     {
       ...sourceInventory.items[fromSlot.slot - 1],
-      slot: toSlot.slot,
+      slot:       toSlot.slot,
       durability: itemDurability(fromSlot.metadata, curTime),
     },
   ];

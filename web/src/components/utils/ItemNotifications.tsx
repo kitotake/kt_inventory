@@ -1,3 +1,4 @@
+// components/utils/ItemNotifications.tsx
 import React, { useContext } from 'react';
 import { createPortal } from 'react-dom';
 import { TransitionGroup } from 'react-transition-group';
@@ -9,38 +10,23 @@ import { SlotWithItem } from '../../typings';
 import { Items } from '../../store/items';
 import Fade from './transitions/Fade';
 
-interface ItemNotificationProps {
-  item: SlotWithItem;
-  text: string;
-}
+interface ItemNotificationProps { item: SlotWithItem; text: string; }
 
-export const ItemNotificationsContext = React.createContext<{
-  add: (item: ItemNotificationProps) => void;
-} | null>(null);
+export const ItemNotificationsContext = React.createContext<{ add: (item: ItemNotificationProps) => void } | null>(null);
 
 export const useItemNotifications = () => {
-  const itemNotificationsContext = useContext(ItemNotificationsContext);
-  if (!itemNotificationsContext) throw new Error(`ItemNotificationsContext undefined`);
-  return itemNotificationsContext;
+  const ctx = useContext(ItemNotificationsContext);
+  if (!ctx) throw new Error(`ItemNotificationsContext undefined`);
+  return ctx;
 };
 
 const ItemNotification = React.forwardRef(
   (props: { item: ItemNotificationProps; style?: React.CSSProperties }, ref: React.ForwardedRef<HTMLDivElement>) => {
     const slotItem = props.item.item;
-
     return (
-      <div
-        className="item-notification-item-box"
-        style={{
-          backgroundImage: `url(${getItemUrl(slotItem) || 'none'}`,
-          ...props.style,
-        }}
-        ref={ref}
-      >
+      <div className="item-notification-item-box" style={{ backgroundImage: `url(${getItemUrl(slotItem) || 'none'}`, ...props.style }} ref={ref}>
         <div className="item-slot-wrapper">
-          <div className="item-notification-action-box">
-            <p>{props.item.text}</p>
-          </div>
+          <div className="item-notification-action-box"><p>{props.item.text}</p></div>
           <div className="inventory-slot-label-box">
             <div className="inventory-slot-label-text">{slotItem.metadata?.label || Items[slotItem.name]?.label}</div>
           </div>
@@ -51,26 +37,17 @@ const ItemNotification = React.forwardRef(
 );
 
 export const ItemNotificationsProvider = ({ children }: { children: React.ReactNode }) => {
-  const queue = useQueue<{
-    id: number;
-    item: ItemNotificationProps;
-    ref: React.RefObject<HTMLDivElement>;
-  }>();
+  const queue = useQueue<{ id: number; item: ItemNotificationProps; ref: React.RefObject<HTMLDivElement> }>();
 
   const add = (item: ItemNotificationProps) => {
-    const ref = React.createRef<HTMLDivElement>();
-    const notification = { id: Date.now(), item, ref: ref };
-
+    const ref          = React.createRef<HTMLDivElement>();
+    const notification = { id: Date.now(), item, ref };
     queue.add(notification);
-
-    const timeout = setTimeout(() => {
-      queue.remove();
-      clearTimeout(timeout);
-    }, 2500);
+    const timeout = setTimeout(() => { queue.remove(); clearTimeout(timeout); }, 2500);
   };
 
   useNuiEvent<[item: SlotWithItem, text: string, count?: number]>('itemNotify', ([item, text, count]) => {
-    add({ item: item, text: count ? `${Locale[text]} ${count}x` : `${Locale[text]}` });
+    add({ item, text: count ? `${Locale[text]} ${count}x` : `${Locale[text]}` });
   });
 
   return (

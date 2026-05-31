@@ -1,3 +1,4 @@
+// components/inventory/ClothingGrid.tsx
 import React from 'react';
 import { useAppSelector } from '../../store';
 import { ClothingSlotData } from '../../typings/clothing';

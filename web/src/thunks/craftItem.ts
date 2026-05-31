@@ -1,3 +1,4 @@
+// thunks/craftItem.ts
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { fetchNui } from '../utils/fetchNui';
 
@@ -9,11 +10,8 @@ export const craftItem = createAsyncThunk(
   ) => {
     try {
       const response = await fetchNui<boolean>('craftItem', data);
-
-      if (response === false) {
-        return rejectWithValue(response);
-      }
-    } catch (error) {
+      if (response === false) return rejectWithValue(response);
+    } catch {
       return rejectWithValue(false);
     }
   }

@@ -1,3 +1,4 @@
+// components/inventory/InventoryHotbar.tsx
 import React, { useState } from 'react';
 import { getItemUrl, isSlotWithItem } from '../../helpers';
 import useNuiEvent from '../../hooks/useNuiEvent';
@@ -11,20 +12,17 @@ import SlideUp from '../utils/transitions/SlideUp';
 const InventoryHotbar: React.FC = () => {
   const [hotbarVisible, setHotbarVisible] = useState(false);
   const items = useAppSelector(selectLeftInventory).items.slice(0, 5);
+  const [handle, setHandle] = useState<ReturnType<typeof setTimeout>>();
 
- // stupid fix for timeout
-const [handle, setHandle] = useState<ReturnType<typeof setTimeout>>();
-useNuiEvent('toggleHotbar', () => {
-  if (hotbarVisible) {
-    setHotbarVisible(false);
-  } else {
-    if (handle) clearTimeout(handle);
-    setHotbarVisible(true);
-    setHandle(
-      setTimeout(() => setHotbarVisible(false), 3000)
-    );
-  }
-});
+  useNuiEvent('toggleHotbar', () => {
+    if (hotbarVisible) {
+      setHotbarVisible(false);
+    } else {
+      if (handle) clearTimeout(handle);
+      setHotbarVisible(true);
+      setHandle(setTimeout(() => setHotbarVisible(false), 3000));
+    }
+  });
 
   return (
     <SlideUp in={hotbarVisible}>
@@ -32,9 +30,7 @@ useNuiEvent('toggleHotbar', () => {
         {items.map((item) => (
           <div
             className="hotbar-item-slot"
-            style={{
-              backgroundImage: `url(${item?.name ? getItemUrl(item as SlotWithItem) : 'none'}`,
-            }}
+            style={{ backgroundImage: `url(${item?.name ? getItemUrl(item as SlotWithItem) : 'none'}` }}
             key={`hotbar-${item.slot}`}
           >
             {isSlotWithItem(item) && (
@@ -42,18 +38,8 @@ useNuiEvent('toggleHotbar', () => {
                 <div className="hotbar-slot-header-wrapper">
                   <div className="inventory-slot-number">{item.slot}</div>
                   <div className="item-slot-info-wrapper">
-                    <p>
-                      {item.weight > 0
-                        ? item.weight >= 1000
-                          ? `${(item.weight / 1000).toLocaleString('en-us', {
-                              minimumFractionDigits: 2,
-                            })}kg `
-                          : `${item.weight.toLocaleString('en-us', {
-                              minimumFractionDigits: 0,
-                            })}g `
-                        : ''}
-                    </p>
-                    <p>{item.count ? item.count.toLocaleString('en-us') + `x` : ''}</p>
+                    <p>{item.weight > 0 ? item.weight >= 1000 ? `${(item.weight / 1000).toLocaleString('en-us', { minimumFractionDigits: 2 })}kg ` : `${item.weight.toLocaleString('en-us', { minimumFractionDigits: 0 })}g ` : ''}</p>
+                    <p>{item.count ? item.count.toLocaleString('en-us') + 'x' : ''}</p>
                   </div>
                 </div>
                 <div>

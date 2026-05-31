@@ -1,53 +1,38 @@
 // components/inventory/index.tsx
-
 import React, { useState } from 'react';
-
 import useNuiEvent from '../../hooks/useNuiEvent';
-
 import InventoryControl from './InventoryControl';
 import InventoryHotbar from './InventoryHotbar';
-
 import { useAppDispatch } from '../../store';
-
 import {
   refreshSlots,
   setAdditionalMetadata,
   setupInventory,
 } from '../../store/inventory';
-
-import { setAllEquipped, equipClothing, removeClothing, equipOutfit } from '../../store/clothing';
-
+import {
+  setAllEquipped,
+  equipClothing,
+  removeClothing,
+  equipOutfit,
+} from '../../store/clothing';
 import { useExitListener } from '../../hooks/useExitListener';
-
 import type { Inventory as InventoryProps } from '../../typings';
 import type { EquippedClothing } from '../../typings/clothing';
 import { getClothingItemType } from '../../typings/clothing';
-
 import RightInventory from './RightInventory';
 import LeftInventory from './LeftInventory';
-
 import LeftInventoryClothing from './LeftInventoryClothing';
 import RightInventoryClothing from './RightInventoryClothing';
-
 import PlayerPreview from './PlayerPreview';
-
 import Tooltip from '../utils/Tooltip';
-
 import { closeTooltip } from '../../store/tooltip';
-
 import InventoryContext from './InventoryContext';
-
 import { closeContextMenu } from '../../store/contextMenu';
-
 import Fade from '../utils/transitions/Fade';
 
 const Inventory: React.FC = () => {
   const [inventoryVisible, setInventoryVisible] = useState(false);
   const dispatch = useAppDispatch();
-
-  // =====================================================
-  // EVENTS
-  // =====================================================
 
   useNuiEvent<boolean>('setInventoryVisible', setInventoryVisible);
 
@@ -64,39 +49,31 @@ const Inventory: React.FC = () => {
     rightInventory?: InventoryProps;
   }>('setupInventory', (data) => {
     dispatch(setupInventory(data));
-    if (!inventoryVisible) {
-      setInventoryVisible(true);
-    }
+    if (!inventoryVisible) setInventoryVisible(true);
   });
 
-  // Sync vêtements depuis le Lua (état initial à l'ouverture)
   useNuiEvent<EquippedClothing>('setupClothing', (data) => {
     dispatch(setAllEquipped(data));
   });
 
-  // Equip d'un vêtement individuel depuis le Lua
   useNuiEvent<{ category: string; name: string; label: string; itemType?: string }>(
     'clothingEquipped',
     (data) => {
-      dispatch(
-        equipClothing({
-          category: data.category as any,
-          item: {
-            name:     data.name,
-            label:    data.label,
-            itemType: (data.itemType ?? getClothingItemType(data.name)) as any,
-          },
-        })
-      );
+      dispatch(equipClothing({
+        category: data.category as any,
+        item: {
+          name:     data.name,
+          label:    data.label,
+          itemType: (data.itemType ?? getClothingItemType(data.name)) as any,
+        },
+      }));
     }
   );
 
-  // Retrait d'un vêtement depuis le Lua
   useNuiEvent<{ category: string }>('clothingRemoved', (data) => {
     dispatch(removeClothing(data.category as any));
   });
 
-  // Tenue complète équipée depuis le Lua
   useNuiEvent<{
     name:  string;
     label: string;
@@ -120,36 +97,40 @@ const Inventory: React.FC = () => {
     }
   );
 
-  // =====================================================
-  // RENDER
-  // =====================================================
-
   return (
     <>
       <Fade in={inventoryVisible}>
         <div className="inventory-wrapper">
-
           <div className="inventory-main-row">
 
-            <LeftInventory />
-
-            <LeftInventoryClothing />
-
-            {/* CENTER */}
-            <div className="inventory-center-column">
-              <PlayerPreview />
-              <InventoryControl />
+            {/* COLONNE GAUCHE : inventaire items */}
+            <div className="inventory-side inventory-side--left">
+              <LeftInventory />
             </div>
 
+            {/* CLOTHING GAUCHE */}
+            <LeftInventoryClothing />
+
+            {/* CENTRE : preview ped dominant */}
+            <div className="inventory-center-column">
+              <PlayerPreview />
+              <div className="inventory-center-controls">
+                <InventoryControl />
+              </div>
+            </div>
+
+            {/* CLOTHING DROITE */}
             <RightInventoryClothing />
 
-            <RightInventory />
+            {/* COLONNE DROITE : inventaire secondaire */}
+            <div className="inventory-side inventory-side--right">
+              <RightInventory />
+            </div>
 
           </div>
 
           <Tooltip />
           <InventoryContext />
-
         </div>
       </Fade>
 

@@ -19,13 +19,9 @@ export const clothingSlice = createSlice({
   reducers: {
     equipClothing(
       state,
-      action: PayloadAction<{
-        category: ClothingCategory;
-        item:     EquippedClothingItem;
-      }>
+      action: PayloadAction<{ category: ClothingCategory; item: EquippedClothingItem }>
     ) {
-      const { category, item } = action.payload;
-      state.equipped[category] = item;
+      state.equipped[action.payload.category] = action.payload.item;
     },
 
     removeClothing(state, action: PayloadAction<ClothingCategory>) {
@@ -40,23 +36,19 @@ export const clothingSlice = createSlice({
       state.equipped = action.payload;
     },
 
-    /** Équipe une tenue complète (clothing_tenu) sur toutes les catégories concernées */
     equipOutfit(
       state,
       action: PayloadAction<{
-        name:    string;
-        label:   string;
-        /** Map catégorie → item pour pré-remplir les slots visuellement */
-        slots:   Partial<Record<ClothingCategory, EquippedClothingItem>>;
+        name:  string;
+        label: string;
+        slots: Partial<Record<ClothingCategory, EquippedClothingItem>>;
       }>
     ) {
-      const { slots } = action.payload;
-      for (const [category, item] of Object.entries(slots)) {
+      for (const [category, item] of Object.entries(action.payload.slots)) {
         state.equipped[category as ClothingCategory] = item ?? null;
       }
     },
 
-    /** Retire tous les vêtements (reset tenue) */
     removeAllClothing(state) {
       for (const key of Object.keys(state.equipped)) {
         state.equipped[key] = null;

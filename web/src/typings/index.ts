@@ -1,3 +1,4 @@
+// typings/index.ts
 export * from './state';
 export * from './inventory';
 export * from './item';
