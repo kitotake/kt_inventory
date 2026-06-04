@@ -24,8 +24,10 @@ const InventoryFilterRight : React.FC<Props> = React.memo(({
   const categories = Object.keys(CATEGORY_LABELS) as SortCategory[];
   const sortOrders = Object.keys(SORT_ORDER_LABELS) as SortOrder[];
 
+  if (side === 'left') return null;
+
   return (
-    <div className={`inv-filter${side === 'right' ? ' inv-filter--right' : ''}`}>
+    <div className="inv-filter inv-filter--right">
 
       {/* Catégories */}
       <div className="inv-filter__categories" role="group" aria-label="Catégories">

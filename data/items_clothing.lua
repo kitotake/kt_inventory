@@ -181,4 +181,5 @@ return {
         description = 'Tenue des services médicaux.',
         category    = 'clothing_tenu',
     },
+    
 }

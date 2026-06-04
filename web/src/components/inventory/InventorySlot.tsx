@@ -43,13 +43,13 @@ const ShopPrice: React.FC<{ item: SlotWithItem }> = React.memo(({ item }) => {
           alt="currency"
           style={{ imageRendering: '-webkit-optimize-contrast', height: 'auto', width: '2vh', backfaceVisibility: 'hidden' }}
         />
-        <p>{item.price.toLocaleString('en-us')}</p>
+        <p>{item.price.toLocaleString('en-us')} {Locale.$ ?? '$'}</p>
       </div>
     );
   }
   return (
     <div className="item-slot-price-wrapper" style={{ color: !item.currency || item.currency === 'money' ? '#22c55e' : '#ef4444' }}>
-      <p>{Locale.$ ?? '$'}{item.price.toLocaleString('en-us')}</p>
+      <p>{item.price.toLocaleString('en-us')} {Locale.$ ?? '$'}</p>
     </div>
   );
 });

@@ -1,8 +1,4 @@
 // components/inventory/SlotTooltip.tsx
-// CORRECTIONS :
-//   1. Styles inline extraits en constantes module-level
-//   2. QualityStars et CraftingIngredients isolés en sous-composants mémoïsés
-//   3. React.memo sur le composant entier
 
 import React, { Fragment, useMemo } from 'react';
 import ReactMarkdown   from 'react-markdown';
@@ -55,15 +51,26 @@ const SlotTooltip: React.ForwardRefRenderFunction<
 > = ({ item, inventoryType, style }, ref) => {
   const additionalMetadata = useAppSelector((s) => s.inventory.additionalMetadata);
   const itemData    = useMemo(() => Items[item.name], [item.name]);
+
   const ingredients = useMemo(() => {
     if (!item.ingredients) return null;
     return Object.entries(item.ingredients).sort(([, a], [, b]) => a - b);
   }, [item.ingredients]);
 
+  // Destructure all metadata fields once to avoid scattered optional chaining in JSX
+  const { label, type, ammo, serial, components, weapontint, quality } = useMemo(
+    () => (item.metadata ?? {}) as Record<string, unknown>,
+    [item.metadata]
+  );
+
+  const componentList = useMemo(
+    () => (Array.isArray(components) ? (components as string[]) : null),
+    [components]
+  );
+
   const description = (item.metadata?.description as string | undefined) ?? itemData?.description;
   const ammoLabel   = itemData?.ammoName ? Items[itemData.ammoName]?.label : undefined;
   const isCrafting  = inventoryType === 'crafting';
-  const quality     = item.metadata?.quality as number | undefined;
 
   const weightLabel = useMemo(() => {
     if (!item.weight || item.weight === 0) return null;
@@ -83,16 +90,18 @@ const SlotTooltip: React.ForwardRefRenderFunction<
   return (
     <div className="tooltip-wrapper" ref={ref} style={style}>
       <div className="tooltip-header-wrapper">
-        <p>{(item.metadata?.label as string | undefined) ?? itemData.label ?? item.name}</p>
+        <p>{(label as string | undefined) ?? itemData.label ?? item.name}</p>
         {isCrafting ? (
           <div className="tooltip-crafting-duration"><ClockIcon /><p>{((item.duration ?? 3000) / 1000)}s</p></div>
         ) : (
-          <p style={STYLE_TYPE}>{item.metadata?.type as string | undefined}</p>
+          <p style={STYLE_TYPE}>{type as string | undefined}</p>
         )}
       </div>
       <Divider />
 
-      {quality !== undefined && quality >= 1 && quality <= 5 && <QualityStars quality={quality} />}
+      {quality !== undefined && (quality as number) >= 1 && (quality as number) <= 5 && (
+        <QualityStars quality={quality as number} />
+      )}
 
       {description && (
         <div className="tooltip-description">
@@ -104,21 +113,23 @@ const SlotTooltip: React.ForwardRefRenderFunction<
         <>
           {weightLabel && <p style={STYLE_MUTED}>⚖ {weightLabel}</p>}
           {item.durability !== undefined && <p>{Locale.ui_durability}: {Math.trunc(item.durability)}</p>}
-          {item.metadata?.ammo !== undefined && <p>{Locale.ui_ammo}: {item.metadata.ammo as number}</p>}
+          {ammo !== undefined && <p>{Locale.ui_ammo}: {ammo as number}</p>}
           {ammoLabel && <p>{Locale.ammo_type}: {ammoLabel}</p>}
-          {item.metadata?.serial && <p>{Locale.ui_serial}: {item.metadata.serial as string}</p>}
-          {Array.isArray(item.metadata?.components) && (item.metadata.components as string[]).length > 0 && (
+          {serial && <p>{Locale.ui_serial}: {serial as string}</p>}
+          {componentList && componentList.length > 0 && (
             <p>
               {Locale.ui_components}:{' '}
-              {(item.metadata.components as string[]).map((c, i, arr) =>
+              {componentList.map((c, i, arr) =>
                 i + 1 === arr.length ? Items[c]?.label : `${Items[c]?.label}, `
               )}
             </p>
           )}
-          {item.metadata?.weapontint !== undefined && <p>{Locale.ui_tint}: {item.metadata.weapontint as string}</p>}
+          {weapontint !== undefined && <p>{Locale.ui_tint}: {weapontint as string}</p>}
           {additionalMetadata.map((data, index) => (
             <Fragment key={`metadata-${index}`}>
-              {item.metadata?.[data.metadata] !== undefined && <p>{data.value}: {item.metadata[data.metadata] as string}</p>}
+              {item.metadata?.[data.metadata] !== undefined && (
+                <p>{data.value}: {item.metadata[data.metadata] as string}</p>
+              )}
             </Fragment>
           ))}
         </>
