@@ -44,7 +44,7 @@ files {
     'web/build/index.html',
     'web/build/assets/*.js',
     'web/build/assets/*.css',
-    'web/images/*.png',
+    'web/images/**',
     'modules/**/shared.lua',
     'modules/**/client.lua',
     'data/*.lua',

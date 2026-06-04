@@ -104,6 +104,15 @@ return {
         export = "kt_idcard_ui.UseIdentityCard"
     }
 },
+['identity_card2'] = {
+    label = 'Carte d’identité',
+    weight = 0,
+    stack = false,
+    close = true,
+    client = {
+        export = 'kt_idcard_ui.UseIdentityCard'
+    }
+},
 
 ["license_card"] = {
     label = "Permis de conduire",
@@ -281,6 +290,10 @@ return {
 
     ['money'] = {
         label = 'Money',
+          client = {
+            image = 'money.png',
+        }
+
     },
 
     ['mustard'] = {
