@@ -25,7 +25,8 @@ kt_libs {
 
 server_scripts {
     '@oxmysql/lib/MySQL.lua',
-    'init.lua'
+    'init.lua',
+    'modules/bridge/union/clothing_server.lua',  -- ← à ajouter
 }
 
 client_scripts {
@@ -46,7 +47,5 @@ files {
     'web/images/*.png',
     'modules/**/shared.lua',
     'modules/**/client.lua',
-    'modules/bridge/**/client.lua',
-    'modules/bridge/**/clothing_client.lua',
     'data/*.lua',
 }

@@ -4,17 +4,8 @@ import useNuiEvent from '../../hooks/useNuiEvent';
 import InventoryControl from './InventoryControl';
 import InventoryHotbar from './InventoryHotbar';
 import { useAppDispatch } from '../../store';
-import {
-  refreshSlots,
-  setAdditionalMetadata,
-  setupInventory,
-} from '../../store/inventory';
-import {
-  setAllEquipped,
-  equipClothing,
-  removeClothing,
-  equipOutfit,
-} from '../../store/clothing';
+import { refreshSlots, setAdditionalMetadata, setupInventory } from '../../store/inventory';
+import { setAllEquipped, equipClothing, removeClothing, equipOutfit } from '../../store/clothing';
 import { useExitListener } from '../../hooks/useExitListener';
 import type { Inventory as InventoryProps } from '../../typings';
 import type { EquippedClothing } from '../../typings/clothing';
@@ -56,53 +47,50 @@ const Inventory: React.FC = () => {
     dispatch(setAllEquipped(data));
   });
 
-  useNuiEvent<{ category: string; name: string; label: string; itemType?: string }>(
-    'clothingEquipped',
-    (data) => {
-      dispatch(equipClothing({
+  useNuiEvent<{ category: string; name: string; label: string; itemType?: string }>('clothingEquipped', (data) => {
+    dispatch(
+      equipClothing({
         category: data.category as any,
         item: {
-          name:     data.name,
-          label:    data.label,
+          name: data.name,
+          label: data.label,
           itemType: (data.itemType ?? getClothingItemType(data.name)) as any,
         },
-      }));
-    }
-  );
+      })
+    );
+  });
 
   useNuiEvent<{ category: string }>('clothingRemoved', (data) => {
     dispatch(removeClothing(data.category as any));
   });
 
   useNuiEvent<{
-    name:  string;
+    name: string;
     label: string;
     slots: Partial<Record<string, { name: string; label: string }>>;
   }>('outfitEquipped', (data) => {
-    dispatch(equipOutfit({
-      name:  data.name,
-      label: data.label,
-      slots: data.slots as any,
-    }));
+    dispatch(
+      equipOutfit({
+        name: data.name,
+        label: data.label,
+        slots: data.slots as any,
+      })
+    );
   });
 
   useNuiEvent('refreshSlots', (data) => {
     dispatch(refreshSlots(data));
   });
 
-  useNuiEvent(
-    'displayMetadata',
-    (data: Array<{ metadata: string; value: string }>) => {
-      dispatch(setAdditionalMetadata(data));
-    }
-  );
+  useNuiEvent('displayMetadata', (data: Array<{ metadata: string; value: string }>) => {
+    dispatch(setAdditionalMetadata(data));
+  });
 
   return (
     <>
       <Fade in={inventoryVisible}>
         <div className="inventory-wrapper">
           <div className="inventory-main-row">
-
             {/* COLONNE GAUCHE : inventaire items */}
             <div className="inventory-side inventory-side--left">
               <LeftInventory />
@@ -126,7 +114,6 @@ const Inventory: React.FC = () => {
             <div className="inventory-side inventory-side--right">
               <RightInventory />
             </div>
-
           </div>
 
           <Tooltip />

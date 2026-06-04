@@ -1,8 +1,12 @@
 // reducers/refreshSlots.ts
+// CORRECTIONS :
+//   1. Suppression de filter(Boolean) inutile — boucle for...of directe
+//   2. Items[name]!.count += count → mutation hors Redux corrigée en assignation propre
+//   3. slotsData : resize par push/splice au lieu d'appel récursif au reducer setupInventory
+
 import { CaseReducer, PayloadAction } from '@reduxjs/toolkit';
 import { itemDurability } from '../helpers';
-import { inventorySlice } from '../store/inventory';
-import { Items } from '../store/items';
+import { Items }          from '../store/items';
 import { InventoryType, Slot, State } from '../typings';
 
 export type ItemsPayload = { item: Slot; inventory?: InventoryType };
@@ -14,54 +18,70 @@ interface Payload {
   slotsData?:  { inventoryId: string; slots: number };
 }
 
-export const refreshSlotsReducer: CaseReducer<State, PayloadAction<Payload>> = (state, action) => {
-  if (action.payload.items) {
-    if (!Array.isArray(action.payload.items)) action.payload.items = [action.payload.items];
-    const curTime = Math.floor(Date.now() / 1000);
+type InvKey = 'leftInventory' | 'rightInventory';
 
-    Object.values(action.payload.items).filter(Boolean).forEach((data) => {
-      const targetInventory = data.inventory
-        ? data.inventory !== InventoryType.PLAYER ? state.rightInventory : state.leftInventory
-        : state.leftInventory;
-      data.item.durability = itemDurability(data.item.metadata, curTime);
-      targetInventory.items[data.item.slot - 1] = data.item;
-    });
+const resolveByType = (state: State, t?: InventoryType): InvKey =>
+  !t || t === InventoryType.PLAYER ? 'leftInventory' : 'rightInventory';
 
+const resolveById = (state: State, id: string): InvKey | null => {
+  if (id === state.leftInventory.id)  return 'leftInventory';
+  if (id === state.rightInventory.id) return 'rightInventory';
+  return null;
+};
+
+export const refreshSlotsReducer: CaseReducer<State, PayloadAction<Payload>> = (
+  state, action
+) => {
+  const { items, itemCount, weightData, slotsData } = action.payload;
+  const curTime = Math.floor(Date.now() / 1000);
+
+  // 1. Mise à jour de slots individuels
+  if (items !== undefined) {
+    const list: ItemsPayload[] = Array.isArray(items) ? items : [items];
+    for (const data of list) {
+      if (!data) continue;
+      const key = resolveByType(state, data.inventory);
+      const idx = data.item.slot - 1;
+      const inv = state[key];
+      if (idx < 0 || idx >= inv.items.length) continue;
+      inv.items[idx] = {
+        ...data.item,
+        durability: itemDurability(data.item.metadata, curTime),
+      };
+    }
     if (state.rightInventory.type === InventoryType.CRAFTING) {
       state.rightInventory = { ...state.rightInventory };
     }
   }
 
-  if (action.payload.itemCount) {
-    const items = Object.entries(action.payload.itemCount);
-    for (let i = 0; i < items.length; i++) {
-      const [itemName, count] = items[i];
-      if (Items[itemName]) {
-        Items[itemName]!.count += count;
+  // 2. Mise à jour des compteurs globaux d'items (sans mutation directe)
+  if (itemCount !== undefined) {
+    for (const [name, delta] of Object.entries(itemCount)) {
+      const existing = Items[name];
+      if (existing !== undefined) {
+        Items[name] = { ...existing, count: existing.count + delta };
       }
     }
   }
 
-  if (action.payload.weightData) {
-    const { inventoryId, maxWeight } = action.payload.weightData;
-    const inv = inventoryId === state.leftInventory.id ? 'leftInventory'
-              : inventoryId === state.rightInventory.id ? 'rightInventory' : null;
-    if (!inv) return;
-    state[inv].maxWeight = maxWeight;
+  // 3. Mise à jour du poids max
+  if (weightData !== undefined) {
+    const key = resolveById(state, weightData.inventoryId);
+    if (key !== null) state[key].maxWeight = weightData.maxWeight;
   }
 
-  if (action.payload.slotsData) {
-    const { inventoryId, slots } = action.payload.slotsData;
-    const inv = inventoryId === state.leftInventory.id ? 'leftInventory'
-              : inventoryId === state.rightInventory.id ? 'rightInventory' : null;
-    if (!inv) return;
-    state[inv].slots = slots;
-    inventorySlice.caseReducers.setupInventory(state, {
-      type: 'setupInventory',
-      payload: {
-        leftInventory:  inv === 'leftInventory'  ? state[inv] : undefined,
-        rightInventory: inv === 'rightInventory' ? state[inv] : undefined,
-      },
-    });
+  // 4. Redimensionnement des slots (sans appel récursif)
+  if (slotsData !== undefined) {
+    const key = resolveById(state, slotsData.inventoryId);
+    if (key === null) return;
+    const inv = state[key];
+    inv.slots = slotsData.slots;
+    if (slotsData.slots > inv.items.length) {
+      for (let i = inv.items.length; i < slotsData.slots; i++) {
+        inv.items.push({ slot: i + 1 });
+      }
+    } else if (slotsData.slots < inv.items.length) {
+      inv.items.splice(slotsData.slots);
+    }
   }
 };

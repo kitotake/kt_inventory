@@ -154,7 +154,7 @@
             local idleDict = 'oddjobs@assassinate@construction@'
             -- FIX: 'idle_b' or 'unarmed_fold_arms' évaluait toujours 'idle_b' (string truthy)
             -- 'unarmed_fold_arms' n'était jamais atteint
-            local idleClip = first and 'idle_a' or 'idle_b'
+            local idleClip = first and 'idle_a' or 'unarmed_fold_arms'
 
             if loadAnimDict(idleDict) then
                 TaskPlayAnim(ped, idleDict, idleClip, 8.0, -8.0, -1, 1, 0.0, false, false, false)

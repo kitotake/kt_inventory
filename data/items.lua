@@ -347,11 +347,11 @@ return {
         }
     },
 
-    ['fries'] = {
+    ['Frites'] = {
         label = 'Frites',
         weight = 8,
         client = {
-            image = 'fries.png',
+            image = 'Frites.png',
             status = { hunger = 20, stress = -3 },
             anim = 'eating',
             prop = 'burger',
@@ -530,5 +530,22 @@ return {
             usetime = 2500,
             notification = 'Tu bois une biere'
         }
+    },
+
+     ['clothing_shoes_001'] = {
+        label        = 'Baskets blanches',
+        weight       = 150,
+        stack        = false,
+        close        = false,
+        description  = 'Baskets blanches classiques.',
+        category     = 'clothing',
+        clothingSlot = 'shoes',
+    },
+     ['clothing'] = {
+        label        = 'clothing ',
+        weight       = 150,
+        stack        = false,
+        close        = false,
+        description  = 'clothing.'
     },
 }

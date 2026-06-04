@@ -1,35 +1,47 @@
 // ============================================================
 // KT_INVENTORY — Design System AAA
-// Inspiré GTA Online / NoPixel premium
 // ============================================================
 
 // ── Variables ────────────────────────────────────────────────
-$mainColor:             #1a1b24;
-$mainColorLight:        #22232e;
-$mainColorDark:         #12131a;
-$textColor:             #c8cad0;
-$textColorMuted:        rgba(180, 182, 190, 0.55);
-$accentBlue:            #2563eb;
-$accentBlueBright:      #3b82f6;
-$accentBlueDim:         rgba(37, 99, 235, 0.18);
-$accentPurple:          #7c3aed;
-$accentPurpleDim:       rgba(124, 58, 237, 0.18);
-$accentGreen:           #16a34a;
-$accentRed:             #dc2626;
-$mainFont:              'Roboto', sans-serif;
+$mainColor: #1a1b24;
+$mainColorLight: #22232e;
+$mainColorDark: #12131a;
+$textColor: #c8cad0;
+$textColorMuted: rgba(180, 182, 190, 0.55);
+$accentBlue: #2563eb;
+$accentBlueBright: #3b82f6;
+$accentBlueDim: rgba(37, 99, 235, 0.18);
+$accentPurple: #7c3aed;
+$accentPurpleDim: rgba(124, 58, 237, 0.18);
+$accentGreen: #16a34a;
+$accentRed: #dc2626;
+$mainFont: 'Roboto',
+sans-serif;
 
 // Grid
-$gridCols:     5;
-$gridRows:     8;
-$gridSize:     9.0vh;
-$gridGap:      2px;
+$gridCols: 5;
+$gridRows: 8;
+$gridSize: 9.0vh;
+$gridGap: 2px;
 $containerSize: calc(#{$gridRows} * (#{$gridSize} + 0.22vh) + #{$gridRows} * #{$gridGap});
 
 // Preview
-$previewWidth:  clamp(240px, 20vw, 340px);
+$previewWidth: clamp(240px, 20vw, 340px);
+
+// Filter
+$filter-bg: rgba(10, 11, 18, 0.85);
+$filter-border: rgba(255, 255, 255, 0.06);
+$filter-active-bg: rgba(37, 99, 235, 0.20);
+$filter-active-bd: rgba(59, 130, 246, 0.60);
+$filter-hover-bg: rgba(255, 255, 255, 0.05);
+$filter-text: rgba(180, 182, 190, 0.70);
+$filter-text-on: rgba(200, 210, 255, 0.95);
+$filter-radius: 3px;
 
 // ── Reset / Base ──────────────────────────────────────────────
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
@@ -42,16 +54,29 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-#root { width: 100%; height: 100%; }
+#root {
+  width: 100%;
+  height: 100%;
+}
 
-::-webkit-scrollbar { display: none; }
+::-webkit-scrollbar {
+  display: none;
+}
 
-p { margin: 0; padding: 0; font-family: $mainFont; }
+p {
+  margin: 0;
+  padding: 0;
+  font-family: $mainFont;
+}
 
 input[type='number']::-webkit-inner-spin-button,
-input[type='number']::-webkit-outer-spin-button { appearance: none; }
+input[type='number']::-webkit-outer-spin-button {
+  appearance: none;
+}
 
-button:active { transform: translateY(1px); }
+button:active {
+  transform: translateY(1px);
+}
 
 // ── Layout racine ─────────────────────────────────────────────
 .app-wrapper {
@@ -67,10 +92,8 @@ button:active { transform: translateY(1px); }
   align-items: center;
   justify-content: center;
   background: rgba(0, 0, 0, 0.35);
-
 }
 
-// ── Ligne principale ──────────────────────────────────────────
 .inventory-main-row {
   display: flex;
   flex-direction: row;
@@ -82,7 +105,6 @@ button:active { transform: translateY(1px); }
   padding: 2vh;
 }
 
-// ── Colonnes inventaire (gauche / droite) ─────────────────────
 .inventory-side {
   flex-shrink: 0;
 }
@@ -117,6 +139,7 @@ button:active { transform: translateY(1px); }
   grid-auto-rows: calc($gridSize + 0.22vh);
   gap: $gridGap;
   overflow-y: auto;
+  contain: layout style;
 }
 
 // ── Slot générique ────────────────────────────────────────────
@@ -145,11 +168,7 @@ button:active { transform: translateY(1px); }
   bottom: 0;
   left: 0;
   width: 100%;
-  background: linear-gradient(
-    0deg,
-    rgba(15, 15, 22, 0.95) 0%,
-    rgba(15, 15, 22, 0.75) 100%
-  );
+  background: linear-gradient(0deg, rgba(15, 15, 22, 0.95) 0%, rgba(15, 15, 22, 0.75) 100%);
   border-top: 1px solid rgba(255, 255, 255, 0.04);
   border-bottom-left-radius: 2px;
   border-bottom-right-radius: 2px;
@@ -207,6 +226,28 @@ button:active { transform: translateY(1px); }
   }
 }
 
+// ── Slot highlight (filtrage visuel) ─────────────────────────
+.slot-highlight-wrapper {
+  display: contents;
+}
+
+.inventory-grid-container[data-filtering='true'] {
+  .slot-highlight-wrapper[data-highlighted='false'] .inventory-slot {
+    opacity: 0.28;
+    filter: grayscale(60%) brightness(60%);
+    transform: none !important;
+    pointer-events: none;
+    transition: opacity 200ms ease, filter 200ms ease;
+  }
+
+  .slot-highlight-wrapper[data-highlighted='true'] .inventory-slot {
+    opacity: 1;
+    filter: none;
+    box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.35);
+    transition: opacity 200ms ease, filter 200ms ease, box-shadow 200ms ease;
+  }
+}
+
 // ── Durability bar ────────────────────────────────────────────
 .durability-bar {
   position: absolute;
@@ -232,7 +273,10 @@ button:active { transform: translateY(1px); }
   justify-content: flex-end;
   padding: 2px 3px;
 
-  p { font-size: 10px; font-weight: 600; }
+  p {
+    font-size: 10px;
+    font-weight: 600;
+  }
 }
 
 .item-slot-currency-wrapper {
@@ -241,7 +285,9 @@ button:active { transform: translateY(1px); }
   gap: 3px;
   padding: 2px 3px;
 
-  p { font-size: 10px; }
+  p {
+    font-size: 10px;
+  }
 }
 
 // ── Centre : preview + contrôles ─────────────────────────────
@@ -260,8 +306,9 @@ button:active { transform: translateY(1px); }
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// PLAYER PREVIEW — Rendu AAA
+// PLAYER PREVIEW
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 .player-preview {
   position: relative;
   width: $previewWidth;
@@ -269,14 +316,8 @@ button:active { transform: translateY(1px); }
   flex-shrink: 0;
   overflow: hidden;
   border-radius: 4px;
-
-  // Bordure extérieure fine
   border: 1px solid rgba(37, 99, 235, 0.12);
-
-  // Fond : GTA rend la caméra scriptée ici
-  // Le fond doit être TRANSPARENT pour laisser passer le rendu 3D
   background: transparent;
-
   cursor: grab;
 
   &:active,
@@ -284,24 +325,27 @@ button:active { transform: translateY(1px); }
     cursor: grabbing;
   }
 
-  // État prêt : légère animation d'entrée
   &--ready {
     animation: previewFadeIn 0.4s ease forwards;
   }
 
-  // Lueur externe subtile (marque la zone premium)
-  box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.6),
-    0 8px 40px rgba(0, 0, 0, 0.7),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6),
+  0 8px 40px rgba(0, 0, 0, 0.7),
+  inset 0 1px 0 rgba(255, 255, 255, 0.03);
 
   @keyframes previewFadeIn {
-    from { opacity: 0.4; transform: scale(0.98); }
-    to   { opacity: 1;   transform: scale(1);    }
+    from {
+      opacity: 0.4;
+      transform: scale(0.98);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 }
 
-// Zone transparente — GTA rend la caméra dédiée ici
 .player-preview__viewport {
   position: absolute;
   inset: 0;
@@ -310,22 +354,14 @@ button:active { transform: translateY(1px); }
   z-index: 0;
 }
 
-// Vignettage : fond le ped dans l'UI, masque les bords durs
 .player-preview__vignette {
   position: absolute;
   inset: 0;
   pointer-events: none;
   z-index: 3;
+  background: radial-gradient(ellipse 78% 85% at 50% 48%,
+      transparent 30%, rgba(10, 11, 18, 0.30) 65%, rgba(6, 7, 14, 0.70) 100%);
 
-  // Vignette radiale : centre clair, bords sombres
-  background: radial-gradient(
-    ellipse 78% 85% at 50% 48%,
-    transparent 30%,
-    rgba(10, 11, 18, 0.30) 65%,
-    rgba(6,  7,  14, 0.70) 100%
-  );
-
-  // Dégradé bas : fondu vers le sol (intègre le ped)
   &::after {
     content: '';
     position: absolute;
@@ -333,14 +369,9 @@ button:active { transform: translateY(1px); }
     left: 0;
     right: 0;
     height: 28%;
-    background: linear-gradient(
-      0deg,
-      rgba(8, 9, 16, 0.85) 0%,
-      transparent 100%
-    );
+    background: linear-gradient(0deg, rgba(8, 9, 16, 0.85) 0%, transparent 100%);
   }
 
-  // Dégradé haut : fondu léger
   &::before {
     content: '';
     position: absolute;
@@ -348,34 +379,23 @@ button:active { transform: translateY(1px); }
     left: 0;
     right: 0;
     height: 18%;
-    background: linear-gradient(
-      180deg,
-      rgba(8, 9, 16, 0.45) 0%,
-      transparent 100%
-    );
+    background: linear-gradient(180deg, rgba(8, 9, 16, 0.45) 0%, transparent 100%);
   }
 }
 
-// Reflet de sol : ligne lumineuse subtile en bas du preview
 .player-preview__floor-reflection {
   position: absolute;
   bottom: 0;
   left: 10%;
   right: 10%;
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(59, 130, 246, 0.15) 30%,
-    rgba(59, 130, 246, 0.25) 50%,
-    rgba(59, 130, 246, 0.15) 70%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+      transparent 0%, rgba(59, 130, 246, 0.15) 30%,
+      rgba(59, 130, 246, 0.25) 50%, rgba(59, 130, 246, 0.15) 70%, transparent 100%);
   pointer-events: none;
   z-index: 4;
 }
 
-// ── Chargement ──────────────────────────────────────────────
 .player-preview__loading {
   position: absolute;
   inset: 0;
@@ -400,8 +420,13 @@ button:active { transform: translateY(1px); }
   }
 
   @keyframes spinnerRotate {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
   }
 }
 
@@ -410,9 +435,20 @@ button:active { transform: translateY(1px); }
   animation: spinnerDash 1.2s ease-in-out infinite;
 
   @keyframes spinnerDash {
-    0%   { stroke-dasharray: 1 125;  stroke-dashoffset: 0; }
-    50%  { stroke-dasharray: 90 125; stroke-dashoffset: -35; }
-    100% { stroke-dasharray: 90 125; stroke-dashoffset: -125; }
+    0% {
+      stroke-dasharray: 1 125;
+      stroke-dashoffset: 0;
+    }
+
+    50% {
+      stroke-dasharray: 90 125;
+      stroke-dashoffset: -35;
+    }
+
+    100% {
+      stroke-dasharray: 90 125;
+      stroke-dashoffset: -125;
+    }
   }
 }
 
@@ -424,7 +460,6 @@ button:active { transform: translateY(1px); }
   font-family: $mainFont;
 }
 
-// ── Hints de contrôles ──────────────────────────────────────
 .player-preview__hints {
   position: absolute;
   bottom: 1.2vh;
@@ -438,12 +473,25 @@ button:active { transform: translateY(1px); }
   animation: hintsAppear 0.5s ease forwards, hintsFade 0.5s ease 3s forwards;
 
   @keyframes hintsAppear {
-    from { opacity: 0; transform: translateX(-50%) translateY(6px); }
-    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(6px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
   }
+
   @keyframes hintsFade {
-    from { opacity: 1; }
-    to   { opacity: 0; }
+    from {
+      opacity: 1;
+    }
+
+    to {
+      opacity: 0;
+    }
   }
 }
 
@@ -474,7 +522,6 @@ button:active { transform: translateY(1px); }
   font-size: 9px;
 }
 
-// ── Badge zoom visage ────────────────────────────────────────
 .player-preview__zoom-badge {
   position: absolute;
   top: 1vh;
@@ -491,8 +538,15 @@ button:active { transform: translateY(1px); }
   animation: badgeIn 0.2s ease;
 
   @keyframes badgeIn {
-    from { opacity: 0; transform: scale(0.9); }
-    to   { opacity: 1; transform: scale(1); }
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 
   svg {
@@ -510,7 +564,6 @@ button:active { transform: translateY(1px); }
   }
 }
 
-// ── Curseur rotation ──────────────────────────────────────────
 .player-preview__cursor-hint {
   position: absolute;
   bottom: 1.2vh;
@@ -544,7 +597,6 @@ button:active { transform: translateY(1px); }
   }
 }
 
-// ── Clothing slot ─────────────────────────────────────────────
 .inventory-slot.clothing-slot {
   width: $gridSize;
   height: $gridSize;
@@ -555,12 +607,7 @@ button:active { transform: translateY(1px); }
   background-color: rgba(10, 11, 18, 0.65);
   border: 1px solid rgba(255, 255, 255, 0.05);
   cursor: pointer;
-
-  transition:
-    transform 120ms ease,
-    border-color 120ms ease,
-    background-color 120ms ease,
-    box-shadow 120ms ease;
+  transition: transform 120ms ease, border-color 120ms ease, background-color 120ms ease, box-shadow 120ms ease;
 
   &:hover {
     transform: scale(1.04);
@@ -569,13 +616,14 @@ button:active { transform: translateY(1px); }
     z-index: 2;
   }
 
-  // ── États ──────────────────────────────────────────────────
   &--selected {
     border: 1px solid rgba(59, 130, 246, 0.9) !important;
     background-color: rgba(37, 99, 235, 0.15) !important;
     box-shadow: 0 0 14px rgba(59, 130, 246, 0.35), inset 0 0 10px rgba(59, 130, 246, 0.08) !important;
 
-    .clothing-slot__icon { color: rgba(147, 197, 253, 0.9); }
+    .clothing-slot__icon {
+      color: rgba(147, 197, 253, 0.9);
+    }
   }
 
   &--equipped {
@@ -598,9 +646,19 @@ button:active { transform: translateY(1px); }
     animation: rejectShake 0.25s ease;
 
     @keyframes rejectShake {
-      0%, 100% { transform: translateX(0); }
-      25%       { transform: translateX(-2px); }
-      75%       { transform: translateX(2px); }
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      25% {
+        transform: translateX(-2px);
+      }
+
+      75% {
+        transform: translateX(2px);
+      }
     }
   }
 
@@ -615,7 +673,7 @@ button:active { transform: translateY(1px); }
   align-items: center;
   justify-content: center;
   flex: 1;
-  padding-bottom: 2.2vh; // espace pour le label en bas
+  padding-bottom: 2.2vh;
 }
 
 .clothing-slot__icon {
@@ -624,13 +682,6 @@ button:active { transform: translateY(1px); }
   transition: color 120ms ease;
 }
 
-.clothing-slot__label {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-}
-
-// Badge équipé (point bleu)
 .clothing-slot__badge {
   position: absolute;
   top: 3px;
@@ -644,7 +695,6 @@ button:active { transform: translateY(1px); }
   z-index: 2;
 }
 
-// Badge tenue complète (point violet)
 .clothing-slot__outfit-badge {
   position: absolute;
   top: 3px;
@@ -658,7 +708,6 @@ button:active { transform: translateY(1px); }
   z-index: 2;
 }
 
-// Overlay sélection (pulse subtil)
 .clothing-slot__selected-overlay {
   position: absolute;
   inset: 0;
@@ -669,12 +718,18 @@ button:active { transform: translateY(1px); }
   z-index: 1;
 
   @keyframes selectedPulse {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0.5; }
+
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.5;
+    }
   }
 }
 
-// Indicateurs drop
 .clothing-slot__drop-indicator,
 .clothing-slot__reject-indicator {
   position: absolute;
@@ -695,8 +750,13 @@ button:active { transform: translateY(1px); }
   }
 }
 
-.clothing-slot__drop-indicator svg { stroke: rgba(34, 197, 94, 0.9); }
-.clothing-slot__reject-indicator svg { stroke: rgba(220, 38, 38, 0.9); }
+.clothing-slot__drop-indicator svg {
+  stroke: rgba(34, 197, 94, 0.9);
+}
+
+.clothing-slot__reject-indicator svg {
+  stroke: rgba(220, 38, 38, 0.9);
+}
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // WEIGHT CIRCLE
@@ -711,14 +771,17 @@ button:active { transform: translateY(1px); }
   justify-content: center;
   flex-shrink: 0;
   cursor: default;
+}
 
-  svg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    transform: rotate(230deg);
-  }
+// SVG géré par classe CSS — pas de transform inline dans le JSX
+.weight-circle__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(230deg);
+  will-change: transform;
+  z-index: 0;
 }
 
 .circle-bg {
@@ -734,13 +797,15 @@ button:active { transform: translateY(1px); }
   transition: stroke 0.3s ease, stroke-dasharray 0.4s ease;
 }
 
+// Icône au-dessus du SVG — z-index 1 (fix stacking context CEF)
 .weight-circle__icon {
   position: relative;
-  z-index: 2;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: $textColorMuted;
+  color: rgb(0 0 0 / 55%);
+  pointer-events: none;
 }
 
 .weight-circle__tooltip {
@@ -748,7 +813,6 @@ button:active { transform: translateY(1px); }
   font-size: 11px;
 }
 
-// ── Header inventaire ──────────────────────────────────────────
 .inventory-header-weight {
   display: flex;
   align-items: center;
@@ -758,6 +822,115 @@ button:active { transform: translateY(1px); }
 .inventory-header-weight__text {
   font-size: 1.1vh;
   color: $textColorMuted;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// INVENTORY FILTER
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.inv-filter  {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+  padding: 5px 2px 3px;
+}
+
+
+
+
+.inv-filter__categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  width: 100%;
+}
+
+.inv-filter__cat-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 7px;
+  background: $filter-bg;
+  border: 1px solid $filter-border;
+  border-radius: $filter-radius;
+  color: $filter-text;
+  font-family: $mainFont;
+  font-size: 11px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 100ms ease, border-color 100ms ease, color 100ms ease, transform 80ms ease;
+
+  i {
+    font-size: 12px;
+  }
+
+  &:hover {
+    background-color: $filter-hover-bg;
+    border-color: rgba(255, 255, 255, 0.12);
+    color: #c8cad0;
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
+
+  &--active {
+    background-color: $filter-active-bg;
+    border-color: $filter-active-bd;
+    color: $filter-text-on;
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.15);
+  }
+}
+
+.inv-filter__cat-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.inv-filter__sort-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.inv-filter__sort-label {
+  font-size: 10px;
+  color: $filter-text;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.inv-filter__sort-btn {
+  padding: 3px 8px;
+  background: $filter-bg;
+  border: 1px solid $filter-border;
+  border-radius: $filter-radius;
+  color: $filter-text;
+  font-family: $mainFont;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 100ms ease, border-color 100ms ease, color 100ms ease;
+
+  &:hover {
+    background-color: $filter-hover-bg;
+    border-color: rgba(255, 255, 255, 0.12);
+    color: #c8cad0;
+  }
+
+  &--active {
+    background-color: rgba(124, 58, 237, 0.18);
+    border-color: rgba(167, 139, 250, 0.50);
+    color: rgba(200, 185, 255, 0.95);
+  }
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -779,7 +952,9 @@ button:active { transform: translateY(1px); }
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
   font-family: $mainFont;
 
-  p { font-size: 12px; }
+  p {
+    font-size: 12px;
+  }
 }
 
 .tooltip-header-wrapper {
@@ -798,7 +973,8 @@ button:active { transform: translateY(1px); }
   margin-top: 2px;
   margin-bottom: 4px;
 
-  p, .tooltip-markdown p {
+  p,
+  .tooltip-markdown p {
     font-size: 11px;
     color: $textColorMuted;
     line-height: 1.5;
@@ -810,7 +986,10 @@ button:active { transform: translateY(1px); }
   align-items: center;
   gap: 4px;
 
-  p { font-size: 11px; color: $textColorMuted; }
+  p {
+    font-size: 11px;
+    color: $textColorMuted;
+  }
 }
 
 .tooltip-ingredients {
@@ -832,7 +1011,10 @@ button:active { transform: translateY(1px); }
     object-fit: contain;
   }
 
-  p { font-size: 11px; color: $textColor; }
+  p {
+    font-size: 11px;
+    color: $textColor;
+  }
 }
 
 .divider {
@@ -874,7 +1056,9 @@ button:active { transform: translateY(1px); }
   cursor: pointer;
   transition: background-color 80ms ease;
 
-  &:active { transform: none; }
+  &:active {
+    transform: none;
+  }
 
   &:hover {
     background-color: rgba(59, 130, 246, 0.1);
@@ -980,6 +1164,7 @@ button:active { transform: translateY(1px); }
     &:hover {
       background-color: rgba(37, 99, 235, 0.9);
     }
+
     &:active {
       transform: translateY(1px);
     }
@@ -1025,8 +1210,16 @@ button:active { transform: translateY(1px); }
   cursor: pointer;
   opacity: 0.5;
   transition: opacity 100ms ease;
-  &:hover { opacity: 1; }
-  svg { width: 12px; height: 12px; fill: $textColor; }
+
+  &:hover {
+    opacity: 1;
+  }
+
+  svg {
+    width: 12px;
+    height: 12px;
+    fill: $textColor;
+  }
 }
 
 .useful-controls-content-wrapper {
@@ -1100,25 +1293,41 @@ button:active { transform: translateY(1px); }
 // TRANSITIONS
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-.transition-fade-enter       { opacity: 0; }
+.transition-fade-enter {
+  opacity: 0;
+}
+
 .transition-fade-enter-active {
   opacity: 1;
   transition: opacity 200ms ease;
 }
-.transition-fade-exit        { opacity: 1; }
-.transition-fade-exit-active  {
+
+.transition-fade-exit {
+  opacity: 1;
+}
+
+.transition-fade-exit-active {
   opacity: 0;
   transition: opacity 200ms ease;
 }
 
-.transition-slide-up-enter        { transform: translateY(200px); opacity: 0; }
-.transition-slide-up-enter-active  {
+.transition-slide-up-enter {
+  transform: translateY(200px);
+  opacity: 0;
+}
+
+.transition-slide-up-enter-active {
   transform: translateY(0);
   opacity: 1;
   transition: all 220ms ease;
 }
-.transition-slide-up-exit         { transform: translateY(0); opacity: 1; }
-.transition-slide-up-exit-active   {
+
+.transition-slide-up-exit {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.transition-slide-up-exit-active {
   transform: translateY(200px);
   opacity: 0;
   transition: all 220ms ease;

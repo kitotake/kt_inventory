@@ -1,4 +1,4 @@
-// reducers/index.ts
+// reducers/index.ts — exports inchangés, implémentations optimisées
 export { setupInventoryReducer } from './setupInventory';
 export { refreshSlotsReducer }   from './refreshSlots';
 export { swapSlotsReducer }      from './swapSlots';

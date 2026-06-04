@@ -1,11 +1,7 @@
 // components/inventory/LeftInventory.tsx
+import React from 'react';
 import InventoryGrid from './InventoryGrid';
-import { useAppSelector } from '../../store';
-import { selectLeftInventory } from '../../store/inventory';
 
-const LeftInventory: React.FC = () => {
-  const leftInventory = useAppSelector(selectLeftInventory);
-  return <InventoryGrid inventory={leftInventory} />;
-};
+const LeftInventory: React.FC = () => <InventoryGrid side="left" />;
 
-export default LeftInventory;
+export default React.memo(LeftInventory);
