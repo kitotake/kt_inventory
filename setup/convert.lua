@@ -198,6 +198,8 @@ local function Convert_Old_ESX_Property()
 	started = false
 end
 
+lib.print.info('^2[kt_inventory] setup/modules/convert module et charge')
+
 return {
 	linden = Upgrade,
 	esx = ConvertESX,

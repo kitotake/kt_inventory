@@ -1,11 +1,15 @@
 // components/inventory/InventorySlot.tsx
-// CORRECTIONS :
-//   1. canDrag : dépendances item.slot+item.name uniquement (pas l'objet entier)
-//   2. useDrag/useDrop : dépendances minimales → descriptor stable entre renders
-//   3. mergeRefs : useCallback stable (remplace useMergeRefs de floating-ui)
-//   4. useNuiEvent retiré du slot → 80 listeners remplacés par 1 dans le parent
-//   5. ShopPrice extrait en sous-composant mémoïsé
-//   6. slotStyle calculé par useMemo (pas d'objet inline)
+// Corrections v4 :
+//   [FIX-B6] canDrag : inventoryGroups était un objet passé par référence → nouvelle référence
+//            à chaque render parent → canDrag recréé → useDrag recréé → drag descriptor
+//            instable pendant le drag → drop annulé aléatoirement.
+//            Fix : JSON.stringify(inventoryGroups) comme dépendance stable (string primitive).
+//   [FIX-B7] backgroundImage : getItemUrl() retournait undefined → "url(none)" affiché
+//            dans le DOM → le navigateur CEF le traite comme une URL invalide et affiche
+//            l'image par défaut du système. Fix : fallback sur '' (string vide)
+//            → backgroundImage: 'none' si pas d'image → aucune image affichée, pas de fallback.
+//   [FIX-B8] mergeRefs : useCallback ajouté avec dépendances correctes pour éviter les
+//            re-créations inutiles quand drag/drop changent (perf).
 
 import React, { useCallback, useMemo, useRef } from 'react';
 import { useDrag, useDrop }      from 'react-dnd';
@@ -39,7 +43,7 @@ const ShopPrice: React.FC<{ item: SlotWithItem }> = React.memo(({ item }) => {
     return (
       <div className="item-slot-currency-wrapper">
         <img
-          src={item.currency ? (getItemUrl(item.currency) ?? 'none') : 'none'}
+          src={item.currency ? (getItemUrl(item.currency) ?? '') : ''}
           alt="currency"
           style={{ imageRendering: '-webkit-optimize-contrast', height: 'auto', width: '2vh', backfaceVisibility: 'hidden' }}
         />
@@ -65,10 +69,20 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
   const canPurchase = canPurchaseItem(item, { type: inventoryType, groups: inventoryGroups });
   const canCraft    = canCraftItem(item, inventoryType);
 
+  // [FIX-B6] inventoryGroups est un objet → nouvelle référence à chaque render du parent
+  // → canDrag se recrée → useDrag recrée le descriptor → drag state perdu pendant le drag
+  // → le drop est annulé si le parent re-render pendant le drag (ex: store update).
+  // Fix : sérialiser inventoryGroups en string stable pour la dépendance.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const groupsKey = useMemo(() => JSON.stringify(inventoryGroups), [inventoryGroups]);
+
   const canDrag = useCallback(
-    () => canPurchaseItem(item, { type: inventoryType, groups: inventoryGroups }) && canCraftItem(item, inventoryType),
+    () =>
+      canPurchaseItem(item, { type: inventoryType, groups: inventoryGroups }) &&
+      canCraftItem(item, inventoryType),
+    // [FIX-B6] groupsKey (string) à la place de inventoryGroups (objet) → stable
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [item.slot, item.name, inventoryType, inventoryGroups]
+    [item.slot, item.name, inventoryType, groupsKey]
   );
 
   const [{ isDragging }, drag] = useDrag<DragSource, void, { isDragging: boolean }>(
@@ -77,7 +91,12 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
       collect: (m) => ({ isDragging: m.isDragging() }),
       item: () =>
         isSlotWithItem(item, inventoryType !== InventoryType.SHOP)
-          ? { inventory: inventoryType, item: { name: item.name, slot: item.slot }, image: item.name ? `url(${getItemUrl(item as SlotWithItem) ?? 'none'})` : undefined }
+          ? {
+              inventory: inventoryType,
+              item: { name: item.name, slot: item.slot },
+              // [FIX-B7] getItemUrl peut retourner undefined → fallback sur '' pas 'none'
+              image: item.name ? `url(${getItemUrl(item as SlotWithItem) ?? ''})` : undefined,
+            }
           : null,
       canDrag,
     }),
@@ -104,13 +123,20 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
     [inventoryType, item.slot]
   );
 
-  // Ref fusionnée stable
-  const connectRef = useCallback((el: HTMLDivElement | null) => { drag(drop(el)); }, [drag, drop]);
-  const mergeRefs  = useCallback((el: HTMLDivElement | null) => {
-    connectRef(el);
-    if (typeof ref === 'function') ref(el);
-    else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = el;
-  }, [connectRef, ref]);
+  // [FIX-B8] connectRef stable — dépend uniquement de drag et drop
+  const connectRef = useCallback(
+    (el: HTMLDivElement | null) => { drag(drop(el)); },
+    [drag, drop]
+  );
+
+  const mergeRefs = useCallback(
+    (el: HTMLDivElement | null) => {
+      connectRef(el);
+      if (typeof ref === 'function') ref(el);
+      else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = el;
+    },
+    [connectRef, ref]
+  );
 
   const handleContext = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -121,8 +147,10 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
   const handleClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     dispatch(closeTooltip());
     if (timerRef.current !== null) clearTimeout(timerRef.current);
-    if (e.ctrlKey  && isSlotWithItem(item) && inventoryType !== 'shop' && inventoryType !== 'crafting') onDrop({ item: item as SlotWithItem, inventory: inventoryType });
-    else if (e.altKey && isSlotWithItem(item) && inventoryType === 'player') onUse(item);
+    if (e.ctrlKey && isSlotWithItem(item) && inventoryType !== 'shop' && inventoryType !== 'crafting')
+      onDrop({ item: item as SlotWithItem, inventory: inventoryType });
+    else if (e.altKey && isSlotWithItem(item) && inventoryType === 'player')
+      onUse(item);
   }, [dispatch, inventoryType, item]);
 
   const handleMouseEnter = useCallback(() => {
@@ -137,14 +165,23 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
     if (timerRef.current !== null) { clearTimeout(timerRef.current); timerRef.current = null; }
   }, [dispatch]);
 
-  const slotStyle = useMemo<React.CSSProperties>(() => ({
-    filter:          !canPurchase || !canCraft ? 'brightness(70%) grayscale(100%)' : undefined,
-    opacity:         isDragging ? 0.35 : 1.0,
-    backgroundImage: item.name ? `url(${getItemUrl(item as SlotWithItem) ?? 'none'})` : 'none',
-    border:          isOver ? '1px dashed rgba(59,130,246,0.5)' : '',
-    backgroundColor: isOver ? 'rgba(37,99,235,0.08)' : '',
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }), [isDragging, isOver, canPurchase, canCraft, item.name]);
+  const slotStyle = useMemo<React.CSSProperties>(() => {
+    // [FIX-B7] getItemUrl() peut retourner undefined si l'image n'existe pas.
+    // "url(none)"  → le navigateur cherche un fichier nommé "none" → affiche placeholder
+    // "url('')"    → équivaut à pas d'image → backgroundImage ignoré → correct
+    // ""           → backgroundImage: 'none' → pas d'image → correct
+    const imageUrl = item.name ? getItemUrl(item as SlotWithItem) : undefined;
+    const backgroundImage = imageUrl ? `url(${imageUrl})` : 'none';
+
+    return {
+      filter:          !canPurchase || !canCraft ? 'brightness(70%) grayscale(100%)' : undefined,
+      opacity:         isDragging ? 0.35 : 1.0,
+      backgroundImage,
+      border:          isOver ? '1px dashed rgba(59,130,246,0.5)' : '',
+      backgroundColor: isOver ? 'rgba(37,99,235,0.08)' : '',
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDragging, isOver, canPurchase, canCraft, item.name]);
 
   const hasItem = isSlotWithItem(item);
 
@@ -156,9 +193,10 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
             {inventoryType === 'player' && item.slot <= 5 && <div className="inventory-slot-number">{item.slot}</div>}
             <div className="item-slot-info-wrapper">
               {(item as SlotWithItem).weight > 0 && (
-                <p>{(item as SlotWithItem).weight >= 1000
-                  ? `${((item as SlotWithItem).weight / 1000).toLocaleString('en-us', { minimumFractionDigits: 2 })}kg `
-                  : `${(item as SlotWithItem).weight.toLocaleString('en-us', { minimumFractionDigits: 0 })}g `}
+                <p>
+                  {(item as SlotWithItem).weight >= 1000
+                    ? `${((item as SlotWithItem).weight / 1000).toLocaleString('en-us', { minimumFractionDigits: 2 })}kg `
+                    : `${(item as SlotWithItem).weight.toLocaleString('en-us', { minimumFractionDigits: 0 })}g `}
                 </p>
               )}
               {(item as SlotWithItem).count ? <p>{(item as SlotWithItem).count!.toLocaleString('en-us')}x</p> : null}

@@ -12,8 +12,19 @@
 
 if not lib then return end
 
-local Inventory = require 'modules.inventory.server'
-local Items     = require 'modules.items.server'
+-- Lazy loading pour éviter les dépendances circulaires
+-- Les modules sont require() seulement quand nécessaire
+local Inventory, Items
+
+local function getInventory()
+    Inventory = Inventory or require 'modules.inventory.server'
+    return Inventory
+end
+
+local function getItems()
+    Items = Items or require 'modules.items.server'
+    return Items
+end
 
 -- ─────────────────────────────────────────────────────────────
 -- ÉTAT
@@ -102,12 +113,12 @@ local function cleanupTrashStash(src)
     if not trashStashes[stashId] then return end
 
     -- Vider le stash en mémoire (sécurité : au cas où un item y serait resté)
-    local inv = Inventory(stashId)
+    local inv = getInventory()(stashId)
     if inv then
         -- Vider tous les slots restants
         for slotIndex, slotData in pairs(inv.items or {}) do
             if slotData and slotData.name then
-                local itemLabel = (Items(slotData.name) or {}).label or slotData.name
+                local itemLabel = (getItems()(slotData.name) or {}).label or slotData.name
                 lib.print.warn(('[kt_inventory:trash] Item orphelin supprimé à cleanup: %s x%d (stash=%s)'):format(
                     slotData.name, slotData.count or 1, stashId))
                 -- Suppression directe du slot
@@ -144,67 +155,10 @@ end
 -- On ne veut PAS annuler — on laisse kt_inventory faire le move,
 -- puis on supprime immédiatement le contenu du slot destination.
 
-exports.kt_inventory:AddHook('swapItems', function(payload)
-    local toInv = payload.toInventory
+-- Hook supprimé : AddHook n'existe pas comme export dans kt_inventory
+-- Les vérifications de sécurité sont faites via openTrashStash()
 
-    -- Pas un stash poubelle → ne rien faire, laisser passer normalement
-    if not toInv or toInv.type ~= 'stash' then return end
-    if not isTrashStash(toInv.id) then return end
-
-    -- Récupérer le joueur propriétaire de cette poubelle
-    local src = trashStashes[toInv.id]
-    if not src then return end
-
-    -- Vérification sécurité : seul le propriétaire peut déposer
-    -- (évite qu'un autre joueur proche jette dans la poubelle d'autrui)
-    if payload.source ~= src then
-        lib.print.warn(('[kt_inventory:trash] Tentative de dépôt non autorisé: src=%d owner=%d stash=%s'):format(
-            payload.source or -1, src, toInv.id))
-        return false -- Annule le move
-    end
-
-    -- Récupérer les infos de l'item déplacé
-    local fromSlot = payload.fromSlot
-    if not fromSlot or not fromSlot.name then return end
-
-    local itemName  = fromSlot.name
-    local itemCount = payload.count or fromSlot.count or 1
-    local itemDef   = Items(itemName)
-    local itemLabel = itemDef and itemDef.label or itemName
-
-    -- Planifier la suppression APRÈS que kt_inventory ait fini son move
-    -- (SetTimeout 0 = frame suivante, le move est déjà committed)
-    SetTimeout(0, function()
-        local trashInv = Inventory(toInv.id)
-        if not trashInv then return end
-
-        -- Vider tous les slots du stash poubelle
-        -- (il n'y a qu'1 slot, mais on itère pour robustesse)
-        local destroyed = false
-        for slotIndex, slotData in pairs(trashInv.items or {}) do
-            if slotData and slotData.name then
-                trashInv.items[slotIndex] = nil
-                destroyed = true
-            end
-        end
-
-        if not destroyed then
-            lib.print.warn(('[kt_inventory:trash] Aucun item trouvé à détruire dans %s'):format(toInv.id))
-            return
-        end
-
-        -- Forcer la synchronisation du stash côté client
-        -- pour que le slot apparaisse vide immédiatement
-        TriggerClientEvent('kt_inventory:trash:cleared', src, toInv.id)
-
-        -- Notification de confirmation
-        local msg = ('Vous avez détruit %dx %s'):format(itemCount, itemLabel)
-        notify(src, msg, 'inform')
-
-        lib.print.info(('[kt_inventory:trash] Détruit: %s x%d par src=%d'):format(
-            itemName, itemCount, src))
-    end)
-end)
+-- ─────────────────────────────────────────────────────────────
 
 -- ─────────────────────────────────────────────────────────────
 -- COMMANDE /poubelle
@@ -218,7 +172,7 @@ RegisterNetEvent('kt_inventory:trash:open', function()
     local src = source
     if src == 0 then return end
 
-    local inv = Inventory(src)
+    local inv = getInventory()(src)
     if not inv or not inv.player then
         notify(src, "Impossible d'ouvrir la poubelle.", 'error')
         return
@@ -237,7 +191,7 @@ RegisterCommand('poubelle', function(source)
     end
 
     -- Vérifier que le joueur a un personnage actif
-    local inv = Inventory(src)
+    local inv = getInventory()(src)
     if not inv or not inv.player then
         notify(src, "Impossible d'ouvrir la poubelle.", 'error')
         return
@@ -263,22 +217,13 @@ end)
 AddEventHandler('playerDropped', function()
     cleanupTrashStash(source)
 end)
-
 -- ─────────────────────────────────────────────────────────────
 -- SÉCURITÉ : BLOQUER LES MOVES DEPUIS UNE POUBELLE
 -- Un joueur ne doit jamais pouvoir récupérer un item de la poubelle.
 -- On intercepte aussi les moves DEPUIS un stash poubelle.
 -- ─────────────────────────────────────────────────────────────
 
-exports.kt_inventory:AddHook('swapItems', function(payload)
-    local fromInv = payload.fromInventory
-    if not fromInv or fromInv.type ~= 'stash' then return end
-    if not isTrashStash(fromInv.id) then return end
-
-    -- Bloquer tout mouvement depuis une poubelle vers n'importe où
-    lib.print.warn(('[kt_inventory:trash] Tentative de récupération depuis poubelle bloquée: src=%d stash=%s'):format(
-        payload.source or -1, fromInv.id))
-    return false
-end)
+-- Hook supprimé : AddHook n'existe pas comme export dans kt_inventory
+-- À implémenter : trouver l'API correcte de kt_inventory pour les hooks
 
 lib.print.info('^2[kt_inventory] Système poubelle chargé (/poubelle)^0')

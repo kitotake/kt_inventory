@@ -176,4 +176,7 @@ end
 
 ItemList.cash = ItemList.money
 
+lib.print.info('^2[kt_inventory] modules/items/shared module loaded')
+
 return ItemList
+

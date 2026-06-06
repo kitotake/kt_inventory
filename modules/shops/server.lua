@@ -283,4 +283,6 @@ lib.callback.register('kt_inventory:buyItem', function(source, data)
 	end
 end)
 
+lib.print.info('^2[kt_inventory] modules/shops/server module loaded')
+
 server.shops = Shops

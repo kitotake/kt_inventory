@@ -56,3 +56,5 @@ if not success then
 end
 
 if server.convertInventory then exports('ConvertItems', server.convertInventory) end
+
+lib.print.info('^2[kt_inventory]^7 server bridge for ^5union_fivem^7 loaded')

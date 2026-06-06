@@ -251,3 +251,5 @@ lib.callback.register('kt_inventory:craftItem', function(source, id, index, reci
 		end
 	end
 end)
+
+lib.print.info('^2[kt_inventory] modules/crafting/server module loaded')

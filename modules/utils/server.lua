@@ -45,4 +45,6 @@ if webHook ~= '' then
 	end
 end
 
+lib.print.info('^2[kt_inventory] modules/utils/utils module loaded')
+
 return Utils

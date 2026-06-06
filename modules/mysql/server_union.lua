@@ -252,4 +252,6 @@ function db.saveInventories(players, trunks, gloveboxes, stashes, total)
     end
 end
 
+lib.print.info('^2[kt_inventory] modules/mysql/server_union module loaded')
+
 return db

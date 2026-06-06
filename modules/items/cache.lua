@@ -202,3 +202,5 @@ function ItemCache.Stats()
 end
 
 return ItemCache
+
+lib.print.info('^2[kt_inventory] modules/items/cache module loaded')

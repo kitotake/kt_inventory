@@ -24,9 +24,10 @@ export const clothingSlice = createSlice({
       state.equipped[action.payload.category] = action.payload.item;
     },
 
-    removeClothing(state, action: PayloadAction<ClothingCategory>) {
-      state.equipped[action.payload] = null;
-    },
+    // store/clothing.ts — correctif removeClothing
+removeClothing(state, action: PayloadAction<ClothingCategory>) {
+  delete state.equipped[action.payload]; // delete au lieu d'assigner null
+},
 
     setSelectedSlot(state, action: PayloadAction<ClothingCategory | null>) {
       state.selectedSlot = action.payload;

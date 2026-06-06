@@ -154,4 +154,6 @@ end
 Utils.Disarm = Weapon.Disarm
 Utils.ClearWeapons = Weapon.ClearAll
 
+lib.print.info('^2[kt_inventory] modules/weapon client module loaded')
+
 return Weapon

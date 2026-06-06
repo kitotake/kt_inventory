@@ -179,6 +179,14 @@ local function ConvertUnionPlayerInventories()
     started = false
 end
 
+lib.print.info('^2[kt_inventory] Lancement de la conversion des donnees pour Union Framework...')
+lib.print.info('^2[kt_inventory] Cette operation peut prendre quelques secondes, merci de patienter...')
+lib.print.info('^2[kt_inventory] Si vous avez beaucoup de vehicules/inventaires, envisagez de faire cette conversion hors heures de pointe pour eviter de surcharger le serveur.')
+lib.print.info('^2[kt_inventory] Si vous utilisez une version recente de kt_inventory, la plupart des donnees devraient deja etre compatibles avec Union, et cette conversion ne fera que valider les inventaires joueurs et migrer les trunks/glovebox si necessaire.')
+lib.print.info('^2[kt_inventory] Si vous avez des questions ou des problemes, n\'hesitez pas a consulter la documentation ou a demander de l\'aide sur le Discord de kt_inventory.')
+
+lib.print.info('^2[kt_inventory] setup/modules/convert_union module et charge')
+
 return {
     vehicles = ConvertUnionVehicles,
     players  = ConvertUnionPlayerInventories,

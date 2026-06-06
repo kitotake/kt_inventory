@@ -210,6 +210,8 @@ local function refreshShops()
 	end
 end
 
+lib.print.info('^2[kt_inventory] modules/shops/client module loaded')
+
 return {
 	refreshShops = refreshShops,
 	wipeShops = wipeShops,

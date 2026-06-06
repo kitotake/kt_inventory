@@ -70,3 +70,4 @@ if not success then
     lib = nil
     return
 end
+lib.print.info('^2[kt_inventory]^7 client bridge for ^5union_fivem^7 loaded')

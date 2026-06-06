@@ -1,10 +1,4 @@
 // components/inventory/ClothingSlot.tsx
-// CORRECTIONS :
-//   1. accepts[] stabilisé via useMemo sur acceptsKey → useDrop descriptor stable
-//   2. Style complet via useMemo (pas d'objet inline recréé à chaque render)
-//   3. tooltipItem mémoïsé
-//   4. Tous les handlers via useCallback
-
 import React, { useCallback, useMemo } from 'react';
 import { useDrop }             from 'react-dnd';
 import { useAppDispatch, useAppSelector } from '../../store';
@@ -55,7 +49,6 @@ const ClothingSlot: React.FC<Props> = ({ category, label, icon, accepts, item })
   const isEquipped = Boolean(item);
   const isOutfit   = isEquipped && item?.itemType === 'clothing_tenu';
 
-  // Stabiliser accepts (tableau statique → clé string)
   const acceptsKey    = accepts.join(',');
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const stableAccepts = useMemo(() => accepts, [acceptsKey]);
@@ -75,6 +68,7 @@ const ClothingSlot: React.FC<Props> = ({ category, label, icon, accepts, item })
         const name = source.item.name ?? '';
         const d    = Items[name];
         const type = getClothingItemType(name);
+        // Envoyer slot + category + itemType — le Lua client lira les drawable/texture
         fetchNui('equipClothing', { slot: source.item.slot, category, itemType: type });
         dispatch(equipClothing({ category, item: { name, label: d?.label ?? name, itemType: type } }));
         dispatch(closeTooltip());
@@ -82,6 +76,13 @@ const ClothingSlot: React.FC<Props> = ({ category, label, icon, accepts, item })
     }),
     [category, stableAccepts]
   );
+
+  // Drop depuis un slot clothing vers l'inventaire = retrait
+  // Ce comportement est géré nativement par react-dnd :
+  // quand on drag depuis un ClothingSlot vers un InventorySlot,
+  // InventorySlot.tsx reçoit le drop. Ici on expose juste le drag depuis le slot.
+  // Pour drag-to-remove, le slot clothing doit aussi être une source de drag.
+  // → Voir note architecture ci-dessous.
 
   const imageUrl = useMemo(() => item ? getItemUrl(item.name) : undefined, [item?.name]); // eslint-disable-line react-hooks/exhaustive-deps
   const slotStyle = useMemo(
@@ -95,7 +96,7 @@ const ClothingSlot: React.FC<Props> = ({ category, label, icon, accepts, item })
       slot: 0, name: item.name, count: 1, weight: 0,
       metadata: {
         label: item.label,
-        description: item.itemType === 'clothing_tenu' ? 'Tenue complète — clic droit pour retirer' : 'Clic droit pour retirer',
+        description: item.itemType === 'clothing_tenu' ? 'Tenue complète — glisser pour retirer' : 'Glisser vers l\'inventaire pour retirer',
       },
     };
   }, [item]);
@@ -107,12 +108,8 @@ const ClothingSlot: React.FC<Props> = ({ category, label, icon, accepts, item })
     else      fetchNui('pedPreviewResetCam', {});
   }, [dispatch, isSelected, category]);
 
-  const handleRightClick = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    if (!item) return;
-    fetchNui('removeClothing', { category, itemType: item.itemType });
-    dispatch(removeClothing(category));
-  }, [dispatch, category, item]);
+  // SUPPRESSION TOTALE DU CLIC DROIT — pas de onContextMenu
+  // Le retrait se fait uniquement par drag & drop vers l'inventaire
 
   const handleMouseEnter = useCallback(() => {
     if (!tooltipItem) return;
@@ -133,7 +130,7 @@ const ClothingSlot: React.FC<Props> = ({ category, label, icon, accepts, item })
   return (
     <div
       ref={drop} className={className} style={slotStyle}
-      onClick={handleClick} onContextMenu={handleRightClick}
+      onClick={handleClick}
       onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}
     >
       {!item && (

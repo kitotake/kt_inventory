@@ -15,3 +15,5 @@ end)
 
 exports('CancelProgress', lib.cancelProgress)
 exports('ProgressActive', lib.progressActive)
+
+lib.print.info('^2[kt_inventory] interface/client module loaded')

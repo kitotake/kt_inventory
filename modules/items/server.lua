@@ -366,5 +366,7 @@ end
 -- end)
 
 -----------------------------------------------------------------------------------------------
+lib.print.info('^2[kt_inventory] modules/items/server module loaded')
 
 return Items
+

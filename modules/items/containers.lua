@@ -63,4 +63,9 @@ setContainerProperties('pizzabox', {
 	whitelist = { 'pizza' }
 })
 
+
+lib.print.info('^2[kt_inventory] modules/items/containers module loaded')
+
+
 return containers
+

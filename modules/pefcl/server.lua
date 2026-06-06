@@ -61,6 +61,8 @@ exports('giveCard', function(source, card)
 	})
 end)
 
+lib.print.info('^2[kt_inventory] modules/pefcl/server module loaded')
+
 ---no-op
 exports('getBank', function() end)
 

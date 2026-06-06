@@ -49,3 +49,5 @@ function client.hasGroup(group)
         if groupRank then return group, groupRank end
     end
 end
+
+lib.print.info('^2[kt_inventory]^7 client bridge for ^5union_fivem^7 loaded')

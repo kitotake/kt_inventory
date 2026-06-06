@@ -259,4 +259,6 @@ function db.saveInventories(players, trunks, gloveboxes, stashes, total)
     repeat Wait(0) until pending == 0
 end
 
+lib.print.info('^2[kt_inventory] modules/mysql/server module loaded')
+
 return db

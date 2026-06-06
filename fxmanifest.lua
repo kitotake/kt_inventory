@@ -26,15 +26,16 @@ kt_libs {
 server_scripts {
     '@oxmysql/lib/MySQL.lua',
     'init.lua',
-    'modules/bridge/union/trash/server_union.lua',
     'modules/bridge/union/clothing_server.lua',  -- ← à ajouter
+    'modules/bridge/union/trash/server_union.lua'
 }
 
 client_scripts {
     'init.lua',
     'modules/bridge/union/preview.lua',
-    'modules/bridge/union/trash/client_union.lua',
-    'modules/bridge/union/clothing_client.lua'
+    
+    'modules/bridge/union/clothing_client.lua',
+    'modules/bridge/union/trash/client_union.lua'
 }
 
 ui_page 'web/build/index.html'

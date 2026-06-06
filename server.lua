@@ -698,3 +698,5 @@ lib.addCommand('viewinv', {
 }, function(source, args)
 	Inventory.InspectInventory(source, tonumber(args.invId) or args.invId)
 end)
+
+lib.print.info('^2[kt_inventory] Server Ultimes loaded successfully!^0')

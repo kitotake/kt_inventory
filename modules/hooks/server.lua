@@ -217,4 +217,7 @@ lib.addCommand('invhookstats', {
     end
 end)
 
+lib.print.info('^2[kt_inventory] hooks/server module loaded')
+
 return TriggerEventHooks
+

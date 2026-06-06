@@ -198,4 +198,7 @@ if lib.context == 'server' then
     return require 'server'
 end
 
+lib.print.info('^2[kt_inventory] INIT Ultimes loaded successfully!^0')
+
+
 require 'client'

@@ -292,4 +292,4 @@ AddEventHandler("playerDropped", function()
     release(src)
 end)
 
-print("^2[kt_inventory] Union bridge server v2 chargé^0")
+print("^2[kt_inventory] Union bridge server v3 chargé^0")

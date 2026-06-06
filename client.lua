@@ -46,7 +46,7 @@ plyState:set('canUseWeapons', false, false)
 local function canOpenInventory()
     if not PlayerData.loaded then
         return shared.info('cannot open inventory', '(player inventory has not loaded)')
-    end
+	end
 
    if IsPauseMenuActive() and not Preview?.active then
     return
@@ -1217,17 +1217,16 @@ RegisterNetEvent('kt_inventory:setPlayerInventory', function(currentDrops, inven
 
 		ItemData[v.name] = {
 	label = v.label,
-	stack = v.stack,
-	close = v.close,
-	count = 0,
-	description = v.description,
-	buttons = buttons,
-	ammoName = v.ammoname,
-	image = v.client?.image,
-
-	-- Clothing System
-	category = v.category,
-	clothingSlot = v.clothingSlot,
+    stack = v.stack,
+    close = v.close,
+    count = 0,
+    description = v.description,
+    buttons = buttons,
+    ammoName = v.ammoname,
+    image = v.client?.image,
+    -- Clothing System
+    category = v.category,
+    clothingSlot = v.clothingSlot,
 }
 	end
 
@@ -1909,3 +1908,5 @@ lib.callback.register('kt_inventory:getVehicleData', function(netid)
 		return GetEntityModel(entity), GetVehicleClass(entity)
 	end
 end)
+
+lib.print.info('^2[kt_inventory] Client Ultimes loaded successfully!^0')

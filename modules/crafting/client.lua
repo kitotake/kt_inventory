@@ -97,3 +97,5 @@ end
 for id, data in pairs(lib.load('data.crafting') or {}) do createCraftingBench(data.name or id, data) end
 
 return CraftingBenches
+
+lib.print.info('^2[kt_inventory] modules/crafting/client module loaded')

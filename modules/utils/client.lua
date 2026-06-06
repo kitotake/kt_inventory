@@ -200,4 +200,6 @@ function Utils.nearbyMarker(point)
     end
 end
 
+lib.print.info('^2[kt_inventory] modules/utils/client module loaded')
+
 return Utils
