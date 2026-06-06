@@ -428,6 +428,6 @@ RegisterNetEvent('kt_inventory:refreshSlotCount', function(data)
     })
 end)
 
-return Inventory
-
 lib.print.info('^2[kt_inventory] inventory/client module loaded')
+
+return Inventory

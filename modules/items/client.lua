@@ -192,6 +192,6 @@ end)
 exports('Items', function(item) return getItem(nil, item) end)
 exports('ItemList', function(item) return getItem(nil, item) end)
 
-return Items
-
 lib.print.info('^2[kt_inventory] modules/items/client module loaded')
+
+return Items

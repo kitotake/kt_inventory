@@ -44,13 +44,14 @@ plyState:set('invHotkeys', false, false)
 plyState:set('canUseWeapons', false, false)
 
 local function canOpenInventory()
-    if not PlayerData.loaded then
+    if not PlayerData or not PlayerData.loaded then
+        lib.print.warn(('[kt_inventory] PlayerData non chargé: %s'):format(type(PlayerData)))
         return shared.info('cannot open inventory', '(player inventory has not loaded)')
-	end
+    end
 
-   if IsPauseMenuActive() and not Preview?.active then
-    return
-end
+    if IsPauseMenuActive() and not Preview?.active then
+        return
+    end
 
     if invBusy or invOpen == nil or (currentWeapon?.timer or 0) > 0 then
         return shared.info('cannot open inventory', '(is busy)')
@@ -1184,6 +1185,8 @@ end)
 
 RegisterNetEvent('kt_inventory:setPlayerInventory', function(currentDrops, inventory, weight, player)
 	if source == '' then return end
+
+	lib.print.info(('^2✓ Inventaire reçu du serveur (poids: %d/%d)^0'):format(weight, shared.playerweight))
 
     ---@class PlayerData
     ---@field inventory table<number, SlotWithItem?>

@@ -18,7 +18,49 @@ local Items     = require "modules.items.server"
 local _loadingPlayers = {}
 
 -- ─────────────────────────────────────────────
--- HELPERS
+-- PLAYER INVENTORY SETUP
+-- ─────────────────────────────────────────────
+
+function server.setPlayerInventory(ktPlayer)
+    if type(ktPlayer) ~= "table" then return end
+    
+    local src = ktPlayer.source
+    if not src then return end
+    
+    -- Créer l'inventaire du joueur
+    local inv = Inventory(src, true)
+    if not inv then
+        print(("^1[kt_inventory] Impossible de créer l'inventaire pour src=%d^0"):format(src))
+        return
+    end
+    
+    -- Ajouter les données du joueur
+    inv.owner = ktPlayer.identifier
+    inv.player = {
+        source = src,
+        name = ktPlayer.name,
+        identifier = ktPlayer.identifier,
+        groups = ktPlayer.groups or {},
+        sex = ktPlayer.sex,
+        dob = ktPlayer.dob,
+    }
+    
+    -- Envoyer l'événement au client pour initialiser PlayerData
+    TriggerClientEvent('kt_inventory:setPlayerInventory', src, {}, inv.items or {}, inv.weight or 0, {
+        source = src,
+        name = ktPlayer.name,
+        identifier = ktPlayer.identifier,
+        groups = ktPlayer.groups or {},
+        sex = ktPlayer.sex,
+        dob = ktPlayer.dob,
+        loaded = true,
+        inventory = inv.items or {},
+        weight = inv.weight or 0,
+    })
+    
+    print(("^2[kt_inventory] Inventaire chargé pour %s (src=%d)^0"):format(ktPlayer.name, src))
+end
+
 -- ─────────────────────────────────────────────
 
 local function debug(msg)
@@ -139,6 +181,7 @@ AddEventHandler('onResourceStart', function(resource)
     if resource ~= GetCurrentResourceName() then return end
 
     Wait(500)
+	print('^3[kt_inventory] Réinitialisation après ensure...^0')
 
     for _, rawId in ipairs(GetPlayers()) do
         -- [FIX-4] GetPlayers() peut retourner strings ou numbers selon la version
@@ -152,6 +195,7 @@ AddEventHandler('onResourceStart', function(resource)
 
             if char and isValidChar(char) then
                 debug(("re-init après ensure src=%d uid=%s"):format(playerId, char.unique_id))
+				print(("^2[kt_inventory] Re-chargement inventaire pour joueur %s (src=%d)^0"):format(GetPlayerName(playerId), playerId))
 
                 local pid = playerId  -- capture locale
 
@@ -173,6 +217,8 @@ AddEventHandler('onResourceStart', function(resource)
 
                     if not ok then
                         print(("^1[kt_inventory] ERREUR re-init src=%d: %s^0"):format(pid, tostring(err)))
+					else
+						print(("^2[kt_inventory] Inventaire rechargé avec succès pour src=%d^0"):format(pid))
                     end
                 end)
             end
