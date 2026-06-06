@@ -27,6 +27,7 @@ server_scripts {
     '@oxmysql/lib/MySQL.lua',
     'init.lua',
     'modules/bridge/union/clothing_server.lua',  -- ← à ajouter
+    'modules/bridge/union/trash/server_union.lua',  -- ← à ajouter
 }
 
 client_scripts {
@@ -34,6 +35,7 @@ client_scripts {
     'modules/bridge/union/client.lua',
     'modules/bridge/union/preview.lua',
     'modules/bridge/union/clothing_client.lua',  -- ← décommenter ici
+    'modules/bridge/union/trash/client_union.lua',  -- ← à ajouter
 }
 
 ui_page 'web/build/index.html'

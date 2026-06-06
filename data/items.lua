@@ -1,5 +1,6 @@
 return {
 
+    print("^2[ITEMS] Fichier chargé !^0"),
     -- ─────────────────────────────────────────────────────────────
 --  kt_illegal — Items ox_inventory
 -- ─────────────────────────────────────────────────────────────
@@ -285,11 +286,15 @@ return {
     },
 
     ['money'] = {
-        label = 'Money',
-        client = {
-            image = 'money.png',
-        }
-    },
+    label = 'Money',
+    weight = 0,
+    stack = true,
+    close = false,
+    consume = 0,
+    client = {
+        image = 'money.png',
+    }
+},
 
     ['mustard'] = {
         label = 'Mustard',

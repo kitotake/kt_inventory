@@ -1,10 +1,13 @@
--- modules/bridge/union/trash/client_union.lua
--- Côté client du système de poubelle
---
--- Responsabilités :
---   - Recevoir la confirmation de destruction → notification visuelle
---   - Recevoir le signal de slot vidé → forcer le refresh de l'UI kt_inventory
---   - Détecter la fermeture de l'inventaire → prévenir le serveur de nettoyer
+-- modules/bridge/union/trash/client_union.lua  v2
+-- Corrections v2 :
+--   [FIX-CMD]    RegisterCommand supprimé côté client — la commande est enregistrée
+--                UNIQUEMENT côté serveur. Le client utilise un keybind ou un menu.
+--                Raison : si les deux côtés enregistrent 'poubelle', FiveM garde
+--                le dernier enregistré (serveur) et le client ne se déclenche jamais.
+--   [FIX-LOOP]   closeTrash() ne déclenche plus kt_inventory:closeInventory
+--                pour éviter le re-trigger du handler de fermeture (double cleanup).
+--   [FIX-STATE]  currentTrashId mis à nil AVANT TriggerEvent pour éviter les
+--                boucles dans le handler kt_inventory:closeInventory.
 
 if not lib then return end
 
@@ -12,17 +15,14 @@ if not lib then return end
 -- ÉTAT LOCAL
 -- ─────────────────────────────────────────────────────────────
 
--- Identifiant du stash poubelle actuellement ouvert pour ce joueur
--- Format : "trash_<source>" ou nil si aucun
 local currentTrashId = nil
+local _closing       = false   -- guard anti-boucle fermeture
 
 -- ─────────────────────────────────────────────────────────────
 -- NOTIFICATION
--- Utilise lib.notify (ox_lib) — adapter si tu utilises autre chose
 -- ─────────────────────────────────────────────────────────────
 
 RegisterNetEvent('kt_inventory:trash:notify', function(msg, nType)
-    -- ox_lib notify
     lib.notify({
         title       = '🗑️ Poubelle',
         description = msg,
@@ -34,20 +34,13 @@ end)
 
 -- ─────────────────────────────────────────────────────────────
 -- SLOT VIDÉ → REFRESH UI
--- Quand le serveur a détruit l'item, il envoie cet event pour
--- forcer kt_inventory à rafraîchir l'affichage du stash (slot → vide).
 -- ─────────────────────────────────────────────────────────────
 
 RegisterNetEvent('kt_inventory:trash:cleared', function(stashId)
-    -- Mémoriser quel stash est ouvert
     currentTrashId = stashId
-
-    -- Demander à kt_inventory de rafraîchir l'UI
-    -- kt_inventory expose un event client pour ça
     TriggerEvent('kt_inventory:refreshInventory')
 
-    -- Fermeture automatique après un court délai
-    -- (laisser le temps à l'animation de fin pour se jouer)
+    -- Fermeture automatique avec délai pour laisser l'animation se jouer
     SetTimeout(800, function()
         closeTrash()
     end)
@@ -55,64 +48,56 @@ end)
 
 -- ─────────────────────────────────────────────────────────────
 -- FERMETURE DE LA POUBELLE
+-- [FIX-LOOP] Ne déclenche PAS kt_inventory:closeInventory ici —
+--            c'est kt_inventory lui-même qui l'émet quand il ferme.
+--            On prévient juste le serveur de nettoyer.
 -- ─────────────────────────────────────────────────────────────
 
 function closeTrash()
-    if not currentTrashId then return end
+    if not currentTrashId or _closing then return end
+    _closing = true
 
-    -- Fermer l'inventaire kt_inventory
-    TriggerEvent('kt_inventory:closeInventory')
+    local id       = currentTrashId
+    currentTrashId = nil  -- [FIX-STATE] nil avant tout TriggerEvent
 
-    -- Prévenir le serveur de nettoyer le stash
     TriggerServerEvent('kt_inventory:trash:close')
 
-    currentTrashId = nil
+    lib.print.info(('[kt_inventory:trash] Poubelle fermée: %s'):format(id))
+
+    SetTimeout(100, function() _closing = false end)
 end
 
 -- ─────────────────────────────────────────────────────────────
 -- DÉTECTION FERMETURE MANUELLE
--- Si le joueur ferme l'inventaire lui-même (touche E ou Échap),
--- on prévient le serveur de nettoyer le stash.
+-- kt_inventory émet cet event quand le joueur ferme l'inventaire.
+-- On prévient le serveur de nettoyer le stash.
 -- ─────────────────────────────────────────────────────────────
 
 AddEventHandler('kt_inventory:closeInventory', function()
-    if not currentTrashId then return end
-
-    -- Nettoyer l'état local
-    local id       = currentTrashId
-    currentTrashId = nil
-
-    -- Prévenir le serveur
-    TriggerServerEvent('kt_inventory:trash:close')
-
-    lib.print.info(('[kt_inventory:trash] Poubelle fermée: %s'):format(id))
+    -- [FIX-LOOP] Guard : si closeTrash() est en cours, ne pas re-enter
+    if _closing or not currentTrashId then return end
+    closeTrash()
 end)
 
 -- ─────────────────────────────────────────────────────────────
--- COMMANDE CLIENT /poubelle
--- Relaie vers le serveur qui crée le stash et l'ouvre
+-- OUVERTURE — déclenchée par le serveur après RegisterStash réussi
+-- Le serveur envoie cet event pour confirmer que le stash est prêt.
 -- ─────────────────────────────────────────────────────────────
 
-RegisterCommand('poubelle', function()
-    -- Vérification légère côté client : inventaire déjà ouvert ?
-    if currentTrashId then
-        lib.notify({
-            title       = '🗑️ Poubelle',
-            description = 'Votre poubelle est déjà ouverte.',
-            type        = 'error',
-            duration    = 3000,
-        })
-        return
-    end
+RegisterNetEvent('kt_inventory:trash:opened', function(stashId)
+    currentTrashId = stashId
+    lib.print.info(('[kt_inventory:trash] Poubelle ouverte: %s'):format(stashId))
+end)
 
-    -- Mémoriser immédiatement pour éviter le double-clic
-    -- (le vrai stashId sera confirmé par le serveur via kt_inventory:trash:cleared)
-    -- On utilise un placeholder le temps que le serveur réponde
-    currentTrashId = ('trash_%d'):format(GetPlayerServerId(PlayerId()))
+-- ─────────────────────────────────────────────────────────────
+-- [FIX-CMD] PAS de RegisterCommand ici.
+-- La commande /poubelle est enregistrée uniquement côté SERVEUR.
+-- Le serveur appelle OpenInventory directement → kt_inventory ouvre l'UI.
+--
+-- Si tu veux un raccourci clavier côté client, utilise :
+--   RegisterKeyMapping('poubelle', 'Ouvrir la poubelle', 'keyboard', 'F7')
+--   RegisterCommand('poubelle', function() TriggerServerEvent('kt_inventory:trash:open') end, false)
+-- Mais dans ce cas, RETIRE RegisterCommand du serveur pour ce nom.
+-- ─────────────────────────────────────────────────────────────
 
-    -- Le serveur fait RegisterStash + OpenInventory
-    -- kt_inventory gère l'ouverture de l'UI automatiquement
-    TriggerServerEvent('kt_inventory:trash:open')
-end, false)
-
-lib.print.info('^2[kt_inventory] Système poubelle client chargé^0')
+lib.print.info('^2[kt_inventory] Système poubelle client v2 chargé^0')
