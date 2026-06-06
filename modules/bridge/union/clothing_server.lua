@@ -212,6 +212,7 @@ lib.callback.register('kt_inventory:equipClothing', function(source, slotId, met
     if not inv or not inv.player then return false, 'no_inventory' end
 
     local slotData = inv.items[slotId]
+    print(('DEBUG equipClothing: slotId=%d, metadata=%s'):format(slotId, json.encode(metadata)))
     if not slotData then return false, 'slot_empty' end
 
     local item = getItems()(slotData.name)

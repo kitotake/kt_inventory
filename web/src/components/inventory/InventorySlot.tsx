@@ -10,6 +10,13 @@
 //            → backgroundImage: 'none' si pas d'image → aucune image affichée, pas de fallback.
 //   [FIX-B8] mergeRefs : useCallback ajouté avec dépendances correctes pour éviter les
 //            re-créations inutiles quand drag/drop changent (perf).
+// Corrections v5 :
+//   [FIX-B9] canDrag : logique AND incorrecte → canPurchaseItem retourne false pour les items
+//            normaux (pas un shop) donc RIEN ne pouvait jamais être draggé.
+//            Fix : logique conditionnelle par type d'inventaire :
+//              - SHOP     → canPurchaseItem doit être true
+//              - CRAFTING → canCraftItem doit être true
+//              - autres   → toujours true (drag libre)
 
 import React, { useCallback, useMemo, useRef } from 'react';
 import { useDrag, useDrop }      from 'react-dnd';
@@ -76,10 +83,18 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const groupsKey = useMemo(() => JSON.stringify(inventoryGroups), [inventoryGroups]);
 
+  // [FIX-B9] Logique conditionnelle par type d'inventaire :
+  //   - SHOP     → canPurchaseItem doit être true (on vérifie les groupes / prix)
+  //   - CRAFTING → canCraftItem doit être true (on vérifie les ressources)
+  //   - autres   → drag toujours autorisé (inventaire joueur, coffre, drop…)
+  // L'ancienne logique AND était incorrecte : canPurchaseItem retourne false pour tout
+  // item hors SHOP, ce qui bloquait le drag sur l'inventaire joueur entier.
   const canDrag = useCallback(
-    () =>
-      canPurchaseItem(item, { type: inventoryType, groups: inventoryGroups }) &&
-      canCraftItem(item, inventoryType),
+    () => {
+      if (inventoryType === InventoryType.SHOP)     return canPurchaseItem(item, { type: inventoryType, groups: inventoryGroups });
+      if (inventoryType === InventoryType.CRAFTING) return canCraftItem(item, inventoryType);
+      return true;
+    },
     // [FIX-B6] groupsKey (string) à la place de inventoryGroups (objet) → stable
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [item.slot, item.name, inventoryType, groupsKey]

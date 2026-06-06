@@ -27,15 +27,13 @@ server_scripts {
     '@oxmysql/lib/MySQL.lua',
     'init.lua',
     'modules/bridge/union/clothing_server.lua',  -- ← à ajouter
-    'modules/bridge/union/trash/server_union.lua'
 }
 
 client_scripts {
     'init.lua',
+    'modules/bridge/union/client.lua',
     'modules/bridge/union/preview.lua',
-    
-    'modules/bridge/union/clothing_client.lua',
-    'modules/bridge/union/trash/client_union.lua'
+    'modules/bridge/union/clothing_client.lua',  -- ← décommenter ici
 }
 
 ui_page 'web/build/index.html'
@@ -51,4 +49,8 @@ files {
     'modules/**/shared.lua',
     'modules/**/client.lua',
     'data/*.lua',
+    'modules/mysql/server_union.lua',    -- manquant
+    'modules/inventory/lock.lua',         -- manquant
+    'modules/items/cache.lua',            -- manquant
+    'modules/mysql/save_manager.lua',     -- manquant
 }

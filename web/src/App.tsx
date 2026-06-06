@@ -25,6 +25,7 @@ debugData([
           { slot: 1, name: 'iron',    weight: 3000, metadata: { description: 'name: Svetozar Miletic\nGender: Male', ammo: 3 }, count: 5 },
           { slot: 2, name: 'water',   weight: 100,  count: 1, metadata: { description: 'Eau fraîche' } },
           { slot: 3, name: 'bandage', weight: 115,  count: 3, metadata: { durability: 75 } },
+          { slot: 4, name: 'clothing', weight: 115,  count: 3, metadata: { components: { mask: [1, 0] } } },
         ],
       },
       rightInventory: {

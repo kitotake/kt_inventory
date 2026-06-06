@@ -1,10 +1,8 @@
 -- modules/bridge/union/server.lua
 -- Corrections :
---   [FIX-1] server.setPlayerInventory appelé via pcall avec vérification du retour
---   [FIX-2] AddStat : vérification que la fonction export existe avant l'appel
---   [FIX-3] hasLicense / buyLicense : MySQL.single remplacé par MySQL.scalar (plus portable)
---   [FIX-4] onResourceStart : gestion du cas où GetPlayers() retourne des strings
---   [FIX-5] union:status:actionFromItem : validation des valeurs (nombres entiers, bornes)
+--   [FIX-1] server.setPlayerInventory SUPPRIMÉE de ce fichier
+--           Elle est définie dans server.lua principal et ne doit pas être redéfinie ici
+--           La version locale écrasait la bonne version et ne faisait pas db.loadPlayer
 
 if not lib then return end
 
@@ -18,49 +16,7 @@ local Items     = require "modules.items.server"
 local _loadingPlayers = {}
 
 -- ─────────────────────────────────────────────
--- PLAYER INVENTORY SETUP
--- ─────────────────────────────────────────────
-
-function server.setPlayerInventory(ktPlayer)
-    if type(ktPlayer) ~= "table" then return end
-    
-    local src = ktPlayer.source
-    if not src then return end
-    
-    -- Créer l'inventaire du joueur
-    local inv = Inventory(src, true)
-    if not inv then
-        print(("^1[kt_inventory] Impossible de créer l'inventaire pour src=%d^0"):format(src))
-        return
-    end
-    
-    -- Ajouter les données du joueur
-    inv.owner = ktPlayer.identifier
-    inv.player = {
-        source = src,
-        name = ktPlayer.name,
-        identifier = ktPlayer.identifier,
-        groups = ktPlayer.groups or {},
-        sex = ktPlayer.sex,
-        dob = ktPlayer.dob,
-    }
-    
-    -- Envoyer l'événement au client pour initialiser PlayerData
-    TriggerClientEvent('kt_inventory:setPlayerInventory', src, {}, inv.items or {}, inv.weight or 0, {
-        source = src,
-        name = ktPlayer.name,
-        identifier = ktPlayer.identifier,
-        groups = ktPlayer.groups or {},
-        sex = ktPlayer.sex,
-        dob = ktPlayer.dob,
-        loaded = true,
-        inventory = inv.items or {},
-        weight = inv.weight or 0,
-    })
-    
-    print(("^2[kt_inventory] Inventaire chargé pour %s (src=%d)^0"):format(ktPlayer.name, src))
-end
-
+-- HELPERS
 -- ─────────────────────────────────────────────
 
 local function debug(msg)
@@ -98,7 +54,6 @@ local function buildGroups(char, player)
         groups[job] = grade
     end
 
-    -- Groupe système (admin, moderator, etc.)
     local sys = player and player.group
     if type(sys) == "string" and sys ~= "user" and sys ~= "" then
         groups["sys:" .. sys] = 0
@@ -108,7 +63,7 @@ local function buildGroups(char, player)
 end
 
 -- ─────────────────────────────────────────────
--- SPAWN HANDLER [FIX-1]
+-- SPAWN HANDLER
 -- ─────────────────────────────────────────────
 
 AddEventHandler("union:player:spawned", function(src, characterData)
@@ -140,7 +95,6 @@ AddEventHandler("union:player:spawned", function(src, characterData)
         end
 
         local char = player.currentCharacter or characterData
-        -- Garantir unique_id
         char.unique_id = char.unique_id or characterData.unique_id
 
         if not isValidChar(char) then
@@ -157,12 +111,12 @@ AddEventHandler("union:player:spawned", function(src, characterData)
             identifier = char.unique_id,
             groups     = groups,
             sex        = char.gender or char.sex,
-            dob        = char.dateofbirth or char.dob,
+            dateofbirth = char.dateofbirth or char.dob,
         }
 
         debug(("chargement inventaire uid=%s"):format(char.unique_id))
 
-        -- [FIX-1] Vérification du retour de setPlayerInventory
+        -- Appelle la vraie server.setPlayerInventory définie dans server.lua
         local ok, err = pcall(server.setPlayerInventory, ktPlayer)
 
         release(src)
@@ -174,17 +128,16 @@ AddEventHandler("union:player:spawned", function(src, characterData)
 end)
 
 -- ─────────────────────────────────────────────
--- RE-INIT ON RESOURCE RESTART [FIX-4]
+-- RE-INIT ON RESOURCE RESTART
 -- ─────────────────────────────────────────────
 
 AddEventHandler('onResourceStart', function(resource)
     if resource ~= GetCurrentResourceName() then return end
 
     Wait(500)
-	print('^3[kt_inventory] Réinitialisation après ensure...^0')
+    print('^3[kt_inventory] Réinitialisation après ensure...^0')
 
     for _, rawId in ipairs(GetPlayers()) do
-        -- [FIX-4] GetPlayers() peut retourner strings ou numbers selon la version
         local playerId = tonumber(rawId)
         if not playerId then goto continueLoop end
 
@@ -195,9 +148,9 @@ AddEventHandler('onResourceStart', function(resource)
 
             if char and isValidChar(char) then
                 debug(("re-init après ensure src=%d uid=%s"):format(playerId, char.unique_id))
-				print(("^2[kt_inventory] Re-chargement inventaire pour joueur %s (src=%d)^0"):format(GetPlayerName(playerId), playerId))
+                print(("^2[kt_inventory] Re-chargement inventaire pour joueur %s (src=%d)^0"):format(GetPlayerName(playerId), playerId))
 
-                local pid = playerId  -- capture locale
+                local pid = playerId
 
                 CreateThread(function()
                     Wait(200)
@@ -205,20 +158,20 @@ AddEventHandler('onResourceStart', function(resource)
                     local groups = buildGroups(char, player)
 
                     local ktPlayer = {
-                        source     = pid,
-                        name       = player.name or GetPlayerName(pid),
-                        identifier = char.unique_id,
-                        groups     = groups,
-                        sex        = char.gender or char.sex,
-                        dob        = char.dateofbirth or char.dob,
+                        source      = pid,
+                        name        = player.name or GetPlayerName(pid),
+                        identifier  = char.unique_id,
+                        groups      = groups,
+                        sex         = char.gender or char.sex,
+                        dateofbirth = char.dateofbirth or char.dob,
                     }
 
                     local ok, err = pcall(server.setPlayerInventory, ktPlayer)
 
                     if not ok then
                         print(("^1[kt_inventory] ERREUR re-init src=%d: %s^0"):format(pid, tostring(err)))
-					else
-						print(("^2[kt_inventory] Inventaire rechargé avec succès pour src=%d^0"):format(pid))
+                    else
+                        print(("^2[kt_inventory] Inventaire rechargé avec succès pour src=%d^0"):format(pid))
                     end
                 end)
             end
@@ -246,10 +199,9 @@ AddEventHandler("union:job:updated", function(src, job, grade)
 end)
 
 -- ─────────────────────────────────────────────
--- STATUS FROM ITEM [FIX-5]
+-- STATUS FROM ITEM
 -- ─────────────────────────────────────────────
 
--- [FIX-2] Vérification que l'export AddStat existe
 local function safeAddStat(src, stat, value)
     local ok, err = pcall(function()
         return exports["union"].AddStat(nil, src, stat, value)
@@ -264,7 +216,6 @@ RegisterNetEvent("union:status:actionFromItem", function(values)
 
     if type(values) ~= "table" then return end
 
-    -- [FIX-5] Validation + bornes pour éviter les exploits
     if values.hunger and type(values.hunger) == "number" then
         local v = math.floor(math.max(-100, math.min(500, values.hunger)))
         safeAddStat(src, "hunger", v)
@@ -282,13 +233,12 @@ RegisterNetEvent("union:status:actionFromItem", function(values)
 end)
 
 -- ─────────────────────────────────────────────
--- LICENSE SYSTEM [FIX-3]
+-- LICENSE SYSTEM
 -- ─────────────────────────────────────────────
 
 function server.hasLicense(inv, name)
     if type(inv) ~= "table" or type(inv.owner) ~= "string" then return false end
 
-    -- [FIX-3] MySQL.scalar plus portable que MySQL.single
     local ok, result = pcall(function()
         return MySQL.scalar.await(
             "SELECT COUNT(*) FROM user_licenses WHERE type = ? AND unique_id = ? LIMIT 1",
@@ -338,4 +288,4 @@ AddEventHandler("playerDropped", function()
     release(src)
 end)
 
-print("^2[kt_inventory] Union bridge server v3 chargé^0")
+print("^2[kt_inventory] Union bridge server v4 chargé^0")

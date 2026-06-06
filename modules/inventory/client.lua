@@ -1,3 +1,5 @@
+-- modules/inventory/client.lua
+
 if not lib then return end
 
 local Inventory = {}

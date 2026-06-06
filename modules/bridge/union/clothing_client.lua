@@ -1,13 +1,8 @@
--- modules/bridge/union/clothing_client.lua  v4
--- Corrections v4 :
---   [FIX-NUI-1] loadAndApplyOutfit() envoie maintenant setupClothing au NUI React
---               → les slots clothing dans l'UI sont remplis dès l'ouverture
---   [FIX-NUI-2] equipClothing : envoie clothingEquipped au NUI après succès
---   [FIX-NUI-3] removeClothing : envoie clothingRemoved au NUI après succès
---   [FIX-NUI-4] outfitUpdated NetEvent : envoie setupClothing au NUI pour resync
---   [FIX-NUI-5] equipOutfit : envoie outfitEquipped au NUI après succès
---   [FIX-B1]    require 'modules.items.client' remplacé par exports.kt_inventory:Items()
---               → require() dans un NUI callback peut retourner nil si module non prêt
+-- modules/bridge/union/clothing_client.lua  v5
+-- Corrections v5 (sur base v4) :
+--   [FIX-GUARD-1] PlayerData.inventory accédé avec guard nil → plus de crash si inventaire pas prêt
+--   [FIX-GUARD-2] Preview.Create/Destroy/Rotate... tous protégés par guard → plus d'erreur si Preview nil
+--   [FIX-GUARD-3] Preview callbacks : cb() toujours appelé même si Preview nil → NUI jamais freezé
 
 if not lib then return end
 
@@ -78,14 +73,23 @@ local function applyOutfit(ped, outfit)
 end
 
 -- ─────────────────────────────────────────────────────────────
--- [FIX-NUI-1] SYNC NUI REACT — SETUP CLOTHING
---
--- Convertit l'état EquippedClothing reçu du serveur en message NUI
--- pour mettre à jour le state Redux clothing dans React.
+-- [FIX-GUARD-2] HELPER PREVIEW SÉCURISÉ
+-- Toutes les interactions Preview passent par ces wrappers.
+-- Si Preview est nil ou non actif, rien n'explose.
+-- ─────────────────────────────────────────────────────────────
+
+local function previewRefresh(delay)
+    SetTimeout(delay or 120, function()
+        if Preview and Preview.active then Preview.Refresh() end
+    end)
+end
+
+-- ─────────────────────────────────────────────────────────────
+-- SYNC NUI REACT — SETUP CLOTHING
 -- equipped = { [slotName] = { name, label, itemType } }
 -- ─────────────────────────────────────────────────────────────
 
----@param equipped table|nil  EquippedClothing du serveur
+---@param equipped table|nil
 local function sendSetupClothingNUI(equipped)
     if not equipped then return end
     SendNUIMessage({
@@ -100,7 +104,6 @@ end
 
 local function loadAndApplyOutfit(delay)
     SetTimeout(delay or 500, function()
-        -- [FIX-NUI-1] getOutfit retourne maintenant (outfit, equipped)
         lib.callback('kt_inventory:getOutfit', false, function(outfit, equipped)
             local ped = cache.ped
             if not ped or not DoesEntityExist(ped) then return end
@@ -110,7 +113,6 @@ local function loadAndApplyOutfit(delay)
                 lib.print.info('[kt_inventory:clothing] Tenue appliquée au ped')
             end
 
-            -- [FIX-NUI-1] Sync le state Redux clothing dans React
             if equipped then
                 sendSetupClothingNUI(equipped)
                 lib.print.info('[kt_inventory:clothing] State clothing envoyé au NUI')
@@ -149,8 +151,6 @@ RegisterNetEvent('kt_inventory:outfitUpdated', function(outfit)
 
     applyOutfit(ped, outfit)
 
-    -- [FIX-NUI-4] Reconstruire et envoyer l'état Redux depuis l'outfit mis à jour
-    -- L'outfit v4 contient name+label par slot → on peut reconstruire EquippedClothing
     local equipped = {}
     local hasAny   = false
     for slotName, slotData in pairs(outfit) do
@@ -169,60 +169,78 @@ RegisterNetEvent('kt_inventory:outfitUpdated', function(outfit)
     end
 
     if Preview and Preview.active then
-        SetTimeout(100, function()
-            if Preview.active then Preview.Refresh() end
-        end)
+        previewRefresh(100)
     end
 end)
 
 -- ─────────────────────────────────────────────────────────────
 -- CALLBACKS NUI — Preview ped
+-- [FIX-GUARD-2] Preview.X() protégé : cb() toujours appelé
+-- [FIX-GUARD-3] cb() avant l'action → NUI jamais bloqué si Preview nil
 -- ─────────────────────────────────────────────────────────────
 
 RegisterNUICallback('pedPreviewInit', function(_, cb)
     cb({ ok = true })
-    Preview.Create()
+    -- [FIX-GUARD-2] Preview peut être nil si preview.lua n'est pas chargé
+    if Preview and Preview.Create then
+        Preview.Create()
+    else
+        lib.print.warn('[kt_inventory:clothing] pedPreviewInit : Preview non disponible')
+    end
 end)
 
 RegisterNUICallback('pedPreviewDestroy', function(_, cb)
     cb({ ok = true })
-    Preview.Destroy()
+    if Preview and Preview.Destroy then
+        Preview.Destroy()
+    end
 end)
 
 RegisterNUICallback('pedPreviewRotate', function(data, cb)
     cb({ ok = true })
-    if type(data.delta) == 'number' then Preview.Rotate(data.delta) end
+    if Preview and Preview.Rotate and type(data.delta) == 'number' then
+        Preview.Rotate(data.delta)
+    end
 end)
 
 RegisterNUICallback('pedPreviewRotateVertical', function(data, cb)
     cb({ ok = true })
-    if type(data.deltaY) == 'number' then Preview.RotateVertical(data.deltaY) end
+    if Preview and Preview.RotateVertical and type(data.deltaY) == 'number' then
+        Preview.RotateVertical(data.deltaY)
+    end
 end)
 
 RegisterNUICallback('pedPreviewZoom', function(data, cb)
     cb({ ok = true })
-    if type(data.delta) == 'number' then
+    if not Preview then return end
+    if type(data.delta) == 'number' and Preview.Zoom then
         Preview.Zoom(data.delta)
-    elseif type(data.face) == 'boolean' then
+    elseif type(data.face) == 'boolean' and Preview.SetZoom then
         Preview.SetZoom(data.face)
     end
 end)
 
 RegisterNUICallback('pedPreviewResetCam', function(_, cb)
     cb({ ok = true })
-    Preview.ResetCam()
+    if Preview and Preview.ResetCam then
+        Preview.ResetCam()
+    end
 end)
 
 RegisterNUICallback('pedPreviewAnim', function(data, cb)
     cb({ ok = true })
-    if type(data.dict) == 'string' and type(data.clip) == 'string' then
+    if Preview and Preview.PlayAnim
+        and type(data.dict) == 'string'
+        and type(data.clip) == 'string' then
         Preview.PlayAnim(data.dict, data.clip)
     end
 end)
 
 RegisterNUICallback('pedPreviewZoomCategory', function(data, cb)
     cb({ ok = true })
-    if type(data.category) == 'string' then Preview.ZoomToCategory(data.category) end
+    if Preview and Preview.ZoomToCategory and type(data.category) == 'string' then
+        Preview.ZoomToCategory(data.category)
+    end
 end)
 
 -- ─────────────────────────────────────────────────────────────
@@ -239,13 +257,16 @@ RegisterNUICallback('equipClothing', function(data, cb)
         return cb({ ok = false, reason = 'ped_unavailable' })
     end
 
+    -- [FIX-GUARD-1] Guard nil sur PlayerData.inventory
+    if not PlayerData or not PlayerData.inventory then
+        return cb({ ok = false, reason = 'inventory_not_ready' })
+    end
+
     local slotData = PlayerData.inventory[data.slot]
     if not slotData then
         return cb({ ok = false, reason = 'slot_empty' })
     end
 
-    -- [FIX-B1] Remplace require 'modules.items.client' (peut retourner nil en NUI callback)
-    -- par l'export public de kt_inventory, toujours disponible
     local itemDef = exports.kt_inventory:Items(slotData.name)
     if not itemDef or (itemDef.category ~= 'clothing' and itemDef.category ~= 'clothing_tenu') then
         return cb({ ok = false, reason = 'not_clothing' })
@@ -276,7 +297,6 @@ RegisterNUICallback('equipClothing', function(data, cb)
         end
     end
 
-    -- [FIX-NUI-2] Le serveur v4 retourne (success, outfit, clothingEquippedPayload)
     lib.callback('kt_inventory:equipClothing', false, function(success, outfit, nuiPayload)
         if not success then
             return cb({ ok = false, reason = tostring(outfit) })
@@ -287,8 +307,6 @@ RegisterNUICallback('equipClothing', function(data, cb)
             applyOutfit(ped, outfit)
         end
 
-        -- [FIX-NUI-2] Informer React qu'un slot clothing est maintenant équipé
-        -- → dispatch(equipClothing({ category, item: { name, label, itemType } }))
         if nuiPayload then
             SendNUIMessage({
                 action = 'clothingEquipped',
@@ -297,14 +315,12 @@ RegisterNUICallback('equipClothing', function(data, cb)
         end
 
         if Preview and Preview.active then
-            SetTimeout(120, function()
-                if Preview.active then Preview.Refresh() end
-            end)
+            previewRefresh(120)
         end
 
         PlaySoundFrontend(-1, 'PURCHASE', 'HUD_LIQUOR_STORE_SOUNDSET', true)
 
-        if data.category and Preview and Preview.active then
+        if data.category and Preview and Preview.active and Preview.ZoomToCategory then
             SetTimeout(200, function()
                 if Preview.active then Preview.ZoomToCategory(data.category) end
             end)
@@ -320,7 +336,6 @@ RegisterNUICallback('equipOutfit', function(data, cb)
         return cb({ ok = false, reason = 'invalid_slot' })
     end
 
-    -- [FIX-NUI-5] Le serveur v4 retourne (success, outfitData, outfitEquippedPayload)
     lib.callback('kt_inventory:equipOutfit', false, function(success, outfitData, nuiPayload)
         if not success then
             return cb({ ok = false, reason = tostring(outfitData) })
@@ -331,8 +346,6 @@ RegisterNUICallback('equipOutfit', function(data, cb)
             applyOutfit(ped, outfitData)
         end
 
-        -- [FIX-NUI-5] Informer React de la tenue complète équipée
-        -- → dispatch(equipOutfit({ name, label, slots }))
         if nuiPayload then
             SendNUIMessage({
                 action = 'outfitEquipped',
@@ -341,9 +354,7 @@ RegisterNUICallback('equipOutfit', function(data, cb)
         end
 
         if Preview and Preview.active then
-            SetTimeout(120, function()
-                if Preview.active then Preview.Refresh() end
-            end)
+            previewRefresh(120)
         end
 
         PlaySoundFrontend(-1, 'PURCHASE', 'HUD_LIQUOR_STORE_SOUNDSET', true)
@@ -365,17 +376,13 @@ RegisterNUICallback('removeClothing', function(data, cb)
                 ClearPedProp(ped, slotDef.slot)
             end
 
-            -- [FIX-NUI-3] Informer React que le slot est retiré
-            -- → dispatch(removeClothing({ category }))
             SendNUIMessage({
                 action = 'clothingRemoved',
                 data   = { category = data.clothingSlot },
             })
 
             if Preview and Preview.active then
-                SetTimeout(120, function()
-                    if Preview.active then Preview.Refresh() end
-                end)
+                previewRefresh(120)
             end
 
             PlaySoundFrontend(-1, 'BACK', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
@@ -395,9 +402,7 @@ AddEventHandler('kt_inventory:updateInventory', function(changes)
         if type(slotData) == 'table' and slotData.name then
             local itemDef = exports.kt_inventory:Items(slotData.name)
             if itemDef and (itemDef.category == 'clothing' or itemDef.category == 'clothing_tenu') then
-                SetTimeout(150, function()
-                    if Preview and Preview.active then Preview.Refresh() end
-                end)
+                previewRefresh(150)
                 return
             end
         end
@@ -405,7 +410,7 @@ AddEventHandler('kt_inventory:updateInventory', function(changes)
 end)
 
 AddEventHandler('kt_inventory:closeInventory', function()
-    if Preview and Preview.active then
+    if Preview and Preview.Destroy and Preview.active then
         Preview.Destroy()
     end
 end)
@@ -427,4 +432,4 @@ exports('ApplyClothingSlot', function(slotName, slotData)
     return applyClothingSlot(ped, slotName, slotData)
 end)
 
-lib.print.info('^2[kt_inventory] Clothing client v4 chargé^0')
+lib.print.info('^2[kt_inventory] Clothing client v5 chargé^0')

@@ -73,12 +73,14 @@ function server.setPlayerInventory(player, data)
 
 		if server.syncInventory then server.syncInventory(inv) end
 		lib.print.info(('✓ Inventaire chargé pour %s (poids: %d/%d)'):format(inv.player.name, totalWeight, shared.playerweight))
-		TriggerClientEvent('kt_inventory:setPlayerInventory', player.source, Inventory.Drops, inventory, totalWeight, inv.player)
+		TriggerClientEvent('kt_inventory:setPlayerInventory', player.source, {}, inventory, totalWeight, inv.player)
 	else
 		lib.print.warn(('✗ Impossible de créer l\'inventaire pour %s'):format(player.name))
 	end
 end
+
 exports('setPlayerInventory', server.setPlayerInventory)
+
 AddEventHandler('kt_inventory:setPlayerInventory', server.setPlayerInventory)
 
 local registeredDumpsters = {}
