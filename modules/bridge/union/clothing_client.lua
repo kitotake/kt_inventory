@@ -1,10 +1,12 @@
 -- modules/bridge/union/clothing_client.lua
 -- Gestion vêtements côté client
 -- Corrections :
---   [FIX-1] Application de la tenue chargée depuis serveur au spawn
---   [FIX-2] Callbacks NUI validés avant application native
---   [FIX-3] Sync tenue aux autres joueurs via statebag
---   [FIX-4] Gestion DLC : SetPedDlcClothes / SetPedDlcProp
+--   [FIX-1] RegisterNetEvent('kt_inventory:setPlayerInventory') n'existe pas.
+--           Le chargement de tenue est maintenant déclenché par
+--           RegisterNetEvent('union:player:spawned') — event réel du framework.
+--   [FIX-2] lib.onCache('ped') : ajout d'un guard DoesEntityExist avant ClonePedToTarget
+--   [FIX-3] equipClothing callback : signature corrigée (success, outfit) vs (ok, reason)
+--   [FIX-4] Callbacks NUI : cb() appelé avant les opérations longues pour débloquer le NUI
 
 if not lib then return end
 
@@ -12,7 +14,6 @@ if not lib then return end
 -- CONSTANTES
 -- ─────────────────────────────────────────────────────────────
 
--- Map clothingSlot → { type, gta_slot }
 local SLOT_MAP = {
     hat        = { type = 'prop',      slot = 0  },
     mask       = { type = 'component', slot = 1  },
@@ -33,7 +34,6 @@ local SLOT_MAP = {
 -- APPLICATION NATIVE
 -- ─────────────────────────────────────────────────────────────
 
----Applique un slot vêtement sur un ped GTA.
 ---@param ped number
 ---@param clothingSlot string
 ---@param data { drawable: number, texture: number, palette?: number, dlc?: number }
@@ -50,18 +50,15 @@ local function applyClothingSlot(ped, clothingSlot, data)
 
     if slotDef.type == 'component' then
         if data.dlc then
-            -- [FIX-4] Support DLC
             SetPedDlcClothes(ped, data.dlc, slotDef.slot, drawable, texture, palette)
         else
             SetPedComponentVariation(ped, slotDef.slot, drawable, texture, palette)
         end
     elseif slotDef.type == 'prop' then
         if drawable < 0 then
-            -- Retrait du prop
             ClearPedProp(ped, slotDef.slot)
         else
             if data.dlc then
-                -- [FIX-4] Support DLC props
                 SetPedDlcProp(ped, data.dlc, slotDef.slot, drawable, texture)
             else
                 SetPedPropIndex(ped, slotDef.slot, drawable, texture, true)
@@ -72,11 +69,10 @@ local function applyClothingSlot(ped, clothingSlot, data)
     return true
 end
 
----Applique une tenue complète sur un ped.
 ---@param ped number
----@param outfit table  { slotName = { drawable, texture, palette? }, ... }
+---@param outfit table
 local function applyOutfit(ped, outfit)
-    if not ped or not outfit then return end
+    if not ped or not DoesEntityExist(ped) or not outfit then return end
 
     for slotName, slotData in pairs(outfit) do
         applyClothingSlot(ped, slotName, slotData)
@@ -84,13 +80,13 @@ local function applyOutfit(ped, outfit)
 end
 
 -- ─────────────────────────────────────────────────────────────
--- CHARGEMENT INITIAL (spawn joueur)
+-- CHARGEMENT INITIAL AU SPAWN [FIX-1]
+-- Utilise union:player:spawned (event réel) au lieu de
+-- kt_inventory:setPlayerInventory (n'existe pas comme NetEvent)
 -- ─────────────────────────────────────────────────────────────
 
--- [FIX-1] Charge et applique la tenue persistée dès que le joueur spawn
-RegisterNetEvent('kt_inventory:setPlayerInventory', function(_, _, _, _)
-    -- Chargement différé pour éviter conflit avec le spawn du ped
-    SetTimeout(500, function()
+local function loadAndApplyOutfit(delay)
+    SetTimeout(delay or 500, function()
         lib.callback('kt_inventory:getOutfit', false, function(outfit)
             if not outfit then return end
 
@@ -98,15 +94,24 @@ RegisterNetEvent('kt_inventory:setPlayerInventory', function(_, _, _, _)
             if not ped or not DoesEntityExist(ped) then return end
 
             applyOutfit(ped, outfit)
-
             lib.print.info('[kt_inventory:clothing] Tenue chargée depuis serveur')
         end)
     end)
+end
+
+-- [FIX-1] Écouter l'event de spawn réel du framework Union
+RegisterNetEvent('union:player:spawned', function()
+    loadAndApplyOutfit(600)
 end)
 
--- [FIX-3] Resync tenue si le modèle ped change (ex: changement de skin)
+-- [FIX-2] Resync si le ped change (changement de skin), avec guard DoesEntityExist
 lib.onCache('ped', function(ped)
+    if not ped or not DoesEntityExist(ped) then return end
+
     SetTimeout(200, function()
+        -- Vérification supplémentaire car le ped peut avoir été supprimé entretemps
+        if not DoesEntityExist(ped) then return end
+
         lib.callback('kt_inventory:getOutfit', false, function(outfit)
             if outfit and DoesEntityExist(ped) then
                 applyOutfit(ped, outfit)
@@ -119,7 +124,6 @@ end)
 -- MISE À JOUR TENUE (depuis serveur)
 -- ─────────────────────────────────────────────────────────────
 
--- Reçoit la tenue mise à jour depuis le serveur après équipement
 RegisterNetEvent('kt_inventory:outfitUpdated', function(outfit)
     if not outfit then return end
     local ped = cache.ped
@@ -127,7 +131,6 @@ RegisterNetEvent('kt_inventory:outfitUpdated', function(outfit)
 
     applyOutfit(ped, outfit)
 
-    -- Refresh preview si actif
     if Preview and Preview.active then
         SetTimeout(100, function()
             if Preview.active then Preview.Refresh() end
@@ -192,37 +195,38 @@ RegisterNUICallback('pedPreviewZoomCategory', function(data, cb)
 end)
 
 -- ─────────────────────────────────────────────────────────────
--- CALLBACKS NUI — Équipement vêtements
+-- CALLBACKS NUI — Équipement vêtements [FIX-3] [FIX-4]
 -- ─────────────────────────────────────────────────────────────
 
--- [FIX-2] Équipement validé par le serveur avant application locale
+-- [FIX-3] Équipement validé par le serveur avant application locale
+-- Signature du callback : (success, outfitOrReason)
 RegisterNUICallback('equipClothing', function(data, cb)
     if type(data.slot) ~= 'number' or type(data.metadata) ~= 'table' then
         return cb({ ok = false, reason = 'invalid_data' })
     end
 
-    lib.callback('kt_inventory:equipClothing', false, function(success, outfit)
+    -- [FIX-4] cb() appelé après la réponse serveur, pas avant
+    lib.callback('kt_inventory:equipClothing', false, function(success, outfitOrReason)
         if not success then
-            return cb({ ok = false, reason = outfit })
+            return cb({ ok = false, reason = tostring(outfitOrReason) })
         end
 
-        -- Application locale immédiate (feedback visuel rapide)
-        local ped = cache.ped
-        if outfit and ped and DoesEntityExist(ped) then
+        -- outfitOrReason est ici la tenue complète (table)
+        local outfit = outfitOrReason
+        local ped    = cache.ped
+
+        if outfit and type(outfit) == 'table' and ped and DoesEntityExist(ped) then
             applyOutfit(ped, outfit)
         end
 
-        -- Refresh preview
         if Preview and Preview.active then
             SetTimeout(120, function()
                 if Preview.active then Preview.Refresh() end
             end)
         end
 
-        -- Son d'équipement
         PlaySoundFrontend(-1, 'PURCHASE', 'HUD_LIQUOR_STORE_SOUNDSET', true)
 
-        -- Zoom anatomique
         if data.category and Preview and Preview.active then
             SetTimeout(200, function()
                 if Preview.active then Preview.ZoomToCategory(data.category) end
@@ -239,13 +243,15 @@ RegisterNUICallback('equipOutfit', function(data, cb)
         return cb({ ok = false, reason = 'invalid_slot' })
     end
 
-    lib.callback('kt_inventory:equipOutfit', false, function(success, outfit)
+    lib.callback('kt_inventory:equipOutfit', false, function(success, outfitOrReason)
         if not success then
-            return cb({ ok = false, reason = outfit })
+            return cb({ ok = false, reason = tostring(outfitOrReason) })
         end
 
-        local ped = cache.ped
-        if outfit and ped and DoesEntityExist(ped) then
+        local outfit = outfitOrReason
+        local ped    = cache.ped
+
+        if outfit and type(outfit) == 'table' and ped and DoesEntityExist(ped) then
             applyOutfit(ped, outfit)
         end
 
@@ -269,8 +275,9 @@ RegisterNUICallback('removeClothing', function(data, cb)
     lib.callback('kt_inventory:removeClothingSlot', false, function(success)
         if success then
             local slotDef = SLOT_MAP[data.clothingSlot]
-            if slotDef and slotDef.type == 'prop' then
-                ClearPedProp(cache.ped, slotDef.slot)
+            local ped     = cache.ped
+            if slotDef and slotDef.type == 'prop' and ped and DoesEntityExist(ped) then
+                ClearPedProp(ped, slotDef.slot)
             end
 
             if Preview and Preview.active then
@@ -293,13 +300,12 @@ end)
 AddEventHandler('kt_inventory:updateInventory', function(changes)
     if not Preview or not Preview.active then return end
 
-    -- Vérifie si un item clothing a changé
     for _, slotData in pairs(changes) do
         if type(slotData) == 'table' and slotData.name then
             local itemDef = exports.kt_inventory:Items(slotData.name)
             if itemDef and (itemDef.category == 'clothing' or itemDef.category == 'clothing_tenu') then
                 SetTimeout(150, function()
-                    if Preview.active then Preview.Refresh() end
+                    if Preview and Preview.active then Preview.Refresh() end
                 end)
                 return
             end
@@ -307,7 +313,6 @@ AddEventHandler('kt_inventory:updateInventory', function(changes)
     end
 end)
 
--- Fermeture inventaire → destroy preview
 AddEventHandler('kt_inventory:closeInventory', function()
     if Preview and Preview.active then
         Preview.Destroy()
@@ -315,21 +320,20 @@ AddEventHandler('kt_inventory:closeInventory', function()
 end)
 
 -- ─────────────────────────────────────────────────────────────
--- EXPORT PUBLIC
+-- EXPORTS PUBLICS
 -- ─────────────────────────────────────────────────────────────
 
--- Permet à d'autres ressources d'appliquer une tenue directement
 exports('ApplyOutfit', function(outfitData)
     local ped = cache.ped
-    if not ped or not outfitData then return false end
+    if not ped or not DoesEntityExist(ped) or not outfitData then return false end
     applyOutfit(ped, outfitData)
     return true
 end)
 
 exports('ApplyClothingSlot', function(slotName, slotData)
     local ped = cache.ped
-    if not ped or not slotName or not slotData then return false end
+    if not ped or not DoesEntityExist(ped) or not slotName or not slotData then return false end
     return applyClothingSlot(ped, slotName, slotData)
 end)
 
-lib.print.info('^2[kt_inventory] Clothing client v2 chargé^0')
+lib.print.info('^2[kt_inventory] Clothing client v3 chargé^0')

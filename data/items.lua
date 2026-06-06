@@ -39,7 +39,7 @@ return {
 },
 
 ['water_bottle'] = {
-    label       = "Bouteille d\'eau",
+    label       = "Bouteille d'eau",
     weight      = 100,
     stack       = true,
     close       = true,
@@ -87,12 +87,15 @@ return {
         image = 'bank_diamond_card.png'
     }
 },
-['bank_receipt'] ={
+
+['bank_receipt'] = {
     label = 'Reçu bancaire',
     weight = 1,
     stack = false,
     close = true,
 },
+
+-- ── Cartes d'identité & documents ────────────────────────────
 
 ["identity_card"] = {
     label = "Carte d'identité",
@@ -104,15 +107,10 @@ return {
         export = "kt_idcard_ui.UseIdentityCard"
     }
 },
-['identity_card2'] = {
-    label = 'Carte d’identité',
-    weight = 0,
-    stack = false,
-    close = true,
-    client = {
-        export = 'kt_idcard_ui.UseIdentityCard'
-    }
-},
+
+-- [FIX] identity_card2 supprimé : doublon de identity_card avec apostrophe
+-- typographique (') dans le label qui causait une erreur de syntaxe Lua potentielle.
+-- Utiliser uniquement ['identity_card'].
 
 ["license_card"] = {
     label = "Permis de conduire",
@@ -126,11 +124,11 @@ return {
 },
 
 ["weapon_permit"] = {
-    label = "Permis de port d’arme",
+    label = "Permis de port d'arme",
     weight = 0,
     stack = false,
     close = true,
-    description = "Autorisation de port d’arme",
+    description = "Autorisation de port d'arme",
     server = {
         export = "kt_idcard_ui.UseWeaponCard"
     }
@@ -193,6 +191,7 @@ return {
     }
 },
 
+-- ── Divers ────────────────────────────────────────────────────
 
     ['bandage'] = {
         label = 'Bandage',
@@ -250,9 +249,6 @@ return {
         }
     },
 
-
-
-
     ['lockpick'] = {
         label = 'Lockpick',
         weight = 16,
@@ -266,7 +262,7 @@ return {
         weight = 50,
         stack = false,
         close = false,
-        description = 'Clé associée à une plaque d\'immatriculation.',
+        description = "Clé associée à une plaque d'immatriculation.",
     },
 
     ['phone'] = {
@@ -290,10 +286,9 @@ return {
 
     ['money'] = {
         label = 'Money',
-          client = {
+        client = {
             image = 'money.png',
         }
-
     },
 
     ['mustard'] = {
@@ -545,7 +540,75 @@ return {
         }
     },
 
-     ['clothing_shoes_001'] = {
+    -- ─────────────────────────────────────────────
+    -- 👕 VÊTEMENTS INDIVIDUELS
+    -- [FIX] Déplacés depuis items_clothing.lua (fichier orphelin non chargé)
+    -- et corrigés : clothing_shoes_001 était dupliqué sans category/clothingSlot
+    -- ─────────────────────────────────────────────
+
+    ['clothing_hat_001'] = {
+        label        = 'Bonnet noir',
+        weight       = 50,
+        stack        = false,
+        close        = false,
+        description  = 'Un bonnet en laine noire.',
+        category     = 'clothing',
+        clothingSlot = 'hat',
+    },
+
+    ['clothing_mask_001'] = {
+        label        = 'Cagoule',
+        weight       = 30,
+        stack        = false,
+        close        = false,
+        description  = 'Une cagoule pour ne pas être reconnu.',
+        category     = 'clothing',
+        clothingSlot = 'mask',
+    },
+
+    ['clothing_glasses_001'] = {
+        label        = 'Lunettes de soleil',
+        weight       = 20,
+        stack        = false,
+        close        = false,
+        description  = 'Lunettes de soleil style aviateur.',
+        category     = 'clothing',
+        clothingSlot = 'glasses',
+    },
+
+    ['clothing_top_001'] = {
+        label        = 'Veste en cuir',
+        weight       = 300,
+        stack        = false,
+        close        = false,
+        description  = 'Une veste en cuir noir.',
+        category     = 'clothing',
+        clothingSlot = 'top',
+    },
+
+    ['clothing_undershirt_001'] = {
+        label        = 'T-shirt blanc',
+        weight       = 100,
+        stack        = false,
+        close        = false,
+        description  = 'T-shirt blanc basique.',
+        category     = 'clothing',
+        clothingSlot = 'undershirt',
+    },
+
+    ['clothing_pants_001'] = {
+        label        = 'Jean noir',
+        weight       = 200,
+        stack        = false,
+        close        = false,
+        description  = 'Jean noir slim.',
+        category     = 'clothing',
+        clothingSlot = 'pants',
+    },
+
+    -- [FIX] clothing_shoes_001 : une seule définition avec category + clothingSlot
+    -- L'ancienne entrée dans items.lua n'avait ni category ni clothingSlot → équipement impossible
+    ['clothing_shoes_001'] = {
         label        = 'Baskets blanches',
         weight       = 150,
         stack        = false,
@@ -554,11 +617,105 @@ return {
         category     = 'clothing',
         clothingSlot = 'shoes',
     },
-     ['clothing'] = {
-        label        = 'clothing ',
-        weight       = 150,
+
+    ['clothing_bag_001'] = {
+        label        = 'Sac à dos',
+        weight       = 200,
         stack        = false,
         close        = false,
-        description  = 'clothing.'
+        description  = 'Sac à dos discret.',
+        category     = 'clothing',
+        clothingSlot = 'bag',
+    },
+
+    ['clothing_armor_001'] = {
+        label        = 'Gilet pare-balles',
+        weight       = 800,
+        stack        = false,
+        close        = false,
+        description  = 'Gilet pare-balles léger.',
+        category     = 'clothing',
+        clothingSlot = 'armor',
+    },
+
+    ['clothing_watch_001'] = {
+        label        = 'Montre classique',
+        weight       = 30,
+        stack        = false,
+        close        = false,
+        description  = 'Montre analogique.',
+        category     = 'clothing',
+        clothingSlot = 'watch',
+    },
+
+    ['clothing_bracelet_001'] = {
+        label        = 'Bracelet',
+        weight       = 10,
+        stack        = false,
+        close        = false,
+        description  = 'Bracelet en métal.',
+        category     = 'clothing',
+        clothingSlot = 'bracelet',
+    },
+
+    ['clothing_chain_001'] = {
+        label        = 'Collier',
+        weight       = 15,
+        stack        = false,
+        close        = false,
+        description  = 'Collier en or.',
+        category     = 'clothing',
+        clothingSlot = 'chain',
+    },
+
+    ['clothing_gloves_001'] = {
+        label        = 'Gants noirs',
+        weight       = 50,
+        stack        = false,
+        close        = false,
+        description  = 'Gants en cuir noir.',
+        category     = 'clothing',
+        clothingSlot = 'gloves',
+    },
+
+    -- ─────────────────────────────────────────────
+    -- 👔 TENUES COMPLÈTES
+    -- category = 'clothing_tenu' → s'applique à tous les slots via metadata.outfit
+    -- ─────────────────────────────────────────────
+
+    ['clothing_tenu_police'] = {
+        label       = 'Tenue Police',
+        weight      = 500,
+        stack       = false,
+        close       = false,
+        description = 'Tenue complète de la police de Los Santos.',
+        category    = 'clothing_tenu',
+    },
+
+    ['clothing_tenu_civil'] = {
+        label       = 'Tenue Civile',
+        weight      = 400,
+        stack       = false,
+        close       = false,
+        description = 'Tenue civile décontractée.',
+        category    = 'clothing_tenu',
+    },
+
+    ['clothing_tenu_mechanic'] = {
+        label       = 'Tenue Mécanicien',
+        weight      = 450,
+        stack        = false,
+        close        = false,
+        description = 'Combinaison de mécanicien.',
+        category    = 'clothing_tenu',
+    },
+
+    ['clothing_tenu_ems'] = {
+        label       = 'Tenue EMS',
+        weight      = 450,
+        stack       = false,
+        close       = false,
+        description = 'Tenue des services médicaux.',
+        category    = 'clothing_tenu',
     },
 }

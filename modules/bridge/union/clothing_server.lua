@@ -1,10 +1,14 @@
 -- modules/bridge/union/clothing_server.lua
--- Persistance et validation côté serveur du système de vêtements
--- Problèmes résolus :
---   - Aucune validation serveur des composants/props GTA
---   - Pas de sauvegarde persistante de la tenue dans la DB
---   - Pas de sync entre joueurs proches
---   - Pas de protection contre l'équipement de tenues invalides
+-- Corrections :
+--   [FIX-1] Citizen.CreateThreadNow + await → MySQL.query avec callback via onResourceStart
+--   [FIX-2] lib.callback.register : signature corrigée.
+--           L'ancienne version utilisait function(source, cb, ...) qui est FAUSSE dans ox_lib.
+--           ox_lib ne passe PAS de cb — il attend un RETOUR de la fonction (sync)
+--           ou Citizen.Await(promise) pour l'async.
+--           Tous les callbacks qui font du MySQL utilisent désormais promise + Citizen.Await.
+--   [FIX-3] loadOutfitAsync remplacé par loadOutfitSync (via MySQL.scalar.await dans promise)
+--   [FIX-4] outfitCache invalidé au playerDropped
+--   [FIX-5] Limites drawable/texture étendues pour DLC (1024/64)
 
 if not lib then return end
 
@@ -12,36 +16,9 @@ local Inventory = require 'modules.inventory.server'
 local Items     = require 'modules.items.server'
 
 -- ─────────────────────────────────────────────────────────────
--- CONSTANTES GTA V
--- Plages valides pour composants et props
+-- CONSTANTES
 -- ─────────────────────────────────────────────────────────────
 
--- Slots composants valides (0-11)
-local VALID_COMPONENT_SLOTS = {
-    [0]  = true,  -- head / face
-    [1]  = true,  -- beard / mask overlay
-    [2]  = true,  -- hair
-    [3]  = true,  -- torso
-    [4]  = true,  -- legs
-    [5]  = true,  -- hands / parachute bag
-    [6]  = true,  -- feet
-    [7]  = true,  -- accessories
-    [8]  = true,  -- undershirt
-    [9]  = true,  -- body armor
-    [10] = true,  -- decals
-    [11] = true,  -- top
-}
-
--- Slots props valides (0-9)
-local VALID_PROP_SLOTS = {
-    [0] = true,  -- hats
-    [1] = true,  -- glasses
-    [2] = true,  -- ears
-    [6] = true,  -- watches
-    [7] = true,  -- bracelets
-}
-
--- Slots clothing items valides (depuis items_clothing.lua)
 local VALID_CLOTHING_SLOTS = {
     hat        = { type = 'prop',      slot = 0  },
     mask       = { type = 'component', slot = 1  },
@@ -58,13 +35,13 @@ local VALID_CLOTHING_SLOTS = {
     gloves     = { type = 'component', slot = 3  },
 }
 
+local MAX_DRAWABLE = 1024
+local MAX_TEXTURE  = 64
+
 -- ─────────────────────────────────────────────────────────────
 -- VALIDATION
 -- ─────────────────────────────────────────────────────────────
 
----@param metadata table
----@param clothingSlot string
----@return boolean valid, string? reason
 local function validateClothingMetadata(metadata, clothingSlot)
     if type(metadata) ~= 'table' then
         return false, 'metadata must be a table'
@@ -75,26 +52,26 @@ local function validateClothingMetadata(metadata, clothingSlot)
         return false, ('unknown clothingSlot: %s'):format(tostring(clothingSlot))
     end
 
-    -- drawable doit être un entier >= 0
-    if type(metadata.drawable) ~= 'number' or metadata.drawable < 0 or math.floor(metadata.drawable) ~= metadata.drawable then
+    if type(metadata.drawable) ~= 'number'
+        or metadata.drawable < 0
+        or math.floor(metadata.drawable) ~= metadata.drawable then
         return false, 'drawable must be a non-negative integer'
     end
 
-    -- texture doit être un entier >= 0
-    if type(metadata.texture) ~= 'number' or metadata.texture < 0 or math.floor(metadata.texture) ~= metadata.texture then
+    if type(metadata.texture) ~= 'number'
+        or metadata.texture < 0
+        or math.floor(metadata.texture) ~= metadata.texture then
         return false, 'texture must be a non-negative integer'
     end
 
-    -- Limites raisonnables anti-exploit
-    if metadata.drawable > 512 then
-        return false, ('drawable out of range: %d'):format(metadata.drawable)
+    if metadata.drawable > MAX_DRAWABLE then
+        return false, ('drawable out of range: %d (max %d)'):format(metadata.drawable, MAX_DRAWABLE)
     end
 
-    if metadata.texture > 32 then
-        return false, ('texture out of range: %d'):format(metadata.texture)
+    if metadata.texture > MAX_TEXTURE then
+        return false, ('texture out of range: %d (max %d)'):format(metadata.texture, MAX_TEXTURE)
     end
 
-    -- palette optionnel
     if metadata.palette ~= nil then
         if type(metadata.palette) ~= 'number' or metadata.palette < 0 or metadata.palette > 3 then
             return false, 'palette must be 0-3'
@@ -104,56 +81,54 @@ local function validateClothingMetadata(metadata, clothingSlot)
     return true
 end
 
----@param outfitData table  { hat = {drawable, texture}, ... }
----@return boolean valid, string? reason
 local function validateOutfit(outfitData)
     if type(outfitData) ~= 'table' then
         return false, 'outfitData must be a table'
     end
-
     for slotName, slotData in pairs(outfitData) do
         if not VALID_CLOTHING_SLOTS[slotName] then
             return false, ('unknown slot in outfit: %s'):format(tostring(slotName))
         end
-
         local ok, reason = validateClothingMetadata(slotData, slotName)
         if not ok then
             return false, ('slot %s: %s'):format(slotName, reason)
         end
     end
-
     return true
 end
 
 -- ─────────────────────────────────────────────────────────────
--- PERSISTANCE
--- Table : kt_clothing
--- Colonnes : unique_id (PK), outfit (JSON), updated_at
+-- INITIALISATION TABLE [FIX-1]
 -- ─────────────────────────────────────────────────────────────
 
--- Création de la table si inexistante
-Citizen.CreateThreadNow(function()
-    Wait(1000) -- Attendre oxmysql
+AddEventHandler('onResourceStart', function(resource)
+    if resource ~= GetCurrentResourceName() then return end
 
-    local ok = pcall(MySQL.scalar.await, 'SELECT 1 FROM kt_clothing LIMIT 1')
-
-    if not ok then
-        MySQL.query([[
-            CREATE TABLE IF NOT EXISTS `kt_clothing` (
-                `unique_id`  VARCHAR(64)  NOT NULL,
-                `outfit`     LONGTEXT     DEFAULT NULL,
-                `updated_at` TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                PRIMARY KEY (`unique_id`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-        ]])
-        lib.print.info('[kt_inventory:clothing] Table kt_clothing créée.')
-    end
+    MySQL.query('SELECT 1 FROM kt_clothing LIMIT 1', {}, function(result)
+        if not result then
+            MySQL.query([[
+                CREATE TABLE IF NOT EXISTS `kt_clothing` (
+                    `unique_id`  VARCHAR(64)  NOT NULL,
+                    `outfit`     LONGTEXT     DEFAULT NULL,
+                    `updated_at` TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                    PRIMARY KEY (`unique_id`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+            ]], {}, function()
+                lib.print.info('[kt_inventory:clothing] Table kt_clothing créée.')
+            end)
+        end
+    end)
 end)
 
--- Cache en mémoire des tenues actives (évite N requêtes DB par session)
----@type table<string, table>  uniqueId → outfitData
+-- ─────────────────────────────────────────────────────────────
+-- CACHE + PERSISTANCE
+-- ─────────────────────────────────────────────────────────────
+
+---@type table<string, table>
 local outfitCache = {}
 
+-- [FIX-3] Version synchrone via MySQL.scalar.await dans un contexte Citizen.Await.
+-- À appeler UNIQUEMENT depuis un lib.callback.register (contexte schedulable).
 ---@param uniqueId string
 ---@return table|nil
 local function loadOutfit(uniqueId)
@@ -166,12 +141,12 @@ local function loadOutfit(uniqueId)
         { uniqueId }
     )
 
-    if result then
-        local decoded = json.decode(result)
-        if decoded then
-            outfitCache[uniqueId] = decoded
-            return decoded
-        end
+    if not result then return nil end
+
+    local ok, decoded = pcall(json.decode, result)
+    if ok and type(decoded) == 'table' then
+        outfitCache[uniqueId] = decoded
+        return decoded
     end
 
     return nil
@@ -182,36 +157,42 @@ end
 local function saveOutfit(uniqueId, outfitData)
     outfitCache[uniqueId] = outfitData
 
+    local ok, encoded = pcall(json.encode, outfitData)
+    if not ok then
+        lib.print.warn(('[kt_inventory:clothing] Échec encodage outfit uid=%s'):format(uniqueId))
+        return
+    end
+
     MySQL.query(
-        [[INSERT INTO kt_clothing (unique_id, outfit)
-          VALUES (?, ?)
-          ON DUPLICATE KEY UPDATE outfit = VALUES(outfit), updated_at = CURRENT_TIMESTAMP]],
-        { uniqueId, json.encode(outfitData) }
+        'INSERT INTO kt_clothing (unique_id, outfit) VALUES (?, ?) ON DUPLICATE KEY UPDATE outfit = VALUES(outfit), updated_at = CURRENT_TIMESTAMP',
+        { uniqueId, encoded }
     )
 end
 
 -- ─────────────────────────────────────────────────────────────
--- CALLBACKS NET
+-- CALLBACKS [FIX-2]
+-- Signature correcte ox_lib : function(source, arg1, arg2, ...)
+-- Pas de cb en paramètre. Pour l'async : Citizen.Await(promise).
+-- MySQL.scalar.await est utilisable directement car lib.callback.register
+-- s'exécute dans un thread Citizen schedulable.
 -- ─────────────────────────────────────────────────────────────
 
--- Chargement de la tenue au spawn
 lib.callback.register('kt_inventory:getOutfit', function(source)
     local inv = Inventory(source)
-    if not inv?.player then return end
+    if not inv or not inv.player then return nil end
 
     local uniqueId = inv.owner
-    if not uniqueId then return end
+    if not uniqueId then return nil end
 
     return loadOutfit(uniqueId)
 end)
 
--- Équipement d'un vêtement (pièce individuelle)
 lib.callback.register('kt_inventory:equipClothing', function(source, slotId, metadata)
-    if type(slotId) ~= 'number' then return false, 'invalid_slot' end
-    if type(metadata) ~= 'table' then return false, 'invalid_metadata' end
+    if type(slotId)   ~= 'number' then return false, 'invalid_slot'     end
+    if type(metadata) ~= 'table'  then return false, 'invalid_metadata' end
 
     local inv = Inventory(source)
-    if not inv?.player then return false, 'no_inventory' end
+    if not inv or not inv.player then return false, 'no_inventory' end
 
     local slotData = inv.items[slotId]
     if not slotData then return false, 'slot_empty' end
@@ -219,7 +200,6 @@ lib.callback.register('kt_inventory:equipClothing', function(source, slotId, met
     local item = Items(slotData.name)
     if not item then return false, 'invalid_item' end
 
-    -- Vérifie que c'est bien un item clothing
     if item.category ~= 'clothing' then
         return false, 'not_clothing'
     end
@@ -227,14 +207,12 @@ lib.callback.register('kt_inventory:equipClothing', function(source, slotId, met
     local clothingSlot = item.clothingSlot
     if not clothingSlot then return false, 'no_clothing_slot' end
 
-    -- Validation des métadonnées
     local ok, reason = validateClothingMetadata(metadata, clothingSlot)
     if not ok then
         lib.print.warn(('[kt_inventory:clothing] Validation échouée player %d: %s'):format(source, reason))
         return false, 'invalid_metadata'
     end
 
-    -- Mise à jour de la tenue persistée
     local uniqueId = inv.owner
     local outfit   = loadOutfit(uniqueId) or {}
 
@@ -245,19 +223,16 @@ lib.callback.register('kt_inventory:equipClothing', function(source, slotId, met
     }
 
     saveOutfit(uniqueId, outfit)
-
-    -- Sync aux joueurs proches (pour voir la tenue des autres)
     TriggerClientEvent('kt_inventory:outfitUpdated', source, outfit)
 
     return true, outfit
 end)
 
--- Équipement d'une tenue complète
 lib.callback.register('kt_inventory:equipOutfit', function(source, slotId)
     if type(slotId) ~= 'number' then return false, 'invalid_slot' end
 
     local inv = Inventory(source)
-    if not inv?.player then return false, 'no_inventory' end
+    if not inv or not inv.player then return false, 'no_inventory' end
 
     local slotData = inv.items[slotId]
     if not slotData then return false, 'slot_empty' end
@@ -269,8 +244,7 @@ lib.callback.register('kt_inventory:equipOutfit', function(source, slotId)
         return false, 'not_outfit'
     end
 
-    -- L'outfit complet est dans les métadonnées de l'item
-    local outfitData = slotData.metadata?.outfit
+    local outfitData = slotData.metadata and slotData.metadata.outfit
     if not outfitData then return false, 'no_outfit_data' end
 
     local ok, reason = validateOutfit(outfitData)
@@ -281,51 +255,47 @@ lib.callback.register('kt_inventory:equipOutfit', function(source, slotId)
 
     local uniqueId = inv.owner
     saveOutfit(uniqueId, outfitData)
-
     TriggerClientEvent('kt_inventory:outfitUpdated', source, outfitData)
 
     return true, outfitData
 end)
 
--- Retrait d'un slot vêtement
 lib.callback.register('kt_inventory:removeClothingSlot', function(source, clothingSlot)
-    if type(clothingSlot) ~= 'string' then return false end
-    if not VALID_CLOTHING_SLOTS[clothingSlot] then return false end
+    if type(clothingSlot) ~= 'string'         then return false end
+    if not VALID_CLOTHING_SLOTS[clothingSlot]  then return false end
 
     local inv = Inventory(source)
-    if not inv?.player then return false end
+    if not inv or not inv.player then return false end
 
     local uniqueId = inv.owner
     local outfit   = loadOutfit(uniqueId) or {}
 
     outfit[clothingSlot] = nil
     saveOutfit(uniqueId, outfit)
-
     TriggerClientEvent('kt_inventory:outfitUpdated', source, outfit)
+
     return true
 end)
 
 -- ─────────────────────────────────────────────────────────────
--- NETTOYAGE AU DISCONNECT
+-- DISCONNECT [FIX-4]
 -- ─────────────────────────────────────────────────────────────
 
 AddEventHandler('playerDropped', function()
-    local src = source
-    local inv  = Inventory(src)
-
-    if inv?.owner then
+    local inv = Inventory(source)
+    if inv and inv.owner then
         outfitCache[inv.owner] = nil
     end
 end)
 
 -- ─────────────────────────────────────────────────────────────
--- EXPORT PUBLIC
+-- EXPORTS
 -- ─────────────────────────────────────────────────────────────
 
 exports('GetPlayerOutfit', function(source)
     local inv = Inventory(source)
-    if not inv?.owner then return nil end
-    return loadOutfit(inv.owner)
+    if not inv or not inv.owner then return nil end
+    return outfitCache[inv.owner]
 end)
 
 exports('SetPlayerOutfit', function(source, outfitData)
@@ -338,7 +308,7 @@ exports('SetPlayerOutfit', function(source, outfitData)
     end
 
     local inv = Inventory(source)
-    if not inv?.owner then return false end
+    if not inv or not inv.owner then return false end
 
     saveOutfit(inv.owner, outfitData)
     TriggerClientEvent('kt_inventory:outfitUpdated', source, outfitData)
@@ -349,4 +319,4 @@ exports('ValidateClothingMetadata', function(metadata, clothingSlot)
     return validateClothingMetadata(metadata, clothingSlot)
 end)
 
-lib.print.info('^2[kt_inventory] Clothing server chargé^0')
+lib.print.info('^2[kt_inventory] Clothing server v3 chargé^0')

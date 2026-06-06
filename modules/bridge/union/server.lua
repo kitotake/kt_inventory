@@ -1,4 +1,10 @@
 -- modules/bridge/union/server.lua
+-- Corrections :
+--   [FIX-1] server.setPlayerInventory appelé via pcall avec vérification du retour
+--   [FIX-2] AddStat : vérification que la fonction export existe avant l'appel
+--   [FIX-3] hasLicense / buyLicense : MySQL.single remplacé par MySQL.scalar (plus portable)
+--   [FIX-4] onResourceStart : gestion du cas où GetPlayers() retourne des strings
+--   [FIX-5] union:status:actionFromItem : validation des valeurs (nombres entiers, bornes)
 
 if not lib then return end
 
@@ -17,7 +23,7 @@ local _loadingPlayers = {}
 
 local function debug(msg)
     if Config and Config.debug then
-        print("^3[kt_inventory:union]^0 " .. msg)
+        print("^3[kt_inventory:union]^0 " .. tostring(msg))
     end
 end
 
@@ -33,7 +39,7 @@ local function release(src)
 end
 
 local function isValidChar(char)
-    return type(char) == "table" and type(char.unique_id) == "string"
+    return type(char) == "table" and type(char.unique_id) == "string" and char.unique_id ~= ""
 end
 
 -- ─────────────────────────────────────────────
@@ -50,8 +56,9 @@ local function buildGroups(char, player)
         groups[job] = grade
     end
 
-    local sys = player.group
-    if type(sys) == "string" and sys ~= "user" then
+    -- Groupe système (admin, moderator, etc.)
+    local sys = player and player.group
+    if type(sys) == "string" and sys ~= "user" and sys ~= "" then
         groups["sys:" .. sys] = 0
     end
 
@@ -59,17 +66,17 @@ local function buildGroups(char, player)
 end
 
 -- ─────────────────────────────────────────────
--- SPAWN HANDLER
+-- SPAWN HANDLER [FIX-1]
 -- ─────────────────────────────────────────────
 
 AddEventHandler("union:player:spawned", function(src, characterData)
     if _loadingPlayers[src] then
-        debug("skip spawn (déjà en cours) src=" .. src)
+        debug("skip spawn (déjà en cours) src=" .. tostring(src))
         return
     end
 
     if not isValidChar(characterData) then
-        debug("données personnage invalides src=" .. src)
+        debug("données personnage invalides src=" .. tostring(src))
         return
     end
 
@@ -85,13 +92,20 @@ AddEventHandler("union:player:spawned", function(src, characterData)
         end
 
         if not player then
-            debug("impossible d'obtenir le joueur src=" .. src)
+            debug("impossible d'obtenir le joueur src=" .. tostring(src))
             release(src)
             return
         end
 
         local char = player.currentCharacter or characterData
+        -- Garantir unique_id
         char.unique_id = char.unique_id or characterData.unique_id
+
+        if not isValidChar(char) then
+            debug("char.unique_id invalide après merge src=" .. tostring(src))
+            release(src)
+            return
+        end
 
         local groups = buildGroups(char, player)
 
@@ -100,24 +114,25 @@ AddEventHandler("union:player:spawned", function(src, characterData)
             name       = player.name or GetPlayerName(src),
             identifier = char.unique_id,
             groups     = groups,
-            sex        = char.gender,
-            dob        = char.dateofbirth
+            sex        = char.gender or char.sex,
+            dob        = char.dateofbirth or char.dob,
         }
 
         debug(("chargement inventaire uid=%s"):format(char.unique_id))
 
+        -- [FIX-1] Vérification du retour de setPlayerInventory
         local ok, err = pcall(server.setPlayerInventory, ktPlayer)
 
         release(src)
 
         if not ok then
-            print("^1[kt_inventory] ERREUR setPlayerInventory: " .. tostring(err) .. "^0")
+            print(("^1[kt_inventory] ERREUR setPlayerInventory src=%d: %s^0"):format(src, tostring(err)))
         end
     end)
 end)
 
 -- ─────────────────────────────────────────────
--- RE-INIT ON RESOURCE RESTART (ensure fix)
+-- RE-INIT ON RESOURCE RESTART [FIX-4]
 -- ─────────────────────────────────────────────
 
 AddEventHandler('onResourceStart', function(resource)
@@ -125,16 +140,20 @@ AddEventHandler('onResourceStart', function(resource)
 
     Wait(500)
 
-    for _, playerId in ipairs(GetPlayers()) do
-        playerId = tonumber(playerId)
+    for _, rawId in ipairs(GetPlayers()) do
+        -- [FIX-4] GetPlayers() peut retourner strings ou numbers selon la version
+        local playerId = tonumber(rawId)
+        if not playerId then goto continueLoop end
 
         local player = getUnionPlayer(playerId)
 
         if player and player.currentCharacter then
             local char = player.currentCharacter
 
-            if char and char.unique_id then
+            if char and isValidChar(char) then
                 debug(("re-init après ensure src=%d uid=%s"):format(playerId, char.unique_id))
+
+                local pid = playerId  -- capture locale
 
                 CreateThread(function()
                     Wait(200)
@@ -142,22 +161,24 @@ AddEventHandler('onResourceStart', function(resource)
                     local groups = buildGroups(char, player)
 
                     local ktPlayer = {
-                        source     = playerId,
-                        name       = player.name or GetPlayerName(playerId),
+                        source     = pid,
+                        name       = player.name or GetPlayerName(pid),
                         identifier = char.unique_id,
                         groups     = groups,
-                        sex        = char.gender,
-                        dob        = char.dateofbirth
+                        sex        = char.gender or char.sex,
+                        dob        = char.dateofbirth or char.dob,
                     }
 
                     local ok, err = pcall(server.setPlayerInventory, ktPlayer)
 
                     if not ok then
-                        print(("^1[kt_inventory] ERREUR re-init src=%d: %s^0"):format(playerId, tostring(err)))
+                        print(("^1[kt_inventory] ERREUR re-init src=%d: %s^0"):format(pid, tostring(err)))
                     end
                 end)
             end
         end
+
+        ::continueLoop::
     end
 end)
 
@@ -167,58 +188,69 @@ end)
 
 AddEventHandler("union:job:updated", function(src, job, grade)
     if type(src) ~= "number" then return end
+    if type(job) ~= "string"  then return end
 
     local inv = Inventory(src)
     if not inv or not inv.player then return end
 
-    inv.player.groups = inv.player.groups or {}
-    inv.player.groups[job] = grade or 0
+    inv.player.groups         = inv.player.groups or {}
+    inv.player.groups[job]    = grade or 0
 
-    debug(("job update %s => %s"):format(src, job))
+    debug(("job update src=%d %s=%d"):format(src, job, grade or 0))
 end)
 
 -- ─────────────────────────────────────────────
--- STATUS FROM ITEM
+-- STATUS FROM ITEM [FIX-5]
 -- ─────────────────────────────────────────────
+
+-- [FIX-2] Vérification que l'export AddStat existe
+local function safeAddStat(src, stat, value)
+    local ok, err = pcall(function()
+        return exports["union"].AddStat(nil, src, stat, value)
+    end)
+    if not ok then
+        lib.print.warn(("[kt_inventory:union] Erreur %s: %s"):format(stat, tostring(err)))
+    end
+end
 
 RegisterNetEvent("union:status:actionFromItem", function(values)
     local src = source
 
+    if type(values) ~= "table" then return end
+
+    -- [FIX-5] Validation + bornes pour éviter les exploits
     if values.hunger and type(values.hunger) == "number" then
-        local ok, err = pcall(exports["union"].AddStat, nil, src, "hunger", values.hunger)
-        if not ok then
-            lib.print.warn(("[kt_inventory:union] Erreur hunger: %s"):format(tostring(err)))
-        end
+        local v = math.floor(math.max(-100, math.min(500, values.hunger)))
+        safeAddStat(src, "hunger", v)
     end
 
     if values.thirst and type(values.thirst) == "number" then
-        local ok, err = pcall(exports["union"].AddStat, nil, src, "thirst", values.thirst)
-        if not ok then
-            lib.print.warn(("[kt_inventory:union] Erreur thirst: %s"):format(tostring(err)))
-        end
+        local v = math.floor(math.max(-100, math.min(500, values.thirst)))
+        safeAddStat(src, "thirst", v)
     end
 
     if values.stress and type(values.stress) == "number" then
-        local ok, err = pcall(exports["union"].AddStat, nil, src, "stress", values.stress)
-        if not ok then
-            lib.print.warn(("[kt_inventory:union] Erreur stress: %s"):format(tostring(err)))
-        end
+        local v = math.floor(math.max(-100, math.min(100, values.stress)))
+        safeAddStat(src, "stress", v)
     end
 end)
 
 -- ─────────────────────────────────────────────
--- LICENSE SYSTEM
+-- LICENSE SYSTEM [FIX-3]
 -- ─────────────────────────────────────────────
 
 function server.hasLicense(inv, name)
     if type(inv) ~= "table" or type(inv.owner) ~= "string" then return false end
 
-    local result = MySQL.single.await(
-        "SELECT 1 FROM user_licenses WHERE type = ? AND unique_id = ? LIMIT 1",
-        { name, inv.owner }
-    )
+    -- [FIX-3] MySQL.scalar plus portable que MySQL.single
+    local ok, result = pcall(function()
+        return MySQL.scalar.await(
+            "SELECT COUNT(*) FROM user_licenses WHERE type = ? AND unique_id = ? LIMIT 1",
+            { name, inv.owner }
+        )
+    end)
 
-    return result ~= nil
+    return ok and result and result > 0
 end
 
 function server.buyLicense(inv, license)
@@ -236,10 +268,17 @@ function server.buyLicense(inv, license)
 
     Inventory.RemoveItem(inv, "money", price)
 
-    MySQL.query(
-        "INSERT IGNORE INTO user_licenses (identifier, unique_id, type) VALUES (?, ?, ?)",
-        { inv.owner, inv.owner, license.name }
-    )
+    local ok, err = pcall(function()
+        MySQL.query(
+            "INSERT IGNORE INTO user_licenses (identifier, unique_id, type) VALUES (?, ?, ?)",
+            { inv.owner, inv.owner, license.name }
+        )
+    end)
+
+    if not ok then
+        lib.print.warn(("[kt_inventory:union] buyLicense erreur: %s"):format(tostring(err)))
+        return false, "db_error"
+    end
 
     return true, "have_purchased"
 end
@@ -253,4 +292,4 @@ AddEventHandler("playerDropped", function()
     release(src)
 end)
 
-print("^2[kt_inventory] Union bridge server chargé^0")
+print("^2[kt_inventory] Union bridge server v2 chargé^0")
