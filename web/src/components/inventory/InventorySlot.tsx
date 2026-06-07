@@ -1,22 +1,10 @@
 // components/inventory/InventorySlot.tsx
-// Corrections v4 :
-//   [FIX-B6] canDrag : inventoryGroups était un objet passé par référence → nouvelle référence
-//            à chaque render parent → canDrag recréé → useDrag recréé → drag descriptor
-//            instable pendant le drag → drop annulé aléatoirement.
-//            Fix : JSON.stringify(inventoryGroups) comme dépendance stable (string primitive).
-//   [FIX-B7] backgroundImage : getItemUrl() retournait undefined → "url(none)" affiché
-//            dans le DOM → le navigateur CEF le traite comme une URL invalide et affiche
-//            l'image par défaut du système. Fix : fallback sur '' (string vide)
-//            → backgroundImage: 'none' si pas d'image → aucune image affichée, pas de fallback.
-//   [FIX-B8] mergeRefs : useCallback ajouté avec dépendances correctes pour éviter les
-//            re-créations inutiles quand drag/drop changent (perf).
-// Corrections v5 :
-//   [FIX-B9] canDrag : logique AND incorrecte → canPurchaseItem retourne false pour les items
-//            normaux (pas un shop) donc RIEN ne pouvait jamais être draggé.
-//            Fix : logique conditionnelle par type d'inventaire :
-//              - SHOP     → canPurchaseItem doit être true
-//              - CRAFTING → canCraftItem doit être true
-//              - autres   → toujours true (drag libre)
+// Corrections v4-v5 : voir commentaires originaux
+// Correction v6 :
+//   [FIX-C1] useDrop accepte maintenant les drags depuis un ClothingSlot.
+//            Quand source.fromClothingSlot est défini, on appelle removeClothing
+//            (Redux) + fetchNui('removeClothing') au lieu du onDrop normal.
+//            canDrop autorise ces sources même vers un slot vide (aucun item target requis).
 
 import React, { useCallback, useMemo, useRef } from 'react';
 import { useDrag, useDrop }      from 'react-dnd';
@@ -31,7 +19,10 @@ import { Locale }                from '../../store/locale';
 import { canCraftItem, canPurchaseItem, getItemUrl, isSlotWithItem } from '../../helpers';
 import { closeTooltip, openTooltip } from '../../store/tooltip';
 import { openContextMenu }       from '../../store/contextMenu';
+import { removeClothing }        from '../../store/clothing';
+import { fetchNui }              from '../../utils/fetchNui';
 import { DragSource, Inventory, InventoryType, Slot, SlotWithItem } from '../../typings';
+import type { ClothingDragSource } from './ClothingSlot';
 
 const DRAG_TYPE = 'SLOT';
 
@@ -76,26 +67,17 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
   const canPurchase = canPurchaseItem(item, { type: inventoryType, groups: inventoryGroups });
   const canCraft    = canCraftItem(item, inventoryType);
 
-  // [FIX-B6] inventoryGroups est un objet → nouvelle référence à chaque render du parent
-  // → canDrag se recrée → useDrag recrée le descriptor → drag state perdu pendant le drag
-  // → le drop est annulé si le parent re-render pendant le drag (ex: store update).
-  // Fix : sérialiser inventoryGroups en string stable pour la dépendance.
+  // [FIX-B6] inventoryGroups sérialisé pour éviter les re-créations de canDrag
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const groupsKey = useMemo(() => JSON.stringify(inventoryGroups), [inventoryGroups]);
 
-  // [FIX-B9] Logique conditionnelle par type d'inventaire :
-  //   - SHOP     → canPurchaseItem doit être true (on vérifie les groupes / prix)
-  //   - CRAFTING → canCraftItem doit être true (on vérifie les ressources)
-  //   - autres   → drag toujours autorisé (inventaire joueur, coffre, drop…)
-  // L'ancienne logique AND était incorrecte : canPurchaseItem retourne false pour tout
-  // item hors SHOP, ce qui bloquait le drag sur l'inventaire joueur entier.
+  // [FIX-B9] Logique conditionnelle par type d'inventaire
   const canDrag = useCallback(
     () => {
       if (inventoryType === InventoryType.SHOP)     return canPurchaseItem(item, { type: inventoryType, groups: inventoryGroups });
       if (inventoryType === InventoryType.CRAFTING) return canCraftItem(item, inventoryType);
       return true;
     },
-    // [FIX-B6] groupsKey (string) à la place de inventoryGroups (objet) → stable
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [item.slot, item.name, inventoryType, groupsKey]
   );
@@ -109,7 +91,7 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
           ? {
               inventory: inventoryType,
               item: { name: item.name, slot: item.slot },
-              // [FIX-B7] getItemUrl peut retourner undefined → fallback sur '' pas 'none'
+              // [FIX-B7] fallback '' si undefined
               image: item.name ? `url(${getItemUrl(item as SlotWithItem) ?? ''})` : undefined,
             }
           : null,
@@ -118,27 +100,47 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
     [inventoryType, item.slot, item.name, canDrag]
   );
 
-  const [{ isOver }, drop] = useDrop<DragSource, void, { isOver: boolean }>(
+  const [{ isOver }, drop] = useDrop<ClothingDragSource, void, { isOver: boolean }>(
     () => ({
       accept: DRAG_TYPE,
       collect: (m) => ({ isOver: m.isOver() }),
       drop: (source) => {
         dispatch(closeTooltip());
+
+        // [FIX-C1] Drop depuis un ClothingSlot → retrait du vêtement
+        if (source.fromClothingSlot) {
+          dispatch(removeClothing(source.fromClothingSlot));
+          fetchNui('removeClothing', {
+            category: source.fromClothingSlot,
+            name:     source.item?.name,
+            toSlot:   item.slot,
+          });
+          return;
+        }
+
         switch (source.inventory) {
           case InventoryType.SHOP:     onBuy(source,   { inventory: inventoryType, item: { slot: item.slot } }); break;
           case InventoryType.CRAFTING: onCraft(source, { inventory: inventoryType, item: { slot: item.slot } }); break;
           default:                     onDrop(source,  { inventory: inventoryType, item: { slot: item.slot } }); break;
         }
       },
-      canDrop: (source) =>
-        (source.item.slot !== item.slot || source.inventory !== inventoryType) &&
-        inventoryType !== InventoryType.SHOP &&
-        inventoryType !== InventoryType.CRAFTING,
+      canDrop: (source) => {
+        // [FIX-C1] Toujours accepter les drags depuis un clothing slot
+        //          (peu importe si le slot target est vide ou non)
+        if (source.fromClothingSlot) {
+          return inventoryType === InventoryType.PLAYER;
+        }
+        return (
+          (source.item.slot !== item.slot || source.inventory !== inventoryType) &&
+          inventoryType !== InventoryType.SHOP &&
+          inventoryType !== InventoryType.CRAFTING
+        );
+      },
     }),
     [inventoryType, item.slot]
   );
 
-  // [FIX-B8] connectRef stable — dépend uniquement de drag et drop
+  // [FIX-B8] connectRef stable
   const connectRef = useCallback(
     (el: HTMLDivElement | null) => { drag(drop(el)); },
     [drag, drop]
@@ -181,13 +183,8 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
   }, [dispatch]);
 
   const slotStyle = useMemo<React.CSSProperties>(() => {
-    // [FIX-B7] getItemUrl() peut retourner undefined si l'image n'existe pas.
-    // "url(none)"  → le navigateur cherche un fichier nommé "none" → affiche placeholder
-    // "url('')"    → équivaut à pas d'image → backgroundImage ignoré → correct
-    // ""           → backgroundImage: 'none' → pas d'image → correct
     const imageUrl = item.name ? getItemUrl(item as SlotWithItem) : undefined;
     const backgroundImage = imageUrl ? `url(${imageUrl})` : 'none';
-
     return {
       filter:          !canPurchase || !canCraft ? 'brightness(70%) grayscale(100%)' : undefined,
       opacity:         isDragging ? 0.35 : 1.0,

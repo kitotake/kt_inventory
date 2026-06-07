@@ -1,37 +1,21 @@
--- modules/bridge/union/trash/server_union.lua  v2
--- Corrections v2 :
---   [FIX-CMD]    RegisterCommand conservé UNIQUEMENT ici (côté serveur).
---                Le client ne doit pas enregistrer la même commande.
---   [FIX-SPAM]   openingPlayers[src] remis à nil si le stash est déjà ouvert
---                (guard notify-only, ne bloque plus définitivement).
---   [FIX-STASH]  RegisterStash appelé UNE SEULE FOIS par stash (guard trashStashes).
---                Un stash déjà enregistré est simplement rouvert.
---   [FIX-HOOK]   Hook swapItems implémenté via exports.kt_inventory:AddHook (API réelle).
---                Quand un item arrive dans un stash trash_*, il est supprimé immédiatement.
---   [FIX-NOTIFY] Serveur envoie kt_inventory:trash:opened pour confirmer l'ouverture au client.
+-- modules/bridge/union/trash/server_union.lua  v3
+-- Corrections v3 :
+--   [FIX-HOOK]    Pas de AddHook dans kt_inventory → détection par poll (GetInventoryItems)
+--                 toutes les 500ms pendant que la poubelle est ouverte.
+--   [FIX-STASH]   RegisterStash signature correcte : (id, label, slots, maxWeight, owner, groups, coords)
+--   [FIX-OPEN]    forceOpenInventory(src, 'stash', { id = stashId }) → API réelle côté serveur
+--   [FIX-CLEAR]   ClearInventory(stashId) → API réelle pour vider le stash
 
 if not lib then return end
-
-local Inventory, Items
-
-local function getInventory()
-    Inventory = Inventory or require 'modules.inventory.server'
-    return Inventory
-end
-
-local function getItems()
-    Items = Items or require 'modules.items.server'
-    return Items
-end
 
 -- ─────────────────────────────────────────────────────────────
 -- ÉTAT
 -- ─────────────────────────────────────────────────────────────
 
----@type table<string, number>
+---@type table<string, number>   stashId → playerId
 local trashStashes = {}
 
----@type table<number, boolean>
+---@type table<number, boolean>  playerId → ouvert ?
 local openingPlayers = {}
 
 -- ─────────────────────────────────────────────────────────────
@@ -52,111 +36,106 @@ local function notify(src, msg, nType)
 end
 
 -- ─────────────────────────────────────────────────────────────
--- HOOK DESTRUCTION — swapItems
--- kt_inventory appelle ce hook après chaque déplacement d'item.
--- Si la destination est un stash poubelle, on supprime l'item immédiatement.
+-- POLL DE DESTRUCTION
+-- Toutes les 500ms, si la poubelle est ouverte, on regarde
+-- si des items ont été déposés et on les détruit avec ClearInventory.
 -- ─────────────────────────────────────────────────────────────
 
--- Note : l'API hook de kt_inventory varie selon la version.
--- Méthode 1 : exports (ox_inventory style)
--- Méthode 2 : AddEventHandler sur 'kt_inventory:swapItems' (si exposé)
--- On utilise ici la méthode événement qui fonctionne dans toutes les versions.
+---@param src number
+local function startTrashPoll(src)
+    local stashId = getStashId(src)
 
-AddEventHandler('kt_inventory:swapItems', function(payload)
-    if not payload then return end
+    SetTimeout(500, function()
+        -- Arrêt du poll si la poubelle a été fermée
+        if not openingPlayers[src] then return end
 
-    local toInvId = payload.toInventory and payload.toInventory.id
-    if not toInvId then return end
+        local items = exports.kt_inventory:GetInventoryItems(stashId)
 
-    -- Vérifier que c'est bien un stash poubelle légitime
-    if not trashStashes[tostring(toInvId)] then return end
+        if items and next(items) then
+            -- Construire la liste des noms pour la notif
+            local destroyed = {}
+            for _, item in pairs(items) do
+                if item and item.name then
+                    local label = item.label or item.name
+                    table.insert(destroyed, ('%s x%d'):format(label, item.count or 1))
+                end
+            end
 
-    local src = trashStashes[tostring(toInvId)]
+            -- Vider le stash via l'API officielle
+            exports.kt_inventory:ClearInventory(stashId)
 
-    -- Récupérer l'inventaire du stash
-    local Inv    = getInventory()
-    local stashInv = Inv(tostring(toInvId))
-    if not stashInv then return end
+            if #destroyed > 0 then
+                notify(src, ('Détruit : %s'):format(table.concat(destroyed, ', ')), 'success')
+                lib.print.info(('[kt_inventory:trash] Items détruits src=%d : %s'):format(
+                    src, table.concat(destroyed, ', ')))
+            end
 
-    -- Supprimer tous les items du stash poubelle
-    local itemsDestroyed = {}
-    for slotIndex, slotData in pairs(stashInv.items or {}) do
-        if slotData and slotData.name then
-            local label = (getItems()(slotData.name) or {}).label or slotData.name
-            table.insert(itemsDestroyed, ('%s x%d'):format(label, slotData.count or 1))
-            stashInv.items[slotIndex] = nil
+            -- Signaler au client pour fermer l'UI
+            TriggerClientEvent('kt_inventory:trash:cleared', src, stashId)
+            return  -- on arrête le poll, le client va fermer
         end
-    end
 
-    if #itemsDestroyed > 0 then
-        notify(src, ('Détruit : %s'):format(table.concat(itemsDestroyed, ', ')), 'success')
-        -- Demander au client de rafraîchir et fermer
-        TriggerClientEvent('kt_inventory:trash:cleared', src, tostring(toInvId))
-        lib.print.info(('[kt_inventory:trash] Items détruits pour src=%d : %s'):format(src, table.concat(itemsDestroyed, ', ')))
-    end
-end)
+        -- Rien encore → on repoll
+        startTrashPoll(src)
+    end)
+end
 
 -- ─────────────────────────────────────────────────────────────
--- CRÉATION ET OUVERTURE DU STASH
+-- OUVERTURE DU STASH
 -- ─────────────────────────────────────────────────────────────
 
 ---@param src number
 local function openTrashStash(src)
-    -- openingPlayers = "poubelle ouverte pour ce joueur"
-    -- true  → déjà ouverte, refuser
-    -- nil   → libre, on peut ouvrir
     if openingPlayers[src] then
         notify(src, 'Votre poubelle est déjà ouverte.', 'error')
         return
     end
 
-    -- Marquer comme occupé AVANT toute opération pour éviter le double-clic réseau
+    -- Marquer occupé AVANT toute opération (anti double-clic réseau)
     openingPlayers[src] = true
 
     local stashId = getStashId(src)
 
-    -- [FIX-STASH] RegisterStash uniquement si pas encore enregistré
+    -- RegisterStash une seule fois par stash
     if not trashStashes[stashId] then
         local ok, err = pcall(function()
-            exports.kt_inventory:RegisterStash({
-                id     = stashId,
-                label  = '🗑️ Poubelle',
-                slots  = 1,
-                weight = 1000000,
-                owner  = false,
-            })
+            -- Signature réelle : (id, label, slots, maxWeight, owner, groups, coords)
+            exports.kt_inventory:RegisterStash(stashId, '🗑️ Poubelle', 5, 1000000, false)
         end)
 
         if not ok then
-            -- RegisterStash a échoué → rollback du flag sinon le joueur est bloqué
             openingPlayers[src] = nil
             notify(src, "Erreur lors de la création de la poubelle.", 'error')
             lib.print.error(('[kt_inventory:trash] RegisterStash échoué src=%d: %s'):format(src, tostring(err)))
             return
         end
 
-        trashStashes[stashId] = src
         lib.print.info(('[kt_inventory:trash] Stash créé: %s pour src=%d'):format(stashId, src))
-    else
-        trashStashes[stashId] = src
     end
 
-    -- Ouvrir l'inventaire côté client
+    trashStashes[stashId] = src
+
+    -- Vider le stash avant ouverture (items résiduels d'une session précédente)
+    exports.kt_inventory:ClearInventory(stashId)
+
+    -- Ouvrir l'inventaire via l'API serveur réelle
     local ok, err = pcall(function()
-        exports.kt_inventory:OpenInventory(src, 'stash', { id = stashId })
+        exports.kt_inventory:forceOpenInventory(src, 'stash', { id = stashId })
     end)
 
     if not ok then
-        -- OpenInventory a échoué → rollback complet sinon le joueur est bloqué définitivement
         openingPlayers[src]   = nil
         trashStashes[stashId] = nil
         notify(src, "Impossible d'ouvrir la poubelle.", 'error')
-        lib.print.error(('[kt_inventory:trash] OpenInventory échoué src=%d: %s'):format(src, tostring(err)))
+        lib.print.error(('[kt_inventory:trash] forceOpenInventory échoué src=%d: %s'):format(src, tostring(err)))
         return
     end
 
-    -- Confirmer l'ouverture au client
+    -- Confirmer au client
     TriggerClientEvent('kt_inventory:trash:opened', src, stashId)
+
+    -- Démarrer le poll de destruction
+    startTrashPoll(src)
 
     lib.print.info(('[kt_inventory:trash] Poubelle ouverte src=%d stash=%s'):format(src, stashId))
 end
@@ -169,47 +148,24 @@ end
 local function cleanupTrashStash(src)
     local stashId = getStashId(src)
 
-    if not trashStashes[stashId] then
-        -- [FIX-SPAM] Remettre le flag même si stash introuvable
-        openingPlayers[src] = nil
-        return
+    -- Vider les éventuels items résiduels
+    if trashStashes[stashId] then
+        exports.kt_inventory:ClearInventory(stashId)
+        trashStashes[stashId] = nil
     end
 
-    -- Vider les items orphelins restants
-    local Inv    = getInventory()
-    local stashInv = Inv(stashId)
-    if stashInv then
-        for slotIndex, slotData in pairs(stashInv.items or {}) do
-            if slotData and slotData.name then
-                lib.print.warn(('[kt_inventory:trash] Item orphelin supprimé: %s x%d (stash=%s)'):format(
-                    slotData.name, slotData.count or 1, stashId))
-                stashInv.items[slotIndex] = nil
-            end
-        end
-    end
-
-    -- [FIX-SPAM] Toujours remettre le flag à nil au cleanup
-    trashStashes[stashId] = nil
-    openingPlayers[src]   = nil
+    openingPlayers[src] = nil
 
     lib.print.info(('[kt_inventory:trash] Stash nettoyé: %s'):format(stashId))
 end
 
 -- ─────────────────────────────────────────────────────────────
--- [FIX-CMD] COMMANDE /poubelle — UNIQUEMENT CÔTÉ SERVEUR
--- Le client ne doit PAS enregistrer cette commande.
+-- COMMANDE /poubelle — UNIQUEMENT CÔTÉ SERVEUR
 -- ─────────────────────────────────────────────────────────────
 
 RegisterNetEvent('kt_inventory:trash:open', function()
     local src = source
     if src == 0 then return end
-
-    local inv = getInventory()(src)
-    if not inv or not inv.player then
-        notify(src, "Impossible d'ouvrir la poubelle.", 'error')
-        return
-    end
-
     openTrashStash(src)
 end)
 
@@ -218,13 +174,6 @@ RegisterCommand('poubelle', function(src)
         print('[kt_inventory:trash] Commande réservée aux joueurs.')
         return
     end
-
-    local inv = getInventory()(src)
-    if not inv or not inv.player then
-        notify(src, "Impossible d'ouvrir la poubelle.", 'error')
-        return
-    end
-
     openTrashStash(src)
 end, false)
 
@@ -244,4 +193,4 @@ AddEventHandler('playerDropped', function()
     cleanupTrashStash(source)
 end)
 
-lib.print.info('^2[kt_inventory] Système poubelle server v2 chargé (/poubelle)^0')
+lib.print.info('^2[kt_inventory] Système poubelle server v3 chargé (/poubelle)^0')

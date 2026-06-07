@@ -38,7 +38,6 @@ end)
 
 RegisterNetEvent('kt_inventory:trash:cleared', function(stashId)
     currentTrashId = stashId
-    TriggerEvent('kt_inventory:refreshInventory')
 
     -- Fermeture automatique avec délai pour laisser l'animation se jouer
     SetTimeout(800, function()
