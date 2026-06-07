@@ -162,5 +162,7 @@ local function handleClothingItem(data, slot)
     end)
 end
 
+lib.print.info('^2[kt_inventory]^7  module/union/clothing_client pour vêtements Union chargé')
+
 -- Export du handler pour que items/client.lua puisse l'enregistrer
 return handleClothingItem

@@ -68,3 +68,5 @@ lib.callback.register('kt_inventory:removeClothingSlot', function(source, clothi
 
     return true
 end)
+
+lib.print.info('^2[kt_inventory] module/union/clothing_server pour vêtements chargé^0')
