@@ -32,6 +32,15 @@ export const inventorySlice = createSlice({
     setupInventory:  setupInventoryReducer,
     moveSlots:       moveSlotsReducer,
     refreshSlots:    refreshSlotsReducer,
+
+    // ✅ FIX : vide le slot source dans leftInventory après drag vers un ClothingSlot
+    clearSlot: (state, action: PayloadAction<{ slot: number }>) => {
+      const idx = action.payload.slot - 1;
+      if (idx >= 0 && idx < state.leftInventory.items.length) {
+        state.leftInventory.items[idx] = { slot: action.payload.slot };
+      }
+    },
+
     setAdditionalMetadata: (state, action: PayloadAction<Array<{ metadata: string; value: string }>>) => {
       const metadata = [];
       for (let i = 0; i < action.payload.length; i++) {
@@ -72,7 +81,7 @@ export const inventorySlice = createSlice({
 export const {
   setAdditionalMetadata, setItemAmount, setShiftPressed,
   setupInventory, swapSlots, moveSlots, stackSlots,
-  refreshSlots, setContainerWeight,
+  refreshSlots, setContainerWeight, clearSlot,
 } = inventorySlice.actions;
 
 export const selectLeftInventory  = (state: RootState) => state.inventory.leftInventory;

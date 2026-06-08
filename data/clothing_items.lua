@@ -6050,7 +6050,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_1'] = {
         label        = 'Sac #1',
@@ -6059,7 +6059,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_10'] = {
         label        = 'Sac #10',
@@ -6068,7 +6068,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_100'] = {
         label        = 'Sac #100',
@@ -6077,7 +6077,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_101'] = {
         label        = 'Sac #101',
@@ -6086,7 +6086,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_102'] = {
         label        = 'Sac #102',
@@ -6095,7 +6095,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_103'] = {
         label        = 'Sac #103',
@@ -6104,7 +6104,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_104'] = {
         label        = 'Sac #104',
@@ -6113,7 +6113,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_105'] = {
         label        = 'Sac #105',
@@ -6122,7 +6122,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_106'] = {
         label        = 'Sac #106',
@@ -6131,7 +6131,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_107'] = {
         label        = 'Sac #107',
@@ -6140,7 +6140,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_108'] = {
         label        = 'Sac #108',
@@ -6149,7 +6149,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_109'] = {
         label        = 'Sac #109',
@@ -6158,7 +6158,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_11'] = {
         label        = 'Sac #11',
@@ -6167,7 +6167,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_110'] = {
         label        = 'Sac #110',
@@ -6176,7 +6176,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_12'] = {
         label        = 'Sac #12',
@@ -6185,7 +6185,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_13'] = {
         label        = 'Sac #13',
@@ -6194,7 +6194,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_14'] = {
         label        = 'Sac #14',
@@ -6203,7 +6203,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_15'] = {
         label        = 'Sac #15',
@@ -6212,7 +6212,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_16'] = {
         label        = 'Sac #16',
@@ -6221,7 +6221,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_17'] = {
         label        = 'Sac #17',
@@ -6230,7 +6230,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_18'] = {
         label        = 'Sac #18',
@@ -6239,7 +6239,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_19'] = {
         label        = 'Sac #19',
@@ -6248,7 +6248,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_2'] = {
         label        = 'Sac #2',
@@ -6257,7 +6257,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_20'] = {
         label        = 'Sac #20',
@@ -6266,7 +6266,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_21'] = {
         label        = 'Sac #21',
@@ -6275,7 +6275,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_22'] = {
         label        = 'Sac #22',
@@ -6284,7 +6284,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_23'] = {
         label        = 'Sac #23',
@@ -6293,7 +6293,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_24'] = {
         label        = 'Sac #24',
@@ -6302,7 +6302,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_25'] = {
         label        = 'Sac #25',
@@ -6311,7 +6311,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_26'] = {
         label        = 'Sac #26',
@@ -6320,7 +6320,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_27'] = {
         label        = 'Sac #27',
@@ -6329,7 +6329,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_28'] = {
         label        = 'Sac #28',
@@ -6338,7 +6338,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_29'] = {
         label        = 'Sac #29',
@@ -6347,7 +6347,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_3'] = {
         label        = 'Sac #3',
@@ -6356,7 +6356,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_30'] = {
         label        = 'Sac #30',
@@ -6365,7 +6365,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_31'] = {
         label        = 'Sac #31',
@@ -6374,7 +6374,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_32'] = {
         label        = 'Sac #32',
@@ -6383,7 +6383,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_33'] = {
         label        = 'Sac #33',
@@ -6392,7 +6392,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_34'] = {
         label        = 'Sac #34',
@@ -6401,7 +6401,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_35'] = {
         label        = 'Sac #35',
@@ -6410,7 +6410,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_36'] = {
         label        = 'Sac #36',
@@ -6419,7 +6419,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_37'] = {
         label        = 'Sac #37',
@@ -6428,7 +6428,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_38'] = {
         label        = 'Sac #38',
@@ -6437,7 +6437,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_39'] = {
         label        = 'Sac #39',
@@ -6446,7 +6446,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_4'] = {
         label        = 'Sac #4',
@@ -6455,7 +6455,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_40'] = {
         label        = 'Sac #40',
@@ -6464,7 +6464,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_41'] = {
         label        = 'Sac #41',
@@ -6473,7 +6473,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_42'] = {
         label        = 'Sac #42',
@@ -6482,7 +6482,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_43'] = {
         label        = 'Sac #43',
@@ -6491,7 +6491,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_44'] = {
         label        = 'Sac #44',
@@ -6500,7 +6500,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_45'] = {
         label        = 'Sac #45',
@@ -6509,7 +6509,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_46'] = {
         label        = 'Sac #46',
@@ -6518,7 +6518,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_47'] = {
         label        = 'Sac #47',
@@ -6527,7 +6527,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_48'] = {
         label        = 'Sac #48',
@@ -6536,7 +6536,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_49'] = {
         label        = 'Sac #49',
@@ -6545,7 +6545,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_5'] = {
         label        = 'Sac #5',
@@ -6554,7 +6554,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_50'] = {
         label        = 'Sac #50',
@@ -6563,7 +6563,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_51'] = {
         label        = 'Sac #51',
@@ -6572,7 +6572,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_52'] = {
         label        = 'Sac #52',
@@ -6581,7 +6581,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_53'] = {
         label        = 'Sac #53',
@@ -6590,7 +6590,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_54'] = {
         label        = 'Sac #54',
@@ -6599,7 +6599,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_55'] = {
         label        = 'Sac #55',
@@ -6608,7 +6608,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_56'] = {
         label        = 'Sac #56',
@@ -6617,7 +6617,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_57'] = {
         label        = 'Sac #57',
@@ -6626,7 +6626,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_58'] = {
         label        = 'Sac #58',
@@ -6635,7 +6635,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_59'] = {
         label        = 'Sac #59',
@@ -6644,7 +6644,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_6'] = {
         label        = 'Sac #6',
@@ -6653,7 +6653,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_60'] = {
         label        = 'Sac #60',
@@ -6662,7 +6662,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_61'] = {
         label        = 'Sac #61',
@@ -6671,7 +6671,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_62'] = {
         label        = 'Sac #62',
@@ -6680,7 +6680,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_63'] = {
         label        = 'Sac #63',
@@ -6689,7 +6689,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_64'] = {
         label        = 'Sac #64',
@@ -6698,7 +6698,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_65'] = {
         label        = 'Sac #65',
@@ -6707,7 +6707,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_66'] = {
         label        = 'Sac #66',
@@ -6716,7 +6716,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_67'] = {
         label        = 'Sac #67',
@@ -6725,7 +6725,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_68'] = {
         label        = 'Sac #68',
@@ -6734,7 +6734,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_69'] = {
         label        = 'Sac #69',
@@ -6743,7 +6743,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_7'] = {
         label        = 'Sac #7',
@@ -6752,7 +6752,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_70'] = {
         label        = 'Sac #70',
@@ -6761,7 +6761,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_71'] = {
         label        = 'Sac #71',
@@ -6770,7 +6770,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_72'] = {
         label        = 'Sac #72',
@@ -6779,7 +6779,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_73'] = {
         label        = 'Sac #73',
@@ -6788,7 +6788,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_74'] = {
         label        = 'Sac #74',
@@ -6797,7 +6797,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_75'] = {
         label        = 'Sac #75',
@@ -6806,7 +6806,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_76'] = {
         label        = 'Sac #76',
@@ -6815,7 +6815,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_77'] = {
         label        = 'Sac #77',
@@ -6824,7 +6824,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_78'] = {
         label        = 'Sac #78',
@@ -6833,7 +6833,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_79'] = {
         label        = 'Sac #79',
@@ -6842,7 +6842,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_8'] = {
         label        = 'Sac #8',
@@ -6851,7 +6851,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_80'] = {
         label        = 'Sac #80',
@@ -6860,7 +6860,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_81'] = {
         label        = 'Sac #81',
@@ -6869,7 +6869,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_82'] = {
         label        = 'Sac #82',
@@ -6878,7 +6878,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_83'] = {
         label        = 'Sac #83',
@@ -6887,7 +6887,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_84'] = {
         label        = 'Sac #84',
@@ -6896,7 +6896,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_85'] = {
         label        = 'Sac #85',
@@ -6905,7 +6905,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_86'] = {
         label        = 'Sac #86',
@@ -6914,7 +6914,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_87'] = {
         label        = 'Sac #87',
@@ -6923,7 +6923,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_88'] = {
         label        = 'Sac #88',
@@ -6932,7 +6932,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_89'] = {
         label        = 'Sac #89',
@@ -6941,7 +6941,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_9'] = {
         label        = 'Sac #9',
@@ -6950,7 +6950,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_90'] = {
         label        = 'Sac #90',
@@ -6959,7 +6959,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_91'] = {
         label        = 'Sac #91',
@@ -6968,7 +6968,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_92'] = {
         label        = 'Sac #92',
@@ -6977,7 +6977,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_93'] = {
         label        = 'Sac #93',
@@ -6986,7 +6986,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_94'] = {
         label        = 'Sac #94',
@@ -6995,7 +6995,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_95'] = {
         label        = 'Sac #95',
@@ -7004,7 +7004,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_96'] = {
         label        = 'Sac #96',
@@ -7013,7 +7013,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_97'] = {
         label        = 'Sac #97',
@@ -7022,7 +7022,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_98'] = {
         label        = 'Sac #98',
@@ -7031,7 +7031,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_hand_99'] = {
         label        = 'Sac #99',
@@ -7040,7 +7040,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_f_jbib_0'] = {
         label        = 'Crew T-Shirt',
@@ -20189,7 +20189,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_1'] = {
         label        = 'Haut du corps #1',
@@ -20198,7 +20198,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_10'] = {
         label        = 'Haut du corps #10',
@@ -20207,7 +20207,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_100'] = {
         label        = 'Blue Surgical Gloves',
@@ -20216,7 +20216,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_101'] = {
         label        = 'Blue Surgical Gloves',
@@ -20225,7 +20225,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_102'] = {
         label        = 'Blue Surgical Gloves',
@@ -20234,7 +20234,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_103'] = {
         label        = 'Blue Surgical Gloves',
@@ -20243,7 +20243,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_104'] = {
         label        = 'Blue Surgical Gloves',
@@ -20252,7 +20252,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_105'] = {
         label        = 'Blue Surgical Gloves',
@@ -20261,7 +20261,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_106'] = {
         label        = 'Blue Surgical Gloves',
@@ -20270,7 +20270,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_107'] = {
         label        = 'Blue Surgical Gloves',
@@ -20279,7 +20279,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_108'] = {
         label        = 'Blue Surgical Gloves',
@@ -20288,7 +20288,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_109'] = {
         label        = 'Blue Surgical Gloves',
@@ -20297,7 +20297,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_11'] = {
         label        = 'Haut du corps #11',
@@ -20306,7 +20306,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_110'] = {
         label        = 'Blue Surgical Gloves',
@@ -20315,7 +20315,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_111'] = {
         label        = 'Haut du corps #111',
@@ -20324,7 +20324,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_112'] = {
         label        = 'Haut du corps #112',
@@ -20333,7 +20333,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_113'] = {
         label        = 'Haut du corps #113',
@@ -20342,7 +20342,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_114'] = {
         label        = 'Haut du corps #114',
@@ -20351,7 +20351,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_115'] = {
         label        = 'Haut du corps #115',
@@ -20360,7 +20360,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_116'] = {
         label        = 'Haut du corps #116',
@@ -20369,7 +20369,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_117'] = {
         label        = 'Haut du corps #117',
@@ -20378,7 +20378,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_118'] = {
         label        = 'Haut du corps #118',
@@ -20387,7 +20387,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_119'] = {
         label        = 'Haut du corps #119',
@@ -20396,7 +20396,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_12'] = {
         label        = 'Haut du corps #12',
@@ -20405,7 +20405,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_120'] = {
         label        = 'Haut du corps #120',
@@ -20414,7 +20414,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_121'] = {
         label        = 'Haut du corps #121',
@@ -20423,7 +20423,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_122'] = {
         label        = 'Haut du corps #122',
@@ -20432,7 +20432,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_123'] = {
         label        = 'Haut du corps #123',
@@ -20441,7 +20441,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_124'] = {
         label        = 'Haut du corps #124',
@@ -20450,7 +20450,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_125'] = {
         label        = 'Haut du corps #125',
@@ -20459,7 +20459,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_126'] = {
         label        = 'Haut du corps #126',
@@ -20468,7 +20468,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_127'] = {
         label        = 'Racesuit Gloves',
@@ -20477,7 +20477,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_128'] = {
         label        = 'Motocross Gloves',
@@ -20486,7 +20486,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_129'] = {
         label        = 'Haut du corps #129',
@@ -20495,7 +20495,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_13'] = {
         label        = 'Haut du corps #13',
@@ -20504,7 +20504,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_130'] = {
         label        = 'Haut du corps #130',
@@ -20513,7 +20513,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_131'] = {
         label        = 'Haut du corps #131',
@@ -20522,7 +20522,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_132'] = {
         label        = 'Black Driving Gloves',
@@ -20531,7 +20531,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_133'] = {
         label        = 'Black Leather Gloves',
@@ -20540,7 +20540,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_134'] = {
         label        = 'Black Woolen Gloves',
@@ -20549,7 +20549,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_135'] = {
         label        = 'Black Fingerless Gloves',
@@ -20558,7 +20558,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_136'] = {
         label        = 'Refuse Collector Gloves',
@@ -20567,7 +20567,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_137'] = {
         label        = 'White Cotton Gloves',
@@ -20576,7 +20576,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_138'] = {
         label        = 'Blue Surgical Gloves',
@@ -20585,7 +20585,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_139'] = {
         label        = 'Black Driving Gloves',
@@ -20594,7 +20594,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_14'] = {
         label        = 'Haut du corps #14',
@@ -20603,7 +20603,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_140'] = {
         label        = 'Black Leather Gloves',
@@ -20612,7 +20612,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_141'] = {
         label        = 'Black Woolen Gloves',
@@ -20621,7 +20621,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_142'] = {
         label        = 'Black Fingerless Gloves',
@@ -20630,7 +20630,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_143'] = {
         label        = 'Refuse Collector Gloves',
@@ -20639,7 +20639,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_144'] = {
         label        = 'White Cotton Gloves',
@@ -20648,7 +20648,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_145'] = {
         label        = 'Blue Surgical Gloves',
@@ -20657,7 +20657,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_146'] = {
         label        = 'Black Driving Gloves',
@@ -20666,7 +20666,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_147'] = {
         label        = 'Black Leather Gloves',
@@ -20675,7 +20675,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_148'] = {
         label        = 'Black Woolen Gloves',
@@ -20684,7 +20684,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_149'] = {
         label        = 'Black Fingerless Gloves',
@@ -20693,7 +20693,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_15'] = {
         label        = 'Haut du corps #15',
@@ -20702,7 +20702,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_150'] = {
         label        = 'Refuse Collector Gloves',
@@ -20711,7 +20711,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_151'] = {
         label        = 'White Cotton Gloves',
@@ -20720,7 +20720,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_152'] = {
         label        = 'Blue Surgical Gloves',
@@ -20729,7 +20729,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_153'] = {
         label        = 'Haut du corps #153',
@@ -20738,7 +20738,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_154'] = {
         label        = 'Black Driving Gloves',
@@ -20747,7 +20747,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_155'] = {
         label        = 'Black Leather Gloves',
@@ -20756,7 +20756,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_156'] = {
         label        = 'Black Woolen Gloves',
@@ -20765,7 +20765,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_157'] = {
         label        = 'Black Fingerless Gloves',
@@ -20774,7 +20774,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_158'] = {
         label        = 'Refuse Collector Gloves',
@@ -20783,7 +20783,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_159'] = {
         label        = 'White Cotton Gloves',
@@ -20792,7 +20792,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_16'] = {
         label        = 'Magenta Long Gloves',
@@ -20801,7 +20801,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_160'] = {
         label        = 'Blue Surgical Gloves',
@@ -20810,7 +20810,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_161'] = {
         label        = 'Haut du corps #161',
@@ -20819,7 +20819,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_162'] = {
         label        = 'Black Driving Gloves',
@@ -20828,7 +20828,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_163'] = {
         label        = 'Black Leather Gloves',
@@ -20837,7 +20837,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_164'] = {
         label        = 'Black Woolen Gloves',
@@ -20846,7 +20846,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_165'] = {
         label        = 'Black Fingerless Gloves',
@@ -20855,7 +20855,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_166'] = {
         label        = 'Refuse Collector Gloves',
@@ -20864,7 +20864,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_167'] = {
         label        = 'White Cotton Gloves',
@@ -20873,7 +20873,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_168'] = {
         label        = 'Blue Surgical Gloves',
@@ -20882,7 +20882,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_169'] = {
         label        = 'Blue Digital Armored',
@@ -20891,7 +20891,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_17'] = {
         label        = 'Haut du corps #17',
@@ -20900,7 +20900,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_170'] = {
         label        = 'Blue Digital Tactical',
@@ -20909,7 +20909,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_171'] = {
         label        = 'Blue Digital Armored',
@@ -20918,7 +20918,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_172'] = {
         label        = 'Blue Digital Armored',
@@ -20927,7 +20927,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_173'] = {
         label        = 'Blue Digital Armored',
@@ -20936,7 +20936,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_174'] = {
         label        = 'Blue Digital Armored',
@@ -20945,7 +20945,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_175'] = {
         label        = 'Blue Digital Armored',
@@ -20954,7 +20954,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_176'] = {
         label        = 'Blue Digital Armored',
@@ -20963,7 +20963,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_177'] = {
         label        = 'Blue Digital Armored',
@@ -20972,7 +20972,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_178'] = {
         label        = 'Blue Digital Armored',
@@ -20981,7 +20981,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_179'] = {
         label        = 'Blue Digital Armored',
@@ -20990,7 +20990,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_18'] = {
         label        = 'Black Tact Gloves',
@@ -20999,7 +20999,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_180'] = {
         label        = 'Blue Digital Armored',
@@ -21008,7 +21008,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_181'] = {
         label        = 'Blue Digital Armored',
@@ -21017,7 +21017,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_182'] = {
         label        = 'Blue Digital Armored',
@@ -21026,7 +21026,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_183'] = {
         label        = 'Blue Digital Armored',
@@ -21035,7 +21035,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_184'] = {
         label        = 'Blue Digital Armored',
@@ -21044,7 +21044,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_185'] = {
         label        = 'Blue Digital Armored',
@@ -21053,7 +21053,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_186'] = {
         label        = 'Blue Digital Armored',
@@ -21062,7 +21062,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_187'] = {
         label        = 'Blue Digital Tactical',
@@ -21071,7 +21071,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_188'] = {
         label        = 'Blue Digital Tactical',
@@ -21080,7 +21080,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_189'] = {
         label        = 'Blue Digital Tactical',
@@ -21089,7 +21089,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_19'] = {
         label        = 'Black Wool Gloves',
@@ -21098,7 +21098,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_190'] = {
         label        = 'Blue Digital Tactical',
@@ -21107,7 +21107,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_191'] = {
         label        = 'Blue Digital Tactical',
@@ -21116,7 +21116,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_192'] = {
         label        = 'Blue Digital Tactical',
@@ -21125,7 +21125,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_193'] = {
         label        = 'Blue Digital Tactical',
@@ -21134,7 +21134,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_194'] = {
         label        = 'Blue Digital Tactical',
@@ -21143,7 +21143,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_195'] = {
         label        = 'Blue Digital Tactical',
@@ -21152,7 +21152,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_196'] = {
         label        = 'Blue Digital Tactical',
@@ -21161,7 +21161,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_197'] = {
         label        = 'Blue Digital Tactical',
@@ -21170,7 +21170,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_198'] = {
         label        = 'Blue Digital Tactical',
@@ -21179,7 +21179,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_199'] = {
         label        = 'Blue Digital Tactical',
@@ -21188,7 +21188,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_2'] = {
         label        = 'Haut du corps #2',
@@ -21197,7 +21197,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_20'] = {
         label        = 'Black Driving Gloves',
@@ -21206,7 +21206,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_200'] = {
         label        = 'Blue Digital Tactical',
@@ -21215,7 +21215,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_201'] = {
         label        = 'Blue Digital Tactical',
@@ -21224,7 +21224,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_202'] = {
         label        = 'Blue Digital Tactical',
@@ -21233,7 +21233,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_203'] = {
         label        = 'Blue Digital Armored',
@@ -21242,7 +21242,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_204'] = {
         label        = 'Blue Digital Tactical',
@@ -21251,7 +21251,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_205'] = {
         label        = 'Haut du corps #205',
@@ -21260,7 +21260,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_206'] = {
         label        = 'Haut du corps #206',
@@ -21269,7 +21269,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_207'] = {
         label        = 'Haut du corps #207',
@@ -21278,7 +21278,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_208'] = {
         label        = 'Haut du corps #208',
@@ -21287,7 +21287,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_209'] = {
         label        = 'Haut du corps #209',
@@ -21296,7 +21296,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_21'] = {
         label        = 'Black Driving Gloves',
@@ -21305,7 +21305,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_210'] = {
         label        = 'Haut du corps #210',
@@ -21314,7 +21314,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_211'] = {
         label        = 'Black Armored',
@@ -21323,7 +21323,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_212'] = {
         label        = 'Black Armored',
@@ -21332,7 +21332,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_213'] = {
         label        = 'Black Armored',
@@ -21341,7 +21341,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_214'] = {
         label        = 'Black Armored',
@@ -21350,7 +21350,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_215'] = {
         label        = 'Black Armored',
@@ -21359,7 +21359,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_216'] = {
         label        = 'Black Armored',
@@ -21368,7 +21368,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_217'] = {
         label        = 'Black Armored',
@@ -21377,7 +21377,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_218'] = {
         label        = 'Black Armored',
@@ -21386,7 +21386,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_219'] = {
         label        = 'Black Armored',
@@ -21395,7 +21395,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_22'] = {
         label        = 'Black Driving Gloves',
@@ -21404,7 +21404,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_220'] = {
         label        = 'Black Armored',
@@ -21413,7 +21413,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_221'] = {
         label        = 'Black Armored',
@@ -21422,7 +21422,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_222'] = {
         label        = 'Black Armored',
@@ -21431,7 +21431,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_223'] = {
         label        = 'Black Armored',
@@ -21440,7 +21440,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_224'] = {
         label        = 'Black Armored',
@@ -21449,7 +21449,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_225'] = {
         label        = 'Black Armored',
@@ -21458,7 +21458,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_226'] = {
         label        = 'Black Armored',
@@ -21467,7 +21467,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_227'] = {
         label        = 'Black Armored',
@@ -21476,7 +21476,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_228'] = {
         label        = 'Black Armored',
@@ -21485,7 +21485,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_229'] = {
         label        = 'Haut du corps #229',
@@ -21494,7 +21494,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_23'] = {
         label        = 'Black Driving Gloves',
@@ -21503,7 +21503,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_230'] = {
         label        = 'Black Driving Gloves',
@@ -21512,7 +21512,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_231'] = {
         label        = 'Black Leather Gloves',
@@ -21521,7 +21521,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_232'] = {
         label        = 'Black Woolen Gloves',
@@ -21530,7 +21530,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_233'] = {
         label        = 'Black Fingerless Gloves',
@@ -21539,7 +21539,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_234'] = {
         label        = 'Refuse Collector Gloves',
@@ -21548,7 +21548,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_235'] = {
         label        = 'White Cotton Gloves',
@@ -21557,7 +21557,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_236'] = {
         label        = 'Blue Surgical Gloves',
@@ -21566,7 +21566,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_237'] = {
         label        = 'Blue Digital Armored',
@@ -21575,7 +21575,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_238'] = {
         label        = 'Blue Digital Tactical',
@@ -21584,7 +21584,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_239'] = {
         label        = 'Black Armored',
@@ -21593,7 +21593,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_24'] = {
         label        = 'Black Driving Gloves',
@@ -21602,7 +21602,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_240'] = {
         label        = 'Haut du corps #240',
@@ -21611,7 +21611,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_241'] = {
         label        = 'Haut du corps #241',
@@ -21620,7 +21620,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_242'] = {
         label        = 'Haut du corps #242',
@@ -21629,7 +21629,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_243'] = {
         label        = 'Haut du corps #243',
@@ -21638,7 +21638,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_244'] = {
         label        = 'Haut du corps #244',
@@ -21647,7 +21647,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_245'] = {
         label        = 'Haut du corps #245',
@@ -21656,7 +21656,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_246'] = {
         label        = 'Haut du corps #246',
@@ -21665,7 +21665,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_247'] = {
         label        = 'Haut du corps #247',
@@ -21674,7 +21674,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_25'] = {
         label        = 'Black Driving Gloves',
@@ -21683,7 +21683,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_26'] = {
         label        = 'Black Driving Gloves',
@@ -21692,7 +21692,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_27'] = {
         label        = 'Black Driving Gloves',
@@ -21701,7 +21701,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_28'] = {
         label        = 'Black Driving Gloves',
@@ -21710,7 +21710,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_29'] = {
         label        = 'Black Driving Gloves',
@@ -21719,7 +21719,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_3'] = {
         label        = 'Haut du corps #3',
@@ -21728,7 +21728,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_30'] = {
         label        = 'Black Driving Gloves',
@@ -21737,7 +21737,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_31'] = {
         label        = 'Black Driving Gloves',
@@ -21746,7 +21746,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_32'] = {
         label        = 'Black Driving Gloves',
@@ -21755,7 +21755,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_33'] = {
         label        = 'Black Leather Gloves',
@@ -21764,7 +21764,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_34'] = {
         label        = 'Black Leather Gloves',
@@ -21773,7 +21773,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_35'] = {
         label        = 'Black Leather Gloves',
@@ -21782,7 +21782,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_36'] = {
         label        = 'Black Leather Gloves',
@@ -21791,7 +21791,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_37'] = {
         label        = 'Black Leather Gloves',
@@ -21800,7 +21800,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_38'] = {
         label        = 'Black Leather Gloves',
@@ -21809,7 +21809,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_39'] = {
         label        = 'Black Leather Gloves',
@@ -21818,7 +21818,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_4'] = {
         label        = 'Haut du corps #4',
@@ -21827,7 +21827,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_40'] = {
         label        = 'Black Leather Gloves',
@@ -21836,7 +21836,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_41'] = {
         label        = 'Black Leather Gloves',
@@ -21845,7 +21845,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_42'] = {
         label        = 'Black Leather Gloves',
@@ -21854,7 +21854,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_43'] = {
         label        = 'Black Leather Gloves',
@@ -21863,7 +21863,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_44'] = {
         label        = 'Black Leather Gloves',
@@ -21872,7 +21872,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_45'] = {
         label        = 'Black Leather Gloves',
@@ -21881,7 +21881,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_46'] = {
         label        = 'Black Woolen Gloves',
@@ -21890,7 +21890,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_47'] = {
         label        = 'Black Woolen Gloves',
@@ -21899,7 +21899,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_48'] = {
         label        = 'Black Woolen Gloves',
@@ -21908,7 +21908,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_49'] = {
         label        = 'Black Woolen Gloves',
@@ -21917,7 +21917,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_5'] = {
         label        = 'Haut du corps #5',
@@ -21926,7 +21926,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_50'] = {
         label        = 'Black Woolen Gloves',
@@ -21935,7 +21935,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_51'] = {
         label        = 'Black Woolen Gloves',
@@ -21944,7 +21944,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_52'] = {
         label        = 'Black Woolen Gloves',
@@ -21953,7 +21953,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_53'] = {
         label        = 'Black Woolen Gloves',
@@ -21962,7 +21962,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_54'] = {
         label        = 'Black Woolen Gloves',
@@ -21971,7 +21971,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_55'] = {
         label        = 'Black Woolen Gloves',
@@ -21980,7 +21980,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_56'] = {
         label        = 'Black Woolen Gloves',
@@ -21989,7 +21989,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_57'] = {
         label        = 'Black Woolen Gloves',
@@ -21998,7 +21998,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_58'] = {
         label        = 'Black Woolen Gloves',
@@ -22007,7 +22007,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_59'] = {
         label        = 'Black Fingerless Gloves',
@@ -22016,7 +22016,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_6'] = {
         label        = 'Haut du corps #6',
@@ -22025,7 +22025,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_60'] = {
         label        = 'Black Fingerless Gloves',
@@ -22034,7 +22034,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_61'] = {
         label        = 'Black Fingerless Gloves',
@@ -22043,7 +22043,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_62'] = {
         label        = 'Black Fingerless Gloves',
@@ -22052,7 +22052,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_63'] = {
         label        = 'Black Fingerless Gloves',
@@ -22061,7 +22061,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_64'] = {
         label        = 'Black Fingerless Gloves',
@@ -22070,7 +22070,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_65'] = {
         label        = 'Black Fingerless Gloves',
@@ -22079,7 +22079,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_66'] = {
         label        = 'Black Fingerless Gloves',
@@ -22088,7 +22088,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_67'] = {
         label        = 'Black Fingerless Gloves',
@@ -22097,7 +22097,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_68'] = {
         label        = 'Black Fingerless Gloves',
@@ -22106,7 +22106,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_69'] = {
         label        = 'Black Fingerless Gloves',
@@ -22115,7 +22115,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_7'] = {
         label        = 'Haut du corps #7',
@@ -22124,7 +22124,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_70'] = {
         label        = 'Black Fingerless Gloves',
@@ -22133,7 +22133,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_71'] = {
         label        = 'Black Fingerless Gloves',
@@ -22142,7 +22142,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_72'] = {
         label        = 'Refuse Collector Gloves',
@@ -22151,7 +22151,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_73'] = {
         label        = 'Refuse Collector Gloves',
@@ -22160,7 +22160,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_74'] = {
         label        = 'Refuse Collector Gloves',
@@ -22169,7 +22169,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_75'] = {
         label        = 'Refuse Collector Gloves',
@@ -22178,7 +22178,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_76'] = {
         label        = 'Refuse Collector Gloves',
@@ -22187,7 +22187,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_77'] = {
         label        = 'Refuse Collector Gloves',
@@ -22196,7 +22196,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_78'] = {
         label        = 'Refuse Collector Gloves',
@@ -22205,7 +22205,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_79'] = {
         label        = 'Refuse Collector Gloves',
@@ -22214,7 +22214,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_8'] = {
         label        = 'Haut du corps #8',
@@ -22223,7 +22223,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_80'] = {
         label        = 'Refuse Collector Gloves',
@@ -22232,7 +22232,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_81'] = {
         label        = 'Refuse Collector Gloves',
@@ -22241,7 +22241,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_82'] = {
         label        = 'Refuse Collector Gloves',
@@ -22250,7 +22250,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_83'] = {
         label        = 'Refuse Collector Gloves',
@@ -22259,7 +22259,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_84'] = {
         label        = 'Refuse Collector Gloves',
@@ -22268,7 +22268,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_85'] = {
         label        = 'White Cotton Gloves',
@@ -22277,7 +22277,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_86'] = {
         label        = 'White Cotton Gloves',
@@ -22286,7 +22286,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_87'] = {
         label        = 'White Cotton Gloves',
@@ -22295,7 +22295,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_88'] = {
         label        = 'White Cotton Gloves',
@@ -22304,7 +22304,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_89'] = {
         label        = 'White Cotton Gloves',
@@ -22313,7 +22313,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_9'] = {
         label        = 'Haut du corps #9',
@@ -22322,7 +22322,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_90'] = {
         label        = 'White Cotton Gloves',
@@ -22331,7 +22331,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_91'] = {
         label        = 'White Cotton Gloves',
@@ -22340,7 +22340,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_92'] = {
         label        = 'White Cotton Gloves',
@@ -22349,7 +22349,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_93'] = {
         label        = 'White Cotton Gloves',
@@ -22358,7 +22358,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_94'] = {
         label        = 'White Cotton Gloves',
@@ -22367,7 +22367,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_95'] = {
         label        = 'White Cotton Gloves',
@@ -22376,7 +22376,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_96'] = {
         label        = 'White Cotton Gloves',
@@ -22385,7 +22385,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_97'] = {
         label        = 'White Cotton Gloves',
@@ -22394,7 +22394,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_98'] = {
         label        = 'Blue Surgical Gloves',
@@ -22403,7 +22403,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_f_uppr_99'] = {
         label        = 'Blue Surgical Gloves',
@@ -22412,7 +22412,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_accs_0'] = {
         label        = 'Crew T-Shirt',
@@ -27875,7 +27875,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_1'] = {
         label        = 'Sac #1',
@@ -27884,7 +27884,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_10'] = {
         label        = 'Sac #10',
@@ -27893,7 +27893,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_100'] = {
         label        = 'Sac #100',
@@ -27902,7 +27902,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_101'] = {
         label        = 'Sac #101',
@@ -27911,7 +27911,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_102'] = {
         label        = 'Sac #102',
@@ -27920,7 +27920,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_103'] = {
         label        = 'Sac #103',
@@ -27929,7 +27929,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_104'] = {
         label        = 'Sac #104',
@@ -27938,7 +27938,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_105'] = {
         label        = 'Sac #105',
@@ -27947,7 +27947,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_106'] = {
         label        = 'Sac #106',
@@ -27956,7 +27956,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_107'] = {
         label        = 'Sac #107',
@@ -27965,7 +27965,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_108'] = {
         label        = 'Sac #108',
@@ -27974,7 +27974,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_109'] = {
         label        = 'Sac #109',
@@ -27983,7 +27983,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_11'] = {
         label        = 'Sac #11',
@@ -27992,7 +27992,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_110'] = {
         label        = 'Sac #110',
@@ -28001,7 +28001,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_12'] = {
         label        = 'Sac #12',
@@ -28010,7 +28010,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_13'] = {
         label        = 'Sac #13',
@@ -28019,7 +28019,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_14'] = {
         label        = 'Sac #14',
@@ -28028,7 +28028,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_15'] = {
         label        = 'Sac #15',
@@ -28037,7 +28037,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_16'] = {
         label        = 'Sac #16',
@@ -28046,7 +28046,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_17'] = {
         label        = 'Sac #17',
@@ -28055,7 +28055,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_18'] = {
         label        = 'Sac #18',
@@ -28064,7 +28064,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_19'] = {
         label        = 'Sac #19',
@@ -28073,7 +28073,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_2'] = {
         label        = 'Sac #2',
@@ -28082,7 +28082,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_20'] = {
         label        = 'Sac #20',
@@ -28091,7 +28091,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_21'] = {
         label        = 'Sac #21',
@@ -28100,7 +28100,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_22'] = {
         label        = 'Sac #22',
@@ -28109,7 +28109,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_23'] = {
         label        = 'Sac #23',
@@ -28118,7 +28118,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_24'] = {
         label        = 'Sac #24',
@@ -28127,7 +28127,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_25'] = {
         label        = 'Sac #25',
@@ -28136,7 +28136,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_26'] = {
         label        = 'Sac #26',
@@ -28145,7 +28145,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_27'] = {
         label        = 'Sac #27',
@@ -28154,7 +28154,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_28'] = {
         label        = 'Sac #28',
@@ -28163,7 +28163,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_29'] = {
         label        = 'Sac #29',
@@ -28172,7 +28172,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_3'] = {
         label        = 'Sac #3',
@@ -28181,7 +28181,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_30'] = {
         label        = 'Sac #30',
@@ -28190,7 +28190,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_31'] = {
         label        = 'Sac #31',
@@ -28199,7 +28199,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_32'] = {
         label        = 'Sac #32',
@@ -28208,7 +28208,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_33'] = {
         label        = 'Sac #33',
@@ -28217,7 +28217,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_34'] = {
         label        = 'Sac #34',
@@ -28226,7 +28226,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_35'] = {
         label        = 'Sac #35',
@@ -28235,7 +28235,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_36'] = {
         label        = 'Sac #36',
@@ -28244,7 +28244,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_37'] = {
         label        = 'Sac #37',
@@ -28253,7 +28253,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_38'] = {
         label        = 'Sac #38',
@@ -28262,7 +28262,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_39'] = {
         label        = 'Sac #39',
@@ -28271,7 +28271,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_4'] = {
         label        = 'Sac #4',
@@ -28280,7 +28280,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_40'] = {
         label        = 'Sac #40',
@@ -28289,7 +28289,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_41'] = {
         label        = 'Sac #41',
@@ -28298,7 +28298,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_42'] = {
         label        = 'Sac #42',
@@ -28307,7 +28307,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_43'] = {
         label        = 'Sac #43',
@@ -28316,7 +28316,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_44'] = {
         label        = 'Sac #44',
@@ -28325,7 +28325,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_45'] = {
         label        = 'Sac #45',
@@ -28334,7 +28334,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_46'] = {
         label        = 'Sac #46',
@@ -28343,7 +28343,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_47'] = {
         label        = 'Sac #47',
@@ -28352,7 +28352,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_48'] = {
         label        = 'Sac #48',
@@ -28361,7 +28361,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_49'] = {
         label        = 'Sac #49',
@@ -28370,7 +28370,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_5'] = {
         label        = 'Sac #5',
@@ -28379,7 +28379,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_50'] = {
         label        = 'Sac #50',
@@ -28388,7 +28388,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_51'] = {
         label        = 'Sac #51',
@@ -28397,7 +28397,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_52'] = {
         label        = 'Sac #52',
@@ -28406,7 +28406,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_53'] = {
         label        = 'Sac #53',
@@ -28415,7 +28415,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_54'] = {
         label        = 'Sac #54',
@@ -28424,7 +28424,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_55'] = {
         label        = 'Sac #55',
@@ -28433,7 +28433,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_56'] = {
         label        = 'Sac #56',
@@ -28442,7 +28442,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_57'] = {
         label        = 'Sac #57',
@@ -28451,7 +28451,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_58'] = {
         label        = 'Sac #58',
@@ -28460,7 +28460,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_59'] = {
         label        = 'Sac #59',
@@ -28469,7 +28469,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_6'] = {
         label        = 'Sac #6',
@@ -28478,7 +28478,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_60'] = {
         label        = 'Sac #60',
@@ -28487,7 +28487,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_61'] = {
         label        = 'Sac #61',
@@ -28496,7 +28496,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_62'] = {
         label        = 'Sac #62',
@@ -28505,7 +28505,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_63'] = {
         label        = 'Sac #63',
@@ -28514,7 +28514,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_64'] = {
         label        = 'Sac #64',
@@ -28523,7 +28523,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_65'] = {
         label        = 'Sac #65',
@@ -28532,7 +28532,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_66'] = {
         label        = 'Sac #66',
@@ -28541,7 +28541,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_67'] = {
         label        = 'Sac #67',
@@ -28550,7 +28550,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_68'] = {
         label        = 'Sac #68',
@@ -28559,7 +28559,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_69'] = {
         label        = 'Sac #69',
@@ -28568,7 +28568,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_7'] = {
         label        = 'Sac #7',
@@ -28577,7 +28577,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_70'] = {
         label        = 'Sac #70',
@@ -28586,7 +28586,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_71'] = {
         label        = 'Sac #71',
@@ -28595,7 +28595,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_72'] = {
         label        = 'Sac #72',
@@ -28604,7 +28604,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_73'] = {
         label        = 'Sac #73',
@@ -28613,7 +28613,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_74'] = {
         label        = 'Sac #74',
@@ -28622,7 +28622,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_75'] = {
         label        = 'Sac #75',
@@ -28631,7 +28631,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_76'] = {
         label        = 'Sac #76',
@@ -28640,7 +28640,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_77'] = {
         label        = 'Sac #77',
@@ -28649,7 +28649,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_78'] = {
         label        = 'Sac #78',
@@ -28658,7 +28658,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_79'] = {
         label        = 'Sac #79',
@@ -28667,7 +28667,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_8'] = {
         label        = 'Sac #8',
@@ -28676,7 +28676,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_80'] = {
         label        = 'Sac #80',
@@ -28685,7 +28685,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_81'] = {
         label        = 'Sac #81',
@@ -28694,7 +28694,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_82'] = {
         label        = 'Sac #82',
@@ -28703,7 +28703,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_83'] = {
         label        = 'Sac #83',
@@ -28712,7 +28712,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_84'] = {
         label        = 'Sac #84',
@@ -28721,7 +28721,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_85'] = {
         label        = 'Sac #85',
@@ -28730,7 +28730,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_86'] = {
         label        = 'Sac #86',
@@ -28739,7 +28739,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_87'] = {
         label        = 'Sac #87',
@@ -28748,7 +28748,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_88'] = {
         label        = 'Sac #88',
@@ -28757,7 +28757,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_89'] = {
         label        = 'Sac #89',
@@ -28766,7 +28766,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_9'] = {
         label        = 'Sac #9',
@@ -28775,7 +28775,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_90'] = {
         label        = 'Sac #90',
@@ -28784,7 +28784,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_91'] = {
         label        = 'Sac #91',
@@ -28793,7 +28793,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_92'] = {
         label        = 'Sac #92',
@@ -28802,7 +28802,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_93'] = {
         label        = 'Sac #93',
@@ -28811,7 +28811,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_94'] = {
         label        = 'Sac #94',
@@ -28820,7 +28820,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_95'] = {
         label        = 'Sac #95',
@@ -28829,7 +28829,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_96'] = {
         label        = 'Sac #96',
@@ -28838,7 +28838,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_97'] = {
         label        = 'Sac #97',
@@ -28847,7 +28847,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_98'] = {
         label        = 'Sac #98',
@@ -28856,7 +28856,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_hand_99'] = {
         label        = 'Sac #99',
@@ -28865,7 +28865,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'bag',
+        clothingSlot = 'gloves',
     },
     ['clothing_m_jbib_0'] = {
         label        = 'Crew T-Shirt',
@@ -41978,7 +41978,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_1'] = {
         label        = 'Haut du corps #1',
@@ -41987,7 +41987,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_10'] = {
         label        = 'Haut du corps #10',
@@ -41996,7 +41996,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_100'] = {
         label        = 'Haut du corps #100',
@@ -42005,7 +42005,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_101'] = {
         label        = 'Haut du corps #101',
@@ -42014,7 +42014,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_102'] = {
         label        = 'Haut du corps #102',
@@ -42023,7 +42023,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_103'] = {
         label        = 'Haut du corps #103',
@@ -42032,7 +42032,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_104'] = {
         label        = 'Haut du corps #104',
@@ -42041,7 +42041,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_105'] = {
         label        = 'Haut du corps #105',
@@ -42050,7 +42050,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_106'] = {
         label        = 'Haut du corps #106',
@@ -42059,7 +42059,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_107'] = {
         label        = 'Haut du corps #107',
@@ -42068,7 +42068,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_108'] = {
         label        = 'Haut du corps #108',
@@ -42077,7 +42077,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_109'] = {
         label        = 'Haut du corps #109',
@@ -42086,7 +42086,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_11'] = {
         label        = 'Haut du corps #11',
@@ -42095,7 +42095,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_110'] = {
         label        = 'Racesuit Gloves',
@@ -42104,7 +42104,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_111'] = {
         label        = 'Motocross Gloves',
@@ -42113,7 +42113,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_112'] = {
         label        = 'Haut du corps #112',
@@ -42122,7 +42122,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_113'] = {
         label        = 'Haut du corps #113',
@@ -42131,7 +42131,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_114'] = {
         label        = 'Haut du corps #114',
@@ -42140,7 +42140,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_115'] = {
         label        = 'Black Driving Gloves',
@@ -42149,7 +42149,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_116'] = {
         label        = 'Black Leather Gloves',
@@ -42158,7 +42158,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_117'] = {
         label        = 'Black Woolen Gloves',
@@ -42167,7 +42167,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_118'] = {
         label        = 'Black Fingerless Gloves',
@@ -42176,7 +42176,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_119'] = {
         label        = 'Refuse Collector Gloves',
@@ -42185,7 +42185,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_12'] = {
         label        = 'Haut du corps #12',
@@ -42194,7 +42194,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_120'] = {
         label        = 'White Cotton Gloves',
@@ -42203,7 +42203,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_121'] = {
         label        = 'Blue Surgical Gloves',
@@ -42212,7 +42212,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_122'] = {
         label        = 'Black Driving Gloves',
@@ -42221,7 +42221,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_123'] = {
         label        = 'Black Leather Gloves',
@@ -42230,7 +42230,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_124'] = {
         label        = 'Black Woolen Gloves',
@@ -42239,7 +42239,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_125'] = {
         label        = 'Black Fingerless Gloves',
@@ -42248,7 +42248,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_126'] = {
         label        = 'Refuse Collector Gloves',
@@ -42257,7 +42257,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_127'] = {
         label        = 'White Cotton Gloves',
@@ -42266,7 +42266,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_128'] = {
         label        = 'Blue Surgical Gloves',
@@ -42275,7 +42275,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_129'] = {
         label        = 'Black Driving Gloves',
@@ -42284,7 +42284,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_13'] = {
         label        = 'Haut du corps #13',
@@ -42293,7 +42293,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_130'] = {
         label        = 'Black Leather Gloves',
@@ -42302,7 +42302,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_131'] = {
         label        = 'Black Woolen Gloves',
@@ -42311,7 +42311,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_132'] = {
         label        = 'Black Fingerless Gloves',
@@ -42320,7 +42320,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_133'] = {
         label        = 'Refuse Collector Gloves',
@@ -42329,7 +42329,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_134'] = {
         label        = 'White Cotton Gloves',
@@ -42338,7 +42338,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_135'] = {
         label        = 'Blue Surgical Gloves',
@@ -42347,7 +42347,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_136'] = {
         label        = 'Blue Digital Armored',
@@ -42356,7 +42356,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_137'] = {
         label        = 'Blue Digital Tactical',
@@ -42365,7 +42365,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_138'] = {
         label        = 'Blue Digital Armored',
@@ -42374,7 +42374,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_139'] = {
         label        = 'Blue Digital Armored',
@@ -42383,7 +42383,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_14'] = {
         label        = 'Haut du corps #14',
@@ -42392,7 +42392,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_140'] = {
         label        = 'Blue Digital Armored',
@@ -42401,7 +42401,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_141'] = {
         label        = 'Blue Digital Armored',
@@ -42410,7 +42410,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_142'] = {
         label        = 'Blue Digital Armored',
@@ -42419,7 +42419,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_143'] = {
         label        = 'Blue Digital Armored',
@@ -42428,7 +42428,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_144'] = {
         label        = 'Blue Digital Armored',
@@ -42437,7 +42437,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_145'] = {
         label        = 'Blue Digital Armored',
@@ -42446,7 +42446,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_146'] = {
         label        = 'Blue Digital Armored',
@@ -42455,7 +42455,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_147'] = {
         label        = 'Blue Digital Armored',
@@ -42464,7 +42464,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_148'] = {
         label        = 'Blue Digital Armored',
@@ -42473,7 +42473,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_149'] = {
         label        = 'Blue Digital Armored',
@@ -42482,7 +42482,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_15'] = {
         label        = 'Haut du corps #15',
@@ -42491,7 +42491,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_150'] = {
         label        = 'Blue Digital Armored',
@@ -42500,7 +42500,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_151'] = {
         label        = 'Blue Digital Tactical',
@@ -42509,7 +42509,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_152'] = {
         label        = 'Blue Digital Tactical',
@@ -42518,7 +42518,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_153'] = {
         label        = 'Blue Digital Tactical',
@@ -42527,7 +42527,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_154'] = {
         label        = 'Blue Digital Tactical',
@@ -42536,7 +42536,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_155'] = {
         label        = 'Blue Digital Tactical',
@@ -42545,7 +42545,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_156'] = {
         label        = 'Blue Digital Tactical',
@@ -42554,7 +42554,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_157'] = {
         label        = 'Blue Digital Tactical',
@@ -42563,7 +42563,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_158'] = {
         label        = 'Blue Digital Tactical',
@@ -42572,7 +42572,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_159'] = {
         label        = 'Blue Digital Tactical',
@@ -42581,7 +42581,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_16'] = {
         label        = 'Haut du corps #16',
@@ -42590,7 +42590,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_160'] = {
         label        = 'Blue Digital Tactical',
@@ -42599,7 +42599,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_161'] = {
         label        = 'Blue Digital Tactical',
@@ -42608,7 +42608,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_162'] = {
         label        = 'Blue Digital Tactical',
@@ -42617,7 +42617,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_163'] = {
         label        = 'Blue Digital Tactical',
@@ -42626,7 +42626,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_164'] = {
         label        = 'Haut du corps #164',
@@ -42635,7 +42635,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_165'] = {
         label        = 'Haut du corps #165',
@@ -42644,7 +42644,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_166'] = {
         label        = 'Haut du corps #166',
@@ -42653,7 +42653,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_167'] = {
         label        = 'Haut du corps #167',
@@ -42662,7 +42662,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_168'] = {
         label        = 'Haut du corps #168',
@@ -42671,7 +42671,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_169'] = {
         label        = 'Haut du corps #169',
@@ -42680,7 +42680,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_17'] = {
         label        = 'Black Tact Gloves',
@@ -42689,7 +42689,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_170'] = {
         label        = 'Black Armored',
@@ -42698,7 +42698,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_171'] = {
         label        = 'Black Armored',
@@ -42707,7 +42707,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_172'] = {
         label        = 'Black Armored',
@@ -42716,7 +42716,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_173'] = {
         label        = 'Black Armored',
@@ -42725,7 +42725,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_174'] = {
         label        = 'Black Armored',
@@ -42734,7 +42734,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_175'] = {
         label        = 'Black Armored',
@@ -42743,7 +42743,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_176'] = {
         label        = 'Black Armored',
@@ -42752,7 +42752,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_177'] = {
         label        = 'Black Armored',
@@ -42761,7 +42761,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_178'] = {
         label        = 'Black Armored',
@@ -42770,7 +42770,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_179'] = {
         label        = 'Black Armored',
@@ -42779,7 +42779,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_18'] = {
         label        = 'Black Wool Gloves',
@@ -42788,7 +42788,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_180'] = {
         label        = 'Black Armored',
@@ -42797,7 +42797,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_181'] = {
         label        = 'Black Armored',
@@ -42806,7 +42806,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_182'] = {
         label        = 'Black Armored',
@@ -42815,7 +42815,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_183'] = {
         label        = 'Black Armored',
@@ -42824,7 +42824,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_184'] = {
         label        = 'Haut du corps #184',
@@ -42833,7 +42833,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_185'] = {
         label        = 'Black Driving Gloves',
@@ -42842,7 +42842,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_186'] = {
         label        = 'Black Leather Gloves',
@@ -42851,7 +42851,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_187'] = {
         label        = 'Black Woolen Gloves',
@@ -42860,7 +42860,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_188'] = {
         label        = 'Black Fingerless Gloves',
@@ -42869,7 +42869,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_189'] = {
         label        = 'Refuse Collector Gloves',
@@ -42878,7 +42878,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_19'] = {
         label        = 'Black Driving Gloves',
@@ -42887,7 +42887,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_190'] = {
         label        = 'White Cotton Gloves',
@@ -42896,7 +42896,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_191'] = {
         label        = 'Blue Surgical Gloves',
@@ -42905,7 +42905,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_192'] = {
         label        = 'Blue Digital Armored',
@@ -42914,7 +42914,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_193'] = {
         label        = 'Blue Digital Tactical',
@@ -42923,7 +42923,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_194'] = {
         label        = 'Black Armored',
@@ -42932,7 +42932,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_195'] = {
         label        = 'Haut du corps #195',
@@ -42941,7 +42941,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_196'] = {
         label        = 'Haut du corps #196',
@@ -42950,7 +42950,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_197'] = {
         label        = 'Haut du corps #197',
@@ -42959,7 +42959,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_198'] = {
         label        = 'Haut du corps #198',
@@ -42968,7 +42968,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_199'] = {
         label        = 'Black Driving Gloves',
@@ -42977,7 +42977,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_2'] = {
         label        = 'Haut du corps #2',
@@ -42986,7 +42986,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_20'] = {
         label        = 'Black Driving Gloves',
@@ -42995,7 +42995,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_200'] = {
         label        = 'Black Leather Gloves',
@@ -43004,7 +43004,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_201'] = {
         label        = 'Black Woolen Gloves',
@@ -43013,7 +43013,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_202'] = {
         label        = 'Black Fingerless Gloves',
@@ -43022,7 +43022,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_203'] = {
         label        = 'Refuse Collector Gloves',
@@ -43031,7 +43031,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_204'] = {
         label        = 'White Cotton Gloves',
@@ -43040,7 +43040,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_205'] = {
         label        = 'Blue Surgical Gloves',
@@ -43049,7 +43049,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_206'] = {
         label        = 'Blue Digital Armored',
@@ -43058,7 +43058,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_207'] = {
         label        = 'Blue Digital Tactical',
@@ -43067,7 +43067,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_208'] = {
         label        = 'Black Armored',
@@ -43076,7 +43076,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_209'] = {
         label        = 'Haut du corps #209',
@@ -43085,7 +43085,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_21'] = {
         label        = 'Black Driving Gloves',
@@ -43094,7 +43094,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_210'] = {
         label        = 'Haut du corps #210',
@@ -43103,7 +43103,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_211'] = {
         label        = 'Haut du corps #211',
@@ -43112,7 +43112,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_212'] = {
         label        = 'Haut du corps #212',
@@ -43121,7 +43121,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_213'] = {
         label        = 'Haut du corps #213',
@@ -43130,7 +43130,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_22'] = {
         label        = 'Black Driving Gloves',
@@ -43139,7 +43139,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_23'] = {
         label        = 'Black Driving Gloves',
@@ -43148,7 +43148,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_24'] = {
         label        = 'Black Driving Gloves',
@@ -43157,7 +43157,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_25'] = {
         label        = 'Black Driving Gloves',
@@ -43166,7 +43166,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_26'] = {
         label        = 'Black Driving Gloves',
@@ -43175,7 +43175,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_27'] = {
         label        = 'Black Driving Gloves',
@@ -43184,7 +43184,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_28'] = {
         label        = 'Black Driving Gloves',
@@ -43193,7 +43193,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_29'] = {
         label        = 'Black Driving Gloves',
@@ -43202,7 +43202,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_3'] = {
         label        = 'Haut du corps #3',
@@ -43211,7 +43211,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_30'] = {
         label        = 'Black Leather Gloves',
@@ -43220,7 +43220,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_31'] = {
         label        = 'Black Leather Gloves',
@@ -43229,7 +43229,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_32'] = {
         label        = 'Black Leather Gloves',
@@ -43238,7 +43238,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_33'] = {
         label        = 'Black Leather Gloves',
@@ -43247,7 +43247,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_34'] = {
         label        = 'Black Leather Gloves',
@@ -43256,7 +43256,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_35'] = {
         label        = 'Black Leather Gloves',
@@ -43265,7 +43265,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_36'] = {
         label        = 'Black Leather Gloves',
@@ -43274,7 +43274,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_37'] = {
         label        = 'Black Leather Gloves',
@@ -43283,7 +43283,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_38'] = {
         label        = 'Black Leather Gloves',
@@ -43292,7 +43292,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_39'] = {
         label        = 'Black Leather Gloves',
@@ -43301,7 +43301,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_4'] = {
         label        = 'Haut du corps #4',
@@ -43310,7 +43310,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_40'] = {
         label        = 'Black Leather Gloves',
@@ -43319,7 +43319,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_41'] = {
         label        = 'Black Woolen Gloves',
@@ -43328,7 +43328,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_42'] = {
         label        = 'Black Woolen Gloves',
@@ -43337,7 +43337,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_43'] = {
         label        = 'Black Woolen Gloves',
@@ -43346,7 +43346,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_44'] = {
         label        = 'Black Woolen Gloves',
@@ -43355,7 +43355,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_45'] = {
         label        = 'Black Woolen Gloves',
@@ -43364,7 +43364,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_46'] = {
         label        = 'Black Woolen Gloves',
@@ -43373,7 +43373,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_47'] = {
         label        = 'Black Woolen Gloves',
@@ -43382,7 +43382,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_48'] = {
         label        = 'Black Woolen Gloves',
@@ -43391,7 +43391,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_49'] = {
         label        = 'Black Woolen Gloves',
@@ -43400,7 +43400,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_5'] = {
         label        = 'Haut du corps #5',
@@ -43409,7 +43409,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_50'] = {
         label        = 'Black Woolen Gloves',
@@ -43418,7 +43418,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_51'] = {
         label        = 'Black Woolen Gloves',
@@ -43427,7 +43427,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_52'] = {
         label        = 'Black Fingerless Gloves',
@@ -43436,7 +43436,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_53'] = {
         label        = 'Black Fingerless Gloves',
@@ -43445,7 +43445,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_54'] = {
         label        = 'Black Fingerless Gloves',
@@ -43454,7 +43454,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_55'] = {
         label        = 'Black Fingerless Gloves',
@@ -43463,7 +43463,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_56'] = {
         label        = 'Black Fingerless Gloves',
@@ -43472,7 +43472,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_57'] = {
         label        = 'Black Fingerless Gloves',
@@ -43481,7 +43481,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_58'] = {
         label        = 'Black Fingerless Gloves',
@@ -43490,7 +43490,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_59'] = {
         label        = 'Black Fingerless Gloves',
@@ -43499,7 +43499,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_6'] = {
         label        = 'Haut du corps #6',
@@ -43508,7 +43508,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_60'] = {
         label        = 'Black Fingerless Gloves',
@@ -43517,7 +43517,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_61'] = {
         label        = 'Black Fingerless Gloves',
@@ -43526,7 +43526,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_62'] = {
         label        = 'Black Fingerless Gloves',
@@ -43535,7 +43535,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_63'] = {
         label        = 'Refuse Collector Gloves',
@@ -43544,7 +43544,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_64'] = {
         label        = 'Refuse Collector Gloves',
@@ -43553,7 +43553,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_65'] = {
         label        = 'Refuse Collector Gloves',
@@ -43562,7 +43562,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_66'] = {
         label        = 'Refuse Collector Gloves',
@@ -43571,7 +43571,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_67'] = {
         label        = 'Refuse Collector Gloves',
@@ -43580,7 +43580,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_68'] = {
         label        = 'Refuse Collector Gloves',
@@ -43589,7 +43589,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_69'] = {
         label        = 'Refuse Collector Gloves',
@@ -43598,7 +43598,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_7'] = {
         label        = 'Haut du corps #7',
@@ -43607,7 +43607,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_70'] = {
         label        = 'Refuse Collector Gloves',
@@ -43616,7 +43616,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_71'] = {
         label        = 'Refuse Collector Gloves',
@@ -43625,7 +43625,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_72'] = {
         label        = 'Refuse Collector Gloves',
@@ -43634,7 +43634,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_73'] = {
         label        = 'Refuse Collector Gloves',
@@ -43643,7 +43643,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_74'] = {
         label        = 'White Cotton Gloves',
@@ -43652,7 +43652,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_75'] = {
         label        = 'White Cotton Gloves',
@@ -43661,7 +43661,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_76'] = {
         label        = 'White Cotton Gloves',
@@ -43670,7 +43670,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_77'] = {
         label        = 'White Cotton Gloves',
@@ -43679,7 +43679,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_78'] = {
         label        = 'White Cotton Gloves',
@@ -43688,7 +43688,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_79'] = {
         label        = 'White Cotton Gloves',
@@ -43697,7 +43697,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_8'] = {
         label        = 'Haut du corps #8',
@@ -43706,7 +43706,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_80'] = {
         label        = 'White Cotton Gloves',
@@ -43715,7 +43715,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_81'] = {
         label        = 'White Cotton Gloves',
@@ -43724,7 +43724,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_82'] = {
         label        = 'White Cotton Gloves',
@@ -43733,7 +43733,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_83'] = {
         label        = 'White Cotton Gloves',
@@ -43742,7 +43742,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_84'] = {
         label        = 'White Cotton Gloves',
@@ -43751,7 +43751,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_85'] = {
         label        = 'Blue Surgical Gloves',
@@ -43760,7 +43760,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_86'] = {
         label        = 'Blue Surgical Gloves',
@@ -43769,7 +43769,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_87'] = {
         label        = 'Blue Surgical Gloves',
@@ -43778,7 +43778,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_88'] = {
         label        = 'Blue Surgical Gloves',
@@ -43787,7 +43787,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_89'] = {
         label        = 'Blue Surgical Gloves',
@@ -43796,7 +43796,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_9'] = {
         label        = 'Haut du corps #9',
@@ -43805,7 +43805,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_90'] = {
         label        = 'Blue Surgical Gloves',
@@ -43814,7 +43814,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_91'] = {
         label        = 'Blue Surgical Gloves',
@@ -43823,7 +43823,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_92'] = {
         label        = 'Blue Surgical Gloves',
@@ -43832,7 +43832,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_93'] = {
         label        = 'Blue Surgical Gloves',
@@ -43841,7 +43841,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_94'] = {
         label        = 'Blue Surgical Gloves',
@@ -43850,7 +43850,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_95'] = {
         label        = 'Blue Surgical Gloves',
@@ -43859,7 +43859,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_96'] = {
         label        = 'Haut du corps #96',
@@ -43868,7 +43868,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_97'] = {
         label        = 'Haut du corps #97',
@@ -43877,7 +43877,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_98'] = {
         label        = 'Haut du corps #98',
@@ -43886,7 +43886,7 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
     ['clothing_m_uppr_99'] = {
         label        = 'Haut du corps #99',
@@ -43895,6 +43895,6 @@ return {
         usable       = true,
         close        = true,
         category     = 'clothing',
-        clothingSlot = 'gloves',
+        clothingSlot = 'top',
     },
 }

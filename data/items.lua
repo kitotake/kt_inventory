@@ -1,6 +1,6 @@
-return {
+print("^2[ITEMS] Fichier chargé !^0")
 
-    print("^2[ITEMS] Fichier chargé !^0"),
+return {
     -- ─────────────────────────────────────────────────────────────
 --  kt_illegal — Items ox_inventory
 -- ─────────────────────────────────────────────────────────────
@@ -12,6 +12,9 @@ return {
     stack       = true,
     close       = true,
     description = 'Une graine à planter.',
+   client = {
+        image = 'drugs/weed_seed.png'
+    }
 },
 
 ['weed_raw'] = {
@@ -20,6 +23,9 @@ return {
     stack       = true,
     close       = true,
     description = 'Récolte brute non traitée.',
+   client = {
+        image = 'drugs/weed_raw.png'
+    }
 },
 
 ['weed_packaged'] = {
@@ -28,6 +34,9 @@ return {
     stack       = true,
     close       = true,
     description = 'Prêt à la vente.',
+   client = {
+        image = 'drugs/weed_packaged.png'
+    }
 },
 
 -- ── Consommables culture ──────────────────────────────────────
@@ -37,6 +46,9 @@ return {
     stack       = true,
     close       = true,
     description = 'Accélère la croissance des plantes.',
+   client = {
+        image = 'drugs/fertilizer.png'
+    },
 },
 
 ['water_bottle'] = {
@@ -45,6 +57,9 @@ return {
     stack       = true,
     close       = true,
     description = 'Pour arroser les plantes.',
+   client = {
+        image = 'drugs/water_bottle.png'
+    },
 },
 
 -- ── Équipement ────────────────────────────────────────────────
@@ -54,6 +69,9 @@ return {
     stack       = false,
     close       = true,
     description = 'Accélère la croissance en intérieur.',
+   client = {
+        image = 'drugs/uv_lamp.png'
+    }
 },
 
 ['bank_card'] = {
@@ -63,7 +81,7 @@ return {
     close = true,
     description = 'Carte bancaire standard. Dépôt max: $5 000 | Retrait max: $20 000',
     client = {
-        image = 'bank_card.png'
+        image = 'documents/bank_card.png'
     }
 },
 
@@ -74,7 +92,7 @@ return {
     close = true,
     description = 'Carte bancaire Or. Dépôt max: $10 000 | Retrait max: $10 000',
     client = {
-        image = 'bank_gold_card.png'
+        image = 'documents/bank_gold_card.png'
     }
 },
 
@@ -85,7 +103,7 @@ return {
     close = true,
     description = 'Carte bancaire Diamant. Dépôt max: $50 000 | Retrait max: $25 000',
     client = {
-        image = 'bank_diamond_card.png'
+        image = 'documents/bank_diamond_card.png'
     }
 },
 
@@ -94,6 +112,10 @@ return {
     weight = 1,
     stack = false,
     close = true,
+    description = 'Reçu de transaction bancaire.',
+    client = {
+        image = 'documents/bank_receipt.png'
+    }
 },
 
 -- ── Cartes d'identité & documents ────────────────────────────
@@ -103,7 +125,11 @@ return {
     weight = 0,
     stack = false,
     close = true,
-    description = "Carte nationale d'identité officielle.",
+   
+    client = {
+        image = 'documents/identity_card.png',
+        description = "Carte nationale d'identité officielle."
+    },
     server = {
         export = "kt_idcard_ui.UseIdentityCard"
     }
@@ -118,7 +144,11 @@ return {
     weight = 0,
     stack = false,
     close = true,
-    description = "Permis de conduire",
+  
+    client = {
+        image = 'documents/license_card.png',
+        description = "Permis de conduire"
+    },
     server = {
         export = "kt_idcard_ui.UseLicenseCard"
     }
@@ -129,7 +159,11 @@ return {
     weight = 0,
     stack = false,
     close = true,
-    description = "Autorisation de port d'arme",
+   
+    client = {
+        image = 'documents/weapon_permit.png',
+        description = "Autorisation de port d'arme"
+    },
     server = {
         export = "kt_idcard_ui.UseWeaponCard"
     }
@@ -140,7 +174,11 @@ return {
     weight = 0,
     stack = false,
     close = true,
-    description = "Badge officiel de police",
+    client = {
+        description = "Badge officiel de la police",
+        image = 'documents/polic_badge.png'
+    },
+    
     server = {
         export = "kt_idcard_ui.UsePoliceCard"
     }
@@ -151,7 +189,11 @@ return {
     weight = 0,
     stack = false,
     close = true,
-    description = "Carte de mairie"
+    client = {
+         description = "Carte de mairie",
+        image = 'documents/mairie_card.png'
+    },
+   
 },
 
 ["gov_card"] = {
@@ -159,7 +201,13 @@ return {
     weight = 0,
     stack = false,
     close = true,
-    description = "Carte gouvernementale"
+    client = {
+        description = "Carte gouvernementale",
+        image = 'documents/gov_card.png'
+    },
+     server = {
+        export = "kt_idcard_ui.UseGovCard"
+    }
 },
 
 ["ems_card"] = {
@@ -167,7 +215,10 @@ return {
     weight = 0,
     stack = false,
     close = true,
-    description = "Carte des services médicaux",
+    client = {
+        description = "Carte des services médicaux",
+        image = 'documents/ems_card.png'
+    },
     server = {
         export = "kt_idcard_ui.UseEMSCard"
     }
@@ -178,7 +229,11 @@ return {
     weight = 0,
     stack = false,
     close = true,
-    description = "Badge professionnel"
+ 
+    client = {
+           description = "Badge d'entreprise",
+        image = 'documents/company_badge.png'
+    }
 },
 
 ["passport"] = {
@@ -186,7 +241,10 @@ return {
     weight = 0,
     stack = false,
     close = true,
+    client = {
+          image = 'documents/passport.png',
     description = "Passeport officiel",
+     },
     server = {
         export = "kt_idcard_ui.UsePassport"
     }
@@ -202,12 +260,12 @@ return {
             prop = { model = `prop_rolled_sock_02`, pos = vec3(-0.14, -0.14, -0.08), rot = vec3(-50.0, -50.0, 0.0) },
             disable = { move = true, car = true, combat = true },
             usetime = 2500,
+            notification = 'You apply a bandage to yourself.',
+            image = 'medical/bandage.png',
         }
     },
 
-    ['black_money'] = {
-        label = 'Dirty Money',
-    },
+    
 
     ['parachute'] = {
         label = 'Parachute',
@@ -215,12 +273,17 @@ return {
         stack = false,
         client = {
             anim = { dict = 'clothingshirt', clip = 'try_shirt_positive_d' },
-            usetime = 1500
+            usetime = 1500,
+              image = 'misc/parachute.png',
+        
         }
     },
 
     ['garbage'] = {
         label = 'Garbage',
+        client = {
+            image = 'garbage.png'
+        }
     },
 
     ['paperbag'] = {
@@ -228,13 +291,10 @@ return {
         weight = 1,
         stack = false,
         close = false,
-        consume = 0
-    },
-
-    ['identification'] = {
-        label = 'Identification',
+        consume = 0,
         client = {
-            image = 'card_id.png'
+          image = 'consumables/paperbag.png',
+          description = 'A simple paper bag, can be used to carry small items.',
         }
     },
 
@@ -247,6 +307,7 @@ return {
             anim = { dict = 'mp_player_intdrink', clip = 'loop_bottle' },
             prop = { model = `prop_cs_panties_02`, pos = vec3(0.03, 0.0, 0.02), rot = vec3(0.0, -13.5, -1.5) },
             usetime = 2500,
+            image = 'clothing/panties.png',
         }
     },
 
@@ -256,14 +317,42 @@ return {
         stack = true,
         close = true,
         description = 'Un outil pour crocheter les serrures de véhicule.',
+        client = {
+            image = 'tools/lockpick.png'
+        }
     },
 
-    ['vehicle_key'] = {
+    ['carkey'] = {
         label = 'Clé de véhicule',
         weight = 50,
         stack = false,
         close = false,
         description = "Clé associée à une plaque d'immatriculation.",
+        client = {
+            image = 'keys/vehicle_key.png'
+        }
+    },
+
+     ['key'] = {
+        label = 'Clé de véhicule',
+        weight = 50,
+        stack = false,
+        close = false,
+        description = "Clé associée à une plaque d'immatriculation.",
+        client = {
+            image = 'keys/key.png'
+        }
+    },
+
+     ['oldkey'] = {
+        label = 'Clé de véhicule',
+        weight = 50,
+        stack = false,
+        close = false,
+        description = "Clé associée à une plaque d'immatriculation.",
+        client = {
+            image = 'keys/oldkey.png'
+        }
     },
 
     ['phone'] = {
@@ -272,17 +361,19 @@ return {
         stack = false,
         consume = 0,
         client = {
-            add = function(total)
-                if total > 0 then
-                    pcall(function() return exports.npwd:setPhoneDisabled(false) end)
-                end
-            end,
-            remove = function(total)
-                if total < 1 then
-                    pcall(function() return exports.npwd:setPhoneDisabled(true) end)
-                end
-            end
+            image = 'electronics/phone.png'
         }
+    },
+
+['black_money'] = {
+        label = 'Dirty Money',
+        weight = 0,
+    stack = true,
+    close = false,
+    consume = 0,
+    client = {
+        image = 'valubles/black_money.png',
+    }
     },
 
     ['money'] = {
@@ -292,7 +383,7 @@ return {
     close = false,
     consume = 0,
     client = {
-        image = 'money.png',
+        image = 'valubles/money.png',
     }
 },
 
@@ -304,7 +395,8 @@ return {
             anim = { dict = 'mp_player_intdrink', clip = 'loop_bottle' },
             prop = { model = `prop_food_mustard`, pos = vec3(0.01, 0.0, -0.07), rot = vec3(1.0, 1.0, -1.5) },
             usetime = 2500,
-            notification = 'You.. drank mustard'
+            notification = 'You.. drank mustard',
+            image = 'food/mustard.png',
         }
     },
 
@@ -312,7 +404,11 @@ return {
         label = 'Radio',
         weight = 10,
         stack = false,
-        allowArmed = true
+        allowArmed = true,
+        client = {
+            image = 'electronics/radio.png',
+        description = 'A portable radio, can be used to listen to music or communicate.'
+        }
     },
 
     ['armour'] = {
@@ -321,13 +417,21 @@ return {
         stack = false,
         client = {
             anim = { dict = 'clothingshirt', clip = 'try_shirt_positive_d' },
-            usetime = 2500
+            usetime = 2500,
+            notification = 'You put on a bulletproof vest',
+            image = 'misc/armour.png',
         }
     },
 
     ['scrapmetal'] = {
         label = 'Scrap Metal',
         weight = 80,
+        stack = true,
+        close = true,
+        description = 'Pieces of scrap metal, can be sold to a scrap dealer.',
+        client = {
+            image = 'tools/scrapmetal.png'
+        }
     },
 
     -- ─────────────────────────────────────────────
@@ -338,7 +442,7 @@ return {
         label = 'Burger',
         weight = 20,
         client = {
-            image = 'burger.png',
+            image = 'food/burger.png',
             status = { hunger = 30, stress = -5 },
             anim = 'eating',
             prop = 'burger',
@@ -351,7 +455,7 @@ return {
         label = 'Cheeseburger',
         weight = 22,
         client = {
-            image = 'cheeseburger.png',
+            image = 'food/cheeseburger.png',
             status = { hunger = 35, stress = -8 },
             anim = 'eating',
             prop = 'burger',
@@ -364,7 +468,7 @@ return {
         label = 'Frites',
         weight = 8,
         client = {
-            image = 'Frites.png',
+            image = 'food/Frites.png',
             status = { hunger = 20, stress = -3 },
             anim = 'eating',
             prop = 'burger',
@@ -377,7 +481,7 @@ return {
         label = 'Pizza',
         weight = 30,
         client = {
-            image = 'pizza.png',
+            image = 'food/pizza.png',
             status = { hunger = 40, stress = -10 },
             anim = 'eating',
             prop = { model = `prop_cs_burger_01`, pos = vec3(0.02, 0.02, -0.02), rot = vec3(0.0, 0.0, 0.0) },
@@ -390,7 +494,7 @@ return {
         label = 'Donut',
         weight = 8,
         client = {
-            image = 'donut.png',
+            image = 'food/donut.png',
             status = { hunger = 15, stress = -5 },
             anim = 'eating',
             prop = 'burger',
@@ -407,7 +511,7 @@ return {
         label = 'Water',
         weight = 5,
         client = {
-            image = 'water.png',
+            image = 'drinks/water.png',
             status = { thirst = 30 },
             anim = { dict = 'mp_player_intdrink', clip = 'loop_bottle' },
             prop = { model = `prop_ld_flow_bottle`, pos = vec3(0.03, 0.03, 0.02), rot = vec3(0, 0, 0) },
@@ -420,7 +524,7 @@ return {
         label = 'Cola',
         weight = 3,
         client = {
-            image = 'cola.png',
+            image = 'drinks/cola.png',
             status = { thirst = 25, stress = -3 },
             anim = { dict = 'mp_player_intdrink', clip = 'loop_bottle' },
             prop = { model = `prop_ecola_can`, pos = vec3(0.01, 0.01, 0.06), rot = vec3(5, 5, -180) },
@@ -433,7 +537,7 @@ return {
         label = 'Energy Drink',
         weight = 3,
         client = {
-            image = 'energy.png',
+            image = 'drinks/energy_drink.png',
             status = { thirst = 20, stress = -5 },
             anim = { dict = 'mp_player_intdrink', clip = 'loop_bottle' },
             prop = { model = `prop_energy_drink`, pos = vec3(0.01, 0.01, 0.06), rot = vec3(0, 0, 0) },
@@ -450,7 +554,7 @@ return {
         label = 'Chocolate',
         weight = 10,
         client = {
-            image = 'chocolate.png',
+            image = 'food/chocolate.png',
             status = { hunger = 12, stress = -8 },
             anim = 'eating',
             prop = 'burger',
@@ -463,7 +567,7 @@ return {
         label = 'Chips',
         weight = 12,
         client = {
-            image = 'chips.png',
+            image = 'food/chips.png',
             status = { hunger = 18, stress = -3 },
             anim = 'eating',
             prop = 'burger',
@@ -480,7 +584,7 @@ return {
         label = 'Sandwich',
         weight = 18,
         client = {
-            image = 'sandwich.png',
+            image = 'food/sandwich.png',
             status = { hunger = 25, stress = -5 },
             anim = 'eating',
             prop = 'burger',
@@ -493,7 +597,7 @@ return {
         label = 'Taco',
         weight = 12,
         client = {
-            image = 'taco.png',
+            image = 'food/taco.png',
             status = { hunger = 28, stress = -6 },
             anim = 'eating',
             prop = 'burger',
@@ -506,7 +610,7 @@ return {
         label = 'Hotdog',
         weight = 15,
         client = {
-            image = 'hotdog.png',
+            image = 'food/hotdog.png',
             status = { hunger = 26, stress = -5 },
             anim = 'eating',
             prop = 'burger',
@@ -523,7 +627,7 @@ return {
         label = 'Beer',
         weight = 50,
         client = {
-            image = 'beer.png',
+            image = 'drinks/beer.png',
             status = { stress = -15 },
             anim = { dict = 'mp_player_intdrink', clip = 'loop_bottle' },
             prop = { model = `prop_beer_bottle`, pos = vec3(0.01, 0.01, 0.06), rot = vec3(0, 0, 0) },
@@ -532,16 +636,16 @@ return {
         }
     },
 
-    ['fd'] = {
-        label = 'fd',
+    ['dusse'] = {
+        label = 'Dusse',
         weight = 0,
         client = {
-            image = 'beer.png',
+            image = 'drinks/Dusse.png',
             status = { hunger = 250, stress = -50, thirst = 150 },
             anim = { dict = 'mp_player_intdrink', clip = 'loop_bottle' },
             prop = { model = `prop_beer_bottle`, pos = vec3(0.01, 0.01, 0.06), rot = vec3(0, 0, 0) },
             usetime = 2500,
-            notification = 'Tu bois une biere'
+            notification = 'Tu bois une Dusse'
         }
     },
 

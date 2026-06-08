@@ -1,6 +1,7 @@
 // components/inventory/ClothingSlot.tsx
 // v7 : intègre getClothingImageUrlSync() pour afficher les vraies images GitHub
 //      Fallback sur getItemUrl() si l'item n'est pas dans clothingData.json
+// FIX : dispatch(clearSlot) après equipClothing pour vider le slot source Redux
 
 import React, { useCallback, useMemo } from 'react';
 import { useDrag, useDrop }              from 'react-dnd';
@@ -13,6 +14,8 @@ import {
   selectSelectedSlot, setSelectedSlot,
   equipClothing, removeClothing,
 } from '../../store/clothing';
+// ✅ FIX : import de clearSlot depuis le store inventory
+import { clearSlot } from '../../store/inventory';
 import { fetchNui }              from '../../utils/fetchNui';
 import { DragSource, InventoryType, SlotWithItem } from '../../typings';
 import { closeTooltip, openTooltip } from '../../store/tooltip';
@@ -98,11 +101,20 @@ const ClothingSlot: React.FC<Props> = ({ category, label, icon, accepts, item })
       },
       drop: (source) => {
         if (!source.item) return;
-        const name = source.item.name ?? '';
-        const d    = Items[name];
-        const type = getClothingItemType(name);
-        fetchNui('equipClothing', { slot: source.item.slot, category, itemType: type });
+        const name     = source.item.name ?? '';
+        const d        = Items[name];
+        const type     = getClothingItemType(name);
+        const srcSlot  = source.item.slot;
+
+        // Envoie au Lua pour équiper ET retirer l'item côté serveur
+        fetchNui('equipClothing', { slot: srcSlot, category, itemType: type });
+
+        // Met à jour le store clothing (affichage du vêtement dans le slot clothing)
         dispatch(equipClothing({ category, item: { name, label: d?.label ?? name, itemType: type } }));
+
+        // ✅ FIX : vide le slot source dans Redux — sans ça l'item reste affiché dans l'inventaire
+        dispatch(clearSlot({ slot: srcSlot }));
+
         dispatch(closeTooltip());
       },
     }),

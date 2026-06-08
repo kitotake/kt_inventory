@@ -1,72 +1,87 @@
 -- ============================================================
 -- modules/bridge/union/clothing_server.lua
--- Callback pour retirer un vêtement + remettre l'item dans l'inventaire
+-- FIX : lib.callback.register('kt_inventory:removeClothingItem')
+--       Retire l'item du slot inventaire après équipement via drag-and-drop
 -- ============================================================
 
--- VALID_CLOTHING_SLOTS
-local VALID_CLOTHING_SLOTS = {
-    hat = true, glasses = true, ears = true, watch = true, bracelet = true,
-    mask = true, gloves = true, pants = true, bag = true, shoes = true,
-    chain = true, undershirt = true, armor = true, top = true,
-}
+-- ─── Callback : retirer un slot clothing de l'inventaire (déséquiper) ───────
+-- Utilisé par removeClothing NUI (déséquiper depuis le ClothingSlot)
+lib.callback.register('kt_inventory:removeClothingItem', function(source, invSlot)
+    invSlot = tonumber(invSlot)
 
--- Attendre que les fonctions principales soient chargées
-local getInventory = getInventory or function() return nil end
-local loadOutfit   = loadOutfit or function() return {} end
-local saveOutfit   = saveOutfit or function() end
-
-lib.callback.register('kt_inventory:removeClothingSlot', function(source, clothingSlot)
-    if type(clothingSlot) ~= 'string' then 
-        lib.print.warn(('[kt_inventory:clothing] Slot invalide reçu par %s'):format(source))
-        return false 
-    end
-
-    lib.print.info(('[kt_inventory:clothing] Demande de retrait du slot %s par le joueur %s'):format(
-        clothingSlot, source))
-
-    if not VALID_CLOTHING_SLOTS[clothingSlot] then
-        lib.print.warn(('[kt_inventory:clothing] Slot %s non valide'):format(clothingSlot))
+    if not invSlot then
         return false
     end
 
-    local inv = getInventory(source)
-    if not inv then 
-        lib.print.warn(('[kt_inventory:clothing] Inventaire introuvable pour %s'):format(source))
-        return false 
+    local inv = Inventory(source)
+
+    if not inv then
+        return false
     end
 
-    local uniqueId = inv.owner
-    local outfit = loadOutfit(uniqueId) or {}
+    local slotData = inv.items[invSlot]
 
-    -- Récupérer l'item avant suppression
-    local slotData = outfit[clothingSlot]
-    local itemName = slotData and slotData.name
-
-    -- Supprimer du outfit
-    outfit[clothingSlot] = nil
-    saveOutfit(uniqueId, outfit)
-
-    TriggerClientEvent('kt_inventory:outfitUpdated', source, outfit)
-
-    -- Remettre l'item dans l'inventaire
-    if itemName then
-        local Items = getItems and getItems() or {}
-        local itemDef = Items[itemName] or Items(string.lower(itemName))
-
-        if itemDef then
-            local success = Inventory and Inventory.AddItem and Inventory.AddItem(inv, itemDef, 1, {}) 
-
-            if success then
-                lib.print.info(('[kt_inventory:clothing] %s remis dans l\'inventaire de %s'):format(itemName, source))
-            else
-                lib.print.warn(('[kt_inventory:clothing] Impossible de remettre %s pour %s (inventaire plein ?)'):format(itemName, source))
-            end
-        else
-            lib.print.warn(('[kt_inventory:clothing] Item %s non trouvé dans la liste des items'):format(itemName))
-        end
+    if not slotData then
+        return false
     end
 
-    return true
+    local itemName = slotData.name
+    local itemDef = Items(itemName)
+
+    if itemDef and itemDef.category and itemDef.category ~= 'clothing' then
+        return false
+    end
+
+    return Inventory.RemoveItem(inv, itemName, 1, nil, invSlot)
+end)
+
+-- ─── Callback : retirer l'item par numéro de slot après drag-and-drop ────────
+-- ✅ FIX PRINCIPAL
+-- Appelé par clothing_client.lua → RegisterNUICallback('equipClothing') quand
+-- le joueur fait glisser un item depuis l'inventaire vers un ClothingSlot.
+-- On retire l'item du slot source pour que le déplacement soit réel (pas une copie).
+lib.callback.register('kt_inventory:removeClothingItem', function(source, invSlot)
+    invSlot = tonumber(invSlot)
+    if not invSlot or invSlot < 1 then
+        lib.print.warn(('[clothing] removeClothingItem: slot invalide reçu depuis src=%d'):format(source))
+        return false
+    end
+
+    local inv = Inventory(source)
+    if not inv then
+        lib.print.warn(('[clothing] removeClothingItem: inventaire introuvable pour src=%d'):format(source))
+        return false
+    end
+
+    local slotData = inv.items[invSlot]
+
+    -- Vérification de sécurité : le slot doit contenir un item clothing
+    if not slotData or not slotData.name then
+        lib.print.warn(('[clothing] removeClothingItem: slot %d vide pour src=%d'):format(invSlot, source))
+        return false
+    end
+
+    -- Sécurité supplémentaire : vérifier que c'est bien un item de type clothing
+    -- (évite qu'un exploit retire n'importe quel item)
+    local itemName = slotData.name
+    local Items    = getItems()
+    local itemDef  = Items and Items(itemName)
+
+    if itemDef and itemDef.category and itemDef.category ~= 'clothing' then
+        lib.print.warn(('[clothing] removeClothingItem: %s n\'est pas un clothing (category=%s) src=%d'):format(
+            itemName, tostring(itemDef.category), source))
+        return false
+    end
+
+    local removed = Inventory.RemoveItem(inv, itemName, 1, nil, invSlot)
+
+    if removed then
+        lib.print.info(('[clothing] removeClothingItem: %s (slot %d) retiré de src=%d'):format(itemName, invSlot, source))
+        return true
+    else
+        lib.print.warn(('[clothing] removeClothingItem: échec suppression %s slot %d src=%d'):format(itemName, invSlot, source))
+        return false
+    end
 end)
 
 lib.print.info('^2[kt_inventory] module/union/clothing_server pour vêtements chargé^0')

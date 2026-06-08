@@ -1,6 +1,7 @@
 -- ============================================================
 -- modules/bridge/union/clothing_client.lua
 -- Version unifiée v2 - Chargé depuis items/client.lua
+-- FIX : TriggerServerEvent('kt_inventory:removeClothingItem') après équipement
 -- ============================================================
 
 -- ─── SLOT_MAP ───────────────────────────────────────────────────────────────
@@ -119,7 +120,35 @@ RegisterNUICallback('removeClothing', function(data, cb)
     end, clothingSlot)
 end)
 
--- ─── Handler Principal ──────────────────────────────────────────────────────
+-- ─── equipClothing NUI Callback ─────────────────────────────────────────────
+-- Reçu quand le joueur drag un item clothing vers un ClothingSlot.
+-- On équipe le vêtement sur le ped ET on retire l'item de l'inventaire serveur.
+RegisterNUICallback('equipClothing', function(data, cb)
+    -- data.slot     = numéro de slot inventaire source (number)
+    -- data.category = catégorie clothing cible (string, ex: 'top')
+    -- data.itemType = type d'item clothing (string)
+
+    local invSlot = tonumber(data.slot)
+    if not invSlot or invSlot < 1 then
+        lib.print.warn('[clothing] equipClothing: slot invalide reçu')
+        return cb({ ok = false, reason = 'invalid_slot' })
+    end
+
+    -- ✅ FIX : retirer l'item de l'inventaire côté serveur via callback sécurisé
+    lib.callback('kt_inventory:removeClothingItem', false, function(success)
+        if not success then
+            lib.print.warn(('[clothing] equipClothing: impossible de retirer le slot %d'):format(invSlot))
+            return cb({ ok = false, reason = 'remove_failed' })
+        end
+
+        lib.print.info(('[clothing] Item slot %d retiré avec succès'):format(invSlot))
+        cb({ ok = true })
+    end, invSlot)
+end)
+
+-- ─── Handler Principal (appelé via Item('clothing', handler)) ───────────────
+-- Utilisé quand le joueur UTILISE l'item (clic droit → utiliser).
+-- Dans ce flux, useItem gère déjà la consommation côté serveur.
 local kt_inventory = exports[shared.resource]
 
 local function handleClothingItem(data, slot)
@@ -161,8 +190,6 @@ local function handleClothingItem(data, slot)
         end
     end)
 end
-
-lib.print.info('^2[kt_inventory]^7  module/union/clothing_client pour vêtements Union chargé')
 
 -- Export du handler pour que items/client.lua puisse l'enregistrer
 return handleClothingItem
