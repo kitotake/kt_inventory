@@ -1,0 +1,171 @@
+-- ============================================================
+-- AUTO-GENERATED: clothing metadata female lookup
+-- ============================================================
+
+---@type table<string, { type: string, slot: number, drawable: number, texCount: number, clothingSlot: string }>
+local Clothing_Metadata_female_ears = {
+
+    ['clothing_f_p_ears_0'] = {
+        type         = 'prop',
+        slot         = 2,
+        drawable     = 0,
+        texCount     = 1,
+        clothingSlot = 'ears',
+    },
+    ['clothing_f_p_ears_1'] = {
+        type         = 'prop',
+        slot         = 2,
+        drawable     = 1,
+        texCount     = 1,
+        clothingSlot = 'ears',
+    },
+    ['clothing_f_p_ears_10'] = {
+        type         = 'prop',
+        slot         = 2,
+        drawable     = 10,
+        texCount     = 3,
+        clothingSlot = 'ears',
+    },
+    ['clothing_f_p_ears_11'] = {
+        type         = 'prop',
+        slot         = 2,
+        drawable     = 11,
+        texCount     = 3,
+        clothingSlot = 'ears',
+    },
+    ['clothing_f_p_ears_12'] = {
+        type         = 'prop',
+        slot         = 2,
+        drawable     = 12,
+        texCount     = 3,
+        clothingSlot = 'ears',
+    },
+    ['clothing_f_p_ears_13'] = {
+        type         = 'prop',
+        slot         = 2,
+        drawable     = 13,
+        texCount     = 1,
+        clothingSlot = 'ears',
+    },
+    ['clothing_f_p_ears_14'] = {
+        type         = 'prop',
+        slot         = 2,
+        drawable     = 14,
+        texCount     = 1,
+        clothingSlot = 'ears',
+    },
+    ['clothing_f_p_ears_15'] = {
+        type         = 'prop',
+        slot         = 2,
+        drawable     = 15,
+        texCount     = 1,
+        clothingSlot = 'ears',
+    },
+    ['clothing_f_p_ears_16'] = {
+        type         = 'prop',
+        slot         = 2,
+        drawable     = 16,
+        texCount     = 1,
+        clothingSlot = 'ears',
+    },
+    ['clothing_f_p_ears_17'] = {
+        type         = 'prop',
+        slot         = 2,
+        drawable     = 17,
+        texCount     = 1,
+        clothingSlot = 'ears',
+    },
+    ['clothing_f_p_ears_18'] = {
+        type         = 'prop',
+        slot         = 2,
+        drawable     = 18,
+        texCount     = 2,
+        clothingSlot = 'ears',
+    },
+    ['clothing_f_p_ears_19'] = {
+        type         = 'prop',
+        slot         = 2,
+        drawable     = 19,
+        texCount     = 4,
+        clothingSlot = 'ears',
+    },
+    ['clothing_f_p_ears_2'] = {
+        type         = 'prop',
+        slot         = 2,
+        drawable     = 2,
+        texCount     = 1,
+        clothingSlot = 'ears',
+    },
+    ['clothing_f_p_ears_20'] = {
+        type         = 'prop',
+        slot         = 2,
+        drawable     = 20,
+        texCount     = 4,
+        clothingSlot = 'ears',
+    },
+    ['clothing_f_p_ears_21'] = {
+        type         = 'prop',
+        slot         = 2,
+        drawable     = 21,
+        texCount     = 4,
+        clothingSlot = 'ears',
+    },
+    ['clothing_f_p_ears_22'] = {
+        type         = 'prop',
+        slot         = 2,
+        drawable     = 22,
+        texCount     = 12,
+        clothingSlot = 'ears',
+    },
+    ['clothing_f_p_ears_3'] = {
+        type         = 'prop',
+        slot         = 2,
+        drawable     = 3,
+        texCount     = 1,
+        clothingSlot = 'ears',
+    },
+    ['clothing_f_p_ears_4'] = {
+        type         = 'prop',
+        slot         = 2,
+        drawable     = 4,
+        texCount     = 1,
+        clothingSlot = 'ears',
+    },
+    ['clothing_f_p_ears_5'] = {
+        type         = 'prop',
+        slot         = 2,
+        drawable     = 5,
+        texCount     = 1,
+        clothingSlot = 'ears',
+    },
+    ['clothing_f_p_ears_6'] = {
+        type         = 'prop',
+        slot         = 2,
+        drawable     = 6,
+        texCount     = 3,
+        clothingSlot = 'ears',
+    },
+    ['clothing_f_p_ears_7'] = {
+        type         = 'prop',
+        slot         = 2,
+        drawable     = 7,
+        texCount     = 3,
+        clothingSlot = 'ears',
+    },
+    ['clothing_f_p_ears_8'] = {
+        type         = 'prop',
+        slot         = 2,
+        drawable     = 8,
+        texCount     = 3,
+        clothingSlot = 'ears',
+    },
+    ['clothing_f_p_ears_9'] = {
+        type         = 'prop',
+        slot         = 2,
+        drawable     = 9,
+        texCount     = 3,
+        clothingSlot = 'ears',
+    },
+    }
+
+return Clothing_Metadata_female_ears
