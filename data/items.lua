@@ -372,7 +372,7 @@ return {
     close = false,
     consume = 0,
     client = {
-        image = 'valubles/black_money.png',
+        image = 'valuables/black_money.png',
     }
     },
 
@@ -383,7 +383,7 @@ return {
     close = false,
     consume = 0,
     client = {
-        image = 'valubles/money.png',
+        image = 'valuables/money.png',
     }
 },
 
@@ -637,7 +637,7 @@ return {
     },
 
     ['dusse'] = {
-        label = 'Dusse',
+        label = 'Dusse ITEM CHEAT',
         weight = 0,
         client = {
             image = 'drinks/Dusse.png',
