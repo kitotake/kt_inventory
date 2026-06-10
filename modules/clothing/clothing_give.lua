@@ -1,10 +1,16 @@
 -- ============================================================
--- clothing_give.lua — helpers serveur pour donner des vêtements
+-- modules/clothing/clothing_give.lua — helpers serveur
+-- v5 — Inchangé dans la logique.
+--      GiveClothing / GiveClothingAllTextures ajoutent
+--      simplement l'item dans l'inventaire avec les bonnes metadata.
+--      L'équipement / déséquipement NE passe plus par ici.
 -- ============================================================
 
 local ClothingMetadata = require 'modules.clothing.clothing_metadata'
 
----Donne un vêtement à un joueur avec les metadata correctes
+---Donne un vêtement à un joueur avec les metadata correctes.
+---L'item sera présent dans l'inventaire. Le joueur l'équipe
+---en le glissant vers un ClothingSlot ou via clic droit.
 ---@param source number
 ---@param itemName string   ex: 'clothing_m_jbib_23'
 ---@param textureIndex? number  défaut: 0
@@ -25,22 +31,25 @@ local function GiveClothing(source, itemName, textureIndex)
     local itemDef = Items(itemName)
     if not itemDef then return false, 'item_not_defined' end
 
+    -- metadata stockées dans l'item — utilisées par resolveClothingMeta côté client
     local metadata = {
-        texture  = textureIndex,
-        drawable = meta.drawable,
+        texture      = textureIndex,
+        drawable     = meta.drawable,
+        clothingSlot = meta.clothingSlot,
         [meta.type == 'prop' and 'prop' or 'component'] = meta.slot,
     }
 
     return Inventory.AddItem(inv, itemDef, 1, metadata)
 end
 
----Donne toutes les textures d'un vêtement
+---Donne toutes les textures d'un vêtement.
 ---@param source number
 ---@param itemName string
 ---@return boolean, string?
 local function GiveClothingAllTextures(source, itemName)
     local meta = ClothingMetadata[itemName]
     if not meta then return false, 'item_not_found' end
+
     for i = 0, meta.texCount - 1 do
         local ok, err = GiveClothing(source, itemName, i)
         if not ok then return false, err end

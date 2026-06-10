@@ -15,7 +15,16 @@ dependencies {
     'kt_lib',
 }
 
-shared_script '@kt_lib/init.lua'
+shared_scripts {
+    '@kt_lib/init.lua',
+    'data/clothing_metadata.lua',
+
+    'data/male_Metadata/*.lua',
+    'data/female_Metadata/*.lua'
+
+    -- autres fichiers
+}
+
 
 kt_libs {
     'locale',
@@ -27,15 +36,15 @@ server_scripts {
     '@oxmysql/lib/MySQL.lua',
     'init.lua',
     'modules/bridge/union/server.lua',
-    'modules/bridge/clothing/clothing_server.lua',   -- doit être là
+    'modules/clothing/clothing_server.lua',   -- doit être là
     'modules/bridge/union/trash/server_union.lua',
 }
 
 client_scripts {
     'init.lua',
     'modules/bridge/union/client.lua',
-    'modules/bridge/clothing/preview.lua',
-    'modules/bridge/clothing/clothing_client.lua',  -- ← décommenter ici
+    'modules/clothing/preview.lua',
+    'modules/clothing/clothing_client.lua',  -- ← décommenter ici
     'modules/bridge/union/trash/client_union.lua',  -- ← à ajouter
 }
 

@@ -8,6 +8,8 @@ interface ClothingState {
   selectedSlot: ClothingCategory | null;
 }
 
+
+
 const initialState: ClothingState = {
   equipped:     {},
   selectedSlot: null,

@@ -1,28 +1,33 @@
 // components/inventory/ClothingSlot.tsx
-// v7 : intègre getClothingImageUrlSync() pour afficher les vraies images GitHub
-//      Fallback sur getItemUrl() si l'item n'est pas dans clothingData.json
-// FIX : dispatch(clearSlot) après equipClothing pour vider le slot source Redux
+// v9 — corrigé après audit complet des typings
+//
+// DIFF vs v8 :
+//   ✓ drop handler simplifié      → envoie juste { invSlot, category } au Lua
+//   ✓ Le Lua résout lui-même via resolveClothingMeta (drawable, texture, slotNum)
 
-import React, { useCallback, useMemo } from 'react';
-import { useDrag, useDrop }              from 'react-dnd';
+import React, { useCallback, useMemo }    from 'react';
+import { useDrag, useDrop }               from 'react-dnd';
 import { useAppDispatch, useAppSelector } from '../../store';
 import {
-  ClothingCategory, EquippedClothingItem,
-  canDropInSlot, getClothingItemType,
+  ClothingCategory,
+  EquippedClothingItem,
+  canDropInSlot,
+  getClothingItemType,
 } from '../../typings/clothing';
 import {
-  selectSelectedSlot, setSelectedSlot,
-  equipClothing, removeClothing,
+  selectSelectedSlot,
+  setSelectedSlot,
+  equipClothing,
+  removeClothing,
 } from '../../store/clothing';
-// ✅ FIX : import de clearSlot depuis le store inventory
-import { clearSlot } from '../../store/inventory';
-import { fetchNui }              from '../../utils/fetchNui';
+import { fetchNui }                        from '../../utils/fetchNui';
 import { DragSource, InventoryType, SlotWithItem } from '../../typings';
-import { closeTooltip, openTooltip } from '../../store/tooltip';
-import { getItemUrl }            from '../../helpers';
-import { Items }                 from '../../store/items';
-// [v7] Import du helper d'image clothing
-import { getClothingImageUrlSync } from '../../hooks/useClothingImage';
+import { closeTooltip, openTooltip }       from '../../store/tooltip';
+import { getItemUrl }                      from '../../helpers';
+import { Items }                           from '../../store/items';
+import { getClothingImageUrlSync }         from '../../hooks/useClothingImage';
+
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 export type ClothingDragSource = DragSource & {
   fromClothingSlot?: ClothingCategory;
@@ -36,26 +41,53 @@ interface Props {
   item?:    EquippedClothingItem | null;
 }
 
+// ─── Style ────────────────────────────────────────────────────────────────────
+
 const computeStyle = (p: {
-  isOver: boolean; canDrop: boolean; isSelected: boolean;
-  isOutfit: boolean; isEquipped: boolean; isDragging: boolean; imageUrl?: string;
+  isOver:     boolean;
+  canDrop:    boolean;
+  isSelected: boolean;
+  isOutfit:   boolean;
+  isEquipped: boolean;
+  isDragging: boolean;
+  imageUrl?:  string;
 }): React.CSSProperties => {
   let border = '', bg = '', shadow = 'none';
-  if (p.isOver && p.canDrop)   { border = '1px dashed rgba(255,255,255,0.6)'; bg = 'rgba(59,130,246,0.12)'; }
-  else if (p.isOver)           { border = '1px dashed rgba(231,76,60,0.6)';   bg = 'rgba(231,76,60,0.08)'; }
-  else if (p.isSelected)       { border = '1px solid rgba(59,130,246,0.9)';   bg = 'rgba(37,99,235,0.15)'; shadow = '0 0 12px rgba(59,130,246,0.35),inset 0 0 8px rgba(59,130,246,0.1)'; }
-  else if (p.isOutfit)         { border = '1px solid rgba(167,139,250,0.6)';  bg = 'rgba(109,40,217,0.08)'; }
-  else if (p.isEquipped)       { border = '1px solid rgba(37,99,235,0.5)';    shadow = '0 0 6px rgba(37,99,235,0.2)'; }
+
+  if (p.isOver && p.canDrop) {
+    border = '1px dashed rgba(255,255,255,0.6)';
+    bg     = 'rgba(59,130,246,0.12)';
+  } else if (p.isOver) {
+    border = '1px dashed rgba(231,76,60,0.6)';
+    bg     = 'rgba(231,76,60,0.08)';
+  } else if (p.isSelected) {
+    border = '1px solid rgba(59,130,246,0.9)';
+    bg     = 'rgba(37,99,235,0.15)';
+    shadow = '0 0 12px rgba(59,130,246,0.35),inset 0 0 8px rgba(59,130,246,0.1)';
+  } else if (p.isOutfit) {
+    border = '1px solid rgba(167,139,250,0.6)';
+    bg     = 'rgba(109,40,217,0.08)';
+  } else if (p.isEquipped) {
+    border = '1px solid rgba(37,99,235,0.5)';
+    shadow = '0 0 6px rgba(37,99,235,0.2)';
+  }
+
   return {
     backgroundImage:    p.imageUrl ? `url(${p.imageUrl})` : 'none',
     backgroundSize:     '62%',
     backgroundPosition: 'center 40%',
     backgroundRepeat:   'no-repeat',
-    border, backgroundColor: bg, boxShadow: shadow,
-    opacity:    p.isDragging ? 0.35 : 1,
-    transition: 'transform 120ms ease, border-color 120ms ease, background-color 120ms ease, box-shadow 120ms ease, opacity 120ms ease',
+    border,
+    backgroundColor:    bg,
+    boxShadow:          shadow,
+    opacity:            p.isDragging ? 0.35 : 1,
+    transition:
+      'transform 120ms ease, border-color 120ms ease, ' +
+      'background-color 120ms ease, box-shadow 120ms ease, opacity 120ms ease',
   };
 };
+
+// ─── Composant ────────────────────────────────────────────────────────────────
 
 const ClothingSlot: React.FC<Props> = ({ category, label, icon, accepts, item }) => {
   const dispatch   = useAppDispatch();
@@ -69,89 +101,121 @@ const ClothingSlot: React.FC<Props> = ({ category, label, icon, accepts, item })
   const stableAccepts = useMemo(() => accepts, [acceptsKey]);
 
   // ── useDrag ──────────────────────────────────────────────────────────────
-  const [{ isDragging }, drag] = useDrag<ClothingDragSource, void, { isDragging: boolean }>(
+  const [{ isDragging }, drag] = useDrag<
+    ClothingDragSource,
+    void,
+    { isDragging: boolean }
+  >(
     () => ({
-      type: 'SLOT',
+      type:    'SLOT',
       canDrag: () => Boolean(item),
       item: (): ClothingDragSource => ({
-        inventory: InventoryType.PLAYER,
-        item: { name: item!.name, slot: 0 },
-        image: item?.name ? `url(${getItemUrl(item.name) ?? ''})` : undefined,
+        inventory:       InventoryType.PLAYER,
+        item:            { name: item!.name, slot: 0 },
+        image:           item?.name ? `url(${getItemUrl(item.name) ?? ''})` : undefined,
         fromClothingSlot: category,
       }),
       collect: (m) => ({ isDragging: m.isDragging() }),
-      end: (_draggedItem, monitor) => {
-        if (!monitor.didDrop()) return;
-      },
     }),
     [item, category]
   );
 
   // ── useDrop ──────────────────────────────────────────────────────────────
-  const [{ isOver, canDrop }, drop] = useDrop<ClothingDragSource, void, { isOver: boolean; canDrop: boolean }>(
+  const [{ isOver, canDrop }, drop] = useDrop<
+    ClothingDragSource,
+    void,
+    { isOver: boolean; canDrop: boolean }
+  >(
     () => ({
-      accept: 'SLOT',
+      accept:  'SLOT',
       collect: (m) => ({ isOver: m.isOver(), canDrop: m.canDrop() }),
+
       canDrop: (source) => {
-        if (source.fromClothingSlot) return false;
+        if (source.fromClothingSlot)                   return false;
         if (source.inventory !== InventoryType.PLAYER) return false;
         const name = source.item?.name ?? '';
         const d    = Items[name];
         return canDropInSlot(name, d?.category, stableAccepts, d?.clothingSlot);
       },
+
       drop: (source) => {
         if (!source.item) return;
-        const name     = source.item.name ?? '';
-        const d        = Items[name];
-        const type     = getClothingItemType(name);
-        const srcSlot  = source.item.slot;
 
-        // Envoie au Lua pour équiper ET retirer l'item côté serveur
-        fetchNui('equipClothing', { slot: srcSlot, category, itemType: type });
+        const name    = source.item.name ?? '';
+        const srcSlot = source.item.slot;          // slot inventaire réel
+        const d       = Items[name];
+        const type    = getClothingItemType(name);
 
-        // Met à jour le store clothing (affichage du vêtement dans le slot clothing)
-        dispatch(equipClothing({ category, item: { name, label: d?.label ?? name, itemType: type } }));
+        // ── 1. Mise à jour Redux clothing ────────────────────────────────────
+        //    L'item reste dans l'inventaire — pas de clearSlot, pas de moveSlots.
+        dispatch(equipClothing({
+          category,
+          item: { name, label: d?.label ?? name, itemType: type },
+        }));
 
-        // ✅ FIX : vide le slot source dans Redux — sans ça l'item reste affiché dans l'inventaire
-        dispatch(clearSlot({ slot: srcSlot }));
+        // ── 2. Application visuelle sur le ped via Lua ───────────────────────
+        //    On envoie uniquement invSlot + category.
+        //    Le Lua retrouve l'item, résout ses metadata (drawable, texture,
+        //    slotNum) via resolveClothingMeta, et appelle SetPedPropIndex /
+        //    SetPedComponentVariation. Aucun RemoveItem côté serveur.
+        fetchNui('applyClothingFromSlot', {
+          invSlot:  srcSlot,
+          category,
+          name,     // passé en fallback si le Lua ne trouve pas l'item par slot
+        });
 
         dispatch(closeTooltip());
       },
     }),
-    [category, stableAccepts]
+    [category, stableAccepts, dispatch]
   );
 
+  // ── Ref combinée ─────────────────────────────────────────────────────────
   const connectRef = useCallback(
     (el: HTMLDivElement | null) => { drag(drop(el)); },
     [drag, drop]
   );
 
-  // ── [v7] Image URL : clothing GitHub en priorité, fallback getItemUrl ────
+  // ── Retrait visuel ───────────────────────────────────────────────────────
+  const handleRemove = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      if (!item) return;
+
+      // Retrait visuel uniquement — aucun RemoveItem, aucun appel serveur
+      fetchNui('removeClothing', { category });
+      dispatch(removeClothing(category));
+      dispatch(closeTooltip());
+    },
+    [dispatch, category, item]
+  );
+
+  // ── Image URL ─────────────────────────────────────────────────────────────
   const imageUrl = useMemo(() => {
     if (!item) return undefined;
-    // Chercher dans clothingData.json (chargé de façon lazy)
-    // On lit la texture depuis les metadata de l'item si disponible
-    const texture = (item as any).metadata?.texture ?? 0;
+    const texture    = (item as any).metadata?.texture ?? 0;
     const clothingUrl = getClothingImageUrlSync(item.name, texture);
     if (clothingUrl) return clothingUrl;
-    // Fallback : image statique du resource
     return getItemUrl(item.name) ?? undefined;
-  }, [item]); // eslint-disable-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [item]);
 
+  // ── Style calculé ─────────────────────────────────────────────────────────
   const slotStyle = useMemo(
     () => computeStyle({ isOver, canDrop, isSelected, isOutfit, isEquipped, isDragging, imageUrl }),
     [isOver, canDrop, isSelected, isOutfit, isEquipped, isDragging, imageUrl]
   );
 
+  // ── Tooltip ───────────────────────────────────────────────────────────────
   const tooltipItem = useMemo((): SlotWithItem | null => {
     if (!item) return null;
     return {
       slot: 0, name: item.name, count: 1, weight: 0,
       metadata: {
-        label: item.label,
+        label:       item.label,
         description: item.itemType === 'clothing_tenu'
-          ? 'Tenue complète — glisser vers l\'inventaire pour retirer'
-          : 'Glisser vers l\'inventaire pour retirer',
+          ? 'Tenue complète'
+          : 'Vêtement équipé — reste dans l\'inventaire',
       },
     };
   }, [item]);
@@ -168,24 +232,34 @@ const ClothingSlot: React.FC<Props> = ({ category, label, icon, accepts, item })
     dispatch(openTooltip({ item: tooltipItem, inventoryType: 'player' }));
   }, [dispatch, tooltipItem]);
 
-  const handleMouseLeave = useCallback(() => dispatch(closeTooltip()), [dispatch]);
+  const handleMouseLeave = useCallback(
+    () => dispatch(closeTooltip()),
+    [dispatch]
+  );
 
+  // ── Classes CSS ───────────────────────────────────────────────────────────
   const className = useMemo(() => [
-    'inventory-slot', 'clothing-slot',
-    isSelected         ? 'clothing-slot--selected'  : '',
-    isEquipped         ? 'clothing-slot--equipped'   : '',
-    isOutfit           ? 'clothing-slot--outfit'     : '',
-    isDragging         ? 'clothing-slot--dragging'   : '',
-    isOver && !canDrop ? 'clothing-slot--rejected'   : '',
-    isOver && canDrop  ? 'clothing-slot--accept'     : '',
+    'inventory-slot',
+    'clothing-slot',
+    isSelected         ? 'clothing-slot--selected' : '',
+    isEquipped         ? 'clothing-slot--equipped'  : '',
+    isOutfit           ? 'clothing-slot--outfit'    : '',
+    isDragging         ? 'clothing-slot--dragging'  : '',
+    isOver && !canDrop ? 'clothing-slot--rejected'  : '',
+    isOver && canDrop  ? 'clothing-slot--accept'    : '',
   ].filter(Boolean).join(' '), [isSelected, isEquipped, isOutfit, isDragging, isOver, canDrop]);
 
+  // ── Rendu ─────────────────────────────────────────────────────────────────
   return (
     <div
-      ref={connectRef} className={className} style={slotStyle}
+      ref={connectRef}
+      className={className}
+      style={slotStyle}
       onClick={handleClick}
-      onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
+      {/* Slot vide */}
       {!item && (
         <>
           <div className="clothing-slot__icon-wrapper" aria-hidden="true">
@@ -196,18 +270,39 @@ const ClothingSlot: React.FC<Props> = ({ category, label, icon, accepts, item })
           </div>
         </>
       )}
+
+      {/* Slot occupé */}
       {item && (
         <div className="item-slot-wrapper">
           {isOutfit
             ? <div className="clothing-slot__outfit-badge" />
             : <div className="clothing-slot__badge" />
           }
-          {isSelected && <div className="clothing-slot__selected-overlay" aria-hidden="true" />}
+
+          {/* Bouton retrait — visuel uniquement, l'item reste dans l'inventaire */}
+          <button
+            className="clothing-slot__remove-btn"
+            onClick={handleRemove}
+            title="Retirer le vêtement"
+            aria-label={`Retirer ${item.label}`}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <line x1="18" y1="6"  x2="6"  y2="18" />
+              <line x1="6"  y1="6"  x2="18" y2="18" />
+            </svg>
+          </button>
+
+          {isSelected && (
+            <div className="clothing-slot__selected-overlay" aria-hidden="true" />
+          )}
+
           <div className="inventory-slot-label-box">
             <div className="inventory-slot-label-text">{item.label}</div>
           </div>
         </div>
       )}
+
+      {/* Indicateurs drag */}
       {isOver && canDrop && (
         <div className="clothing-slot__drop-indicator" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -218,7 +313,8 @@ const ClothingSlot: React.FC<Props> = ({ category, label, icon, accepts, item })
       {isOver && !canDrop && (
         <div className="clothing-slot__reject-indicator" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-            <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+            <line x1="18" y1="6"  x2="6"  y2="18" />
+            <line x1="6"  y1="6"  x2="18" y2="18" />
           </svg>
         </div>
       )}

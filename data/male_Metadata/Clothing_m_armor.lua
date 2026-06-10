@@ -3,7 +3,7 @@
 -- ============================================================
 
 ---@type table<string, { type: string, slot: number, drawable: number, texCount: number, clothingSlot: string }>
-local Clothing_Metadata_male_ = {
+local Clothing_Metadata_male_armor = {
 
     ['clothing_m_task_0'] = {
         type         = 'component',

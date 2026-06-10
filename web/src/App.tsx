@@ -13,6 +13,13 @@ import { fetchNui } from './utils/fetchNui';
 import { useDragDropManager } from 'react-dnd';
 import KeyPress from './components/utils/KeyPress';
 import { useEffect } from 'react';
+// ── Ajouts clothing ──────────────────────────────────────────────────────────
+import { equipClothing, removeClothing, setAllEquipped } from './store/clothing';
+import {
+  ClothingCategory,
+  EquippedClothingItem,
+  EquippedClothing,
+} from './typings/clothing';
 
 debugData([
   {
@@ -62,6 +69,33 @@ const App: React.FC = () => {
   useNuiEvent('closeInventory', () => {
     manager.dispatch({ type: 'dnd-core/END_DRAG' });
   });
+
+  // ── Clothing handlers ──────────────────────────────────────────────────────
+  // Reçu depuis Lua handleClothingItem (clic droit sur un item clothing)
+  useNuiEvent<{ category: ClothingCategory; item: EquippedClothingItem }>(
+    'clothingEquipped',
+    ({ category, item }) => {
+      dispatch(equipClothing({ category, item }));
+    }
+  );
+
+  // Reçu depuis Lua removeClothingVisual (bouton retirer dans le ClothingSlot)
+  // ou depuis handleClothingItem quand le même item est re-cliqué (toggle off)
+  useNuiEvent<{ category: ClothingCategory }>(
+    'clothingRemoved',
+    ({ category }) => {
+      dispatch(removeClothing(category));
+    }
+  );
+
+  // Reçu à l'ouverture de l'inventaire pour restaurer l'état visuel des slots
+  // clothing depuis le ped actuel (optionnel — si tu l'envoies depuis Lua)
+  useNuiEvent<EquippedClothing>(
+    'setClothingState',
+    (data) => {
+      dispatch(setAllEquipped(data));
+    }
+  );
 
   return (
     <div className="app-wrapper">

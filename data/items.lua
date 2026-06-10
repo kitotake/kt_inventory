@@ -653,7 +653,8 @@ local items = {
 }
 
 local modules = {
-    require 'data.clothing_items',
+    require 'data.clothing_items_f',
+    require 'data.clothing_items_m',
     require 'data.crafting',
     require 'data.licenses',
     require 'data.weapons',
@@ -668,5 +669,6 @@ for _, module in pairs(modules) do
         items[name] = data
     end
 end
+
 
 return items
