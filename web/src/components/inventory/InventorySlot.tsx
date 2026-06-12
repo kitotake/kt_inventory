@@ -1,10 +1,10 @@
 // components/inventory/InventorySlot.tsx
-// Corrections v4-v5 : voir commentaires originaux
-// Correction v6 :
-//   [FIX-C1] useDrop accepte maintenant les drags depuis un ClothingSlot.
-//            Quand source.fromClothingSlot est défini, on appelle removeClothing
-//            (Redux) + fetchNui('removeClothing') au lieu du onDrop normal.
-//            canDrop autorise ces sources même vers un slot vide (aucun item target requis).
+// Correction v7 :
+//   [FIX-C1] (v6) → revu : le drop depuis un ClothingSlot n'effectue plus de
+//            dispatch(removeClothing) immédiat. On appelle 'removeClothing'
+//            côté Lua et on attend la confirmation serveur (ok=true) avant
+//            de mettre à jour Redux. Si ok=false (inventaire plein), rien
+//            ne change : le vêtement reste équipé, l'item ne réapparaît pas.
 
 import React, { useCallback, useMemo, useRef } from 'react';
 import { useDrag, useDrop }      from 'react-dnd';
@@ -25,6 +25,11 @@ import { DragSource, Inventory, InventoryType, Slot, SlotWithItem } from '../../
 import type { ClothingDragSource } from './ClothingSlot';
 
 const DRAG_TYPE = 'SLOT';
+
+interface RemoveResponse {
+  ok: boolean;
+  reason?: string;
+}
 
 interface SlotProps {
   inventoryId:     Inventory['id'];
@@ -105,18 +110,36 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
       accept: DRAG_TYPE,
       collect: (m) => ({ isOver: m.isOver() }),
       drop: (source) => {
-        dispatch(closeTooltip());
-
-        // [FIX-C1] Drop depuis un ClothingSlot → retrait du vêtement
+        // [FIX-C1] Drop depuis un ClothingSlot → demande de retrait au serveur
         if (source.fromClothingSlot) {
-          dispatch(removeClothing(source.fromClothingSlot));
-          fetchNui('removeClothing', {
-            category: source.fromClothingSlot,
-            name:     source.item?.name,
-            toSlot:   item.slot,
-          });
+          dispatch(closeTooltip());
+
+          const fromCategory = source.fromClothingSlot;
+          const itemName     = source.item?.name;
+
+          // On NE dispatch PAS removeClothing tout de suite.
+          // Le serveur décide :
+          //  - ok=true  → l'item a été ajouté dans l'inventaire (refreshSlots
+          //               arrive séparément), on retire l'équipement en Redux
+          //  - ok=false → inventaire plein, rien ne bouge (notif Lua)
+          fetchNui<RemoveResponse>('removeClothing', {
+            category: fromCategory,
+            name:     itemName,
+            toSlot:   item.slot, // indication pour le Lua, non garanti
+          })
+            .then((res) => {
+              if (res?.ok) {
+                dispatch(removeClothing(fromCategory));
+              }
+            })
+            .catch(() => {
+              // erreur réseau — ne rien changer
+            });
+
           return;
         }
+
+        dispatch(closeTooltip());
 
         switch (source.inventory) {
           case InventoryType.SHOP:     onBuy(source,   { inventory: inventoryType, item: { slot: item.slot } }); break;
@@ -126,7 +149,8 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
       },
       canDrop: (source) => {
         // [FIX-C1] Toujours accepter les drags depuis un clothing slot
-        //          (peu importe si le slot target est vide ou non)
+        //          (peu importe si le slot target est vide ou non) —
+        //          le Lua choisit lui-même le slot d'inventaire libre.
         if (source.fromClothingSlot) {
           return inventoryType === InventoryType.PLAYER;
         }
@@ -137,7 +161,7 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
         );
       },
     }),
-    [inventoryType, item.slot]
+    [inventoryType, item.slot, dispatch]
   );
 
   // [FIX-B8] connectRef stable

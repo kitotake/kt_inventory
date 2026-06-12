@@ -1,10 +1,15 @@
 // components/inventory/index.tsx
+// v2 :
+//   ✓ event 'clothingEquipped' → si data.consumedInvSlot est fourni, on vide
+//     ce slot dans leftInventory immédiatement (anticipation visuelle avant
+//     le refreshSlots complet envoyé par le serveur)
+
 import React, { useState } from 'react';
 import useNuiEvent from '../../hooks/useNuiEvent';
 import InventoryControl from './InventoryControl';
 import InventoryHotbar from './InventoryHotbar';
 import { useAppDispatch } from '../../store';
-import { refreshSlots, setAdditionalMetadata, setupInventory } from '../../store/inventory';
+import { refreshSlots, setAdditionalMetadata, setupInventory, clearSlot } from '../../store/inventory';
 import { setAllEquipped, equipClothing, removeClothing, equipOutfit } from '../../store/clothing';
 import { useExitListener } from '../../hooks/useExitListener';
 import type { Inventory as InventoryProps } from '../../typings';
@@ -47,7 +52,16 @@ const Inventory: React.FC = () => {
     dispatch(setAllEquipped(data));
   });
 
-  useNuiEvent<{ category: string; name: string; label: string; itemType?: string }>('clothingEquipped', (data) => {
+  // Reçu depuis Lua handleClothingItem / equipClothingItem.
+  // consumedInvSlot (optionnel) : slot inventaire à vider immédiatement,
+  // en anticipation du refreshSlots complet envoyé par le serveur.
+  useNuiEvent<{
+    category: string;
+    name: string;
+    label: string;
+    itemType?: string;
+    consumedInvSlot?: number;
+  }>('clothingEquipped', (data) => {
     dispatch(
       equipClothing({
         category: data.category as any,
@@ -58,6 +72,10 @@ const Inventory: React.FC = () => {
         },
       })
     );
+
+    if (typeof data.consumedInvSlot === 'number' && data.consumedInvSlot > 0) {
+      dispatch(clearSlot({ slot: data.consumedInvSlot }));
+    }
   });
 
   useNuiEvent<{ category: string }>('clothingRemoved', (data) => {

@@ -1,11 +1,13 @@
 // components/inventory/ClothingSlot.tsx
-// v9 — corrigé après audit complet des typings
+// v10 — drag & drop avec équipement réel (RemoveItem/AddItem serveur)
 //
-// DIFF vs v8 :
-//   ✓ drop handler simplifié      → envoie juste { invSlot, category } au Lua
-//   ✓ Le Lua résout lui-même via resolveClothingMeta (drawable, texture, slotNum)
+// DIFF vs v9 :
+//   ✓ drop équipement      → appelle 'equipClothingItem', attend confirmation serveur
+//   ✓ handleRemove         → devient async, attend 'removeClothing', annule si échec
+//   ✓ swap                 → si slot déjà occupé, envoie swap=true au Lua
+//   ✗ plus de dispatch optimiste avant confirmation serveur
 
-import React, { useCallback, useMemo }    from 'react';
+import React, { useCallback, useMemo, useState }    from 'react';
 import { useDrag, useDrop }               from 'react-dnd';
 import { useAppDispatch, useAppSelector } from '../../store';
 import {
@@ -33,6 +35,21 @@ export type ClothingDragSource = DragSource & {
   fromClothingSlot?: ClothingCategory;
 };
 
+interface EquipResponse {
+  ok: boolean;
+  reason?: string;
+  swapped?: {
+    name:  string;
+    label: string;
+    metadata?: Record<string, any>;
+  };
+}
+
+interface RemoveResponse {
+  ok: boolean;
+  reason?: string;
+}
+
 interface Props {
   category: ClothingCategory;
   label:    string;
@@ -50,6 +67,7 @@ const computeStyle = (p: {
   isOutfit:   boolean;
   isEquipped: boolean;
   isDragging: boolean;
+  isBusy:     boolean;
   imageUrl?:  string;
 }): React.CSSProperties => {
   let border = '', bg = '', shadow = 'none';
@@ -80,7 +98,8 @@ const computeStyle = (p: {
     border,
     backgroundColor:    bg,
     boxShadow:          shadow,
-    opacity:            p.isDragging ? 0.35 : 1,
+    opacity:            p.isDragging ? 0.35 : p.isBusy ? 0.6 : 1,
+    cursor:             p.isBusy ? 'wait' : undefined,
     transition:
       'transform 120ms ease, border-color 120ms ease, ' +
       'background-color 120ms ease, box-shadow 120ms ease, opacity 120ms ease',
@@ -96,6 +115,9 @@ const ClothingSlot: React.FC<Props> = ({ category, label, icon, accepts, item })
   const isEquipped = Boolean(item);
   const isOutfit   = isEquipped && item?.itemType === 'clothing_tenu';
 
+  // Verrou local anti-spam pendant un aller-retour serveur
+  const [isBusy, setIsBusy] = useState(false);
+
   const acceptsKey    = accepts.join(',');
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const stableAccepts = useMemo(() => accepts, [acceptsKey]);
@@ -108,7 +130,7 @@ const ClothingSlot: React.FC<Props> = ({ category, label, icon, accepts, item })
   >(
     () => ({
       type:    'SLOT',
-      canDrag: () => Boolean(item),
+      canDrag: () => Boolean(item) && !isBusy,
       item: (): ClothingDragSource => ({
         inventory:       InventoryType.PLAYER,
         item:            { name: item!.name, slot: 0 },
@@ -117,7 +139,7 @@ const ClothingSlot: React.FC<Props> = ({ category, label, icon, accepts, item })
       }),
       collect: (m) => ({ isDragging: m.isDragging() }),
     }),
-    [item, category]
+    [item, category, isBusy]
   );
 
   // ── useDrop ──────────────────────────────────────────────────────────────
@@ -131,7 +153,8 @@ const ClothingSlot: React.FC<Props> = ({ category, label, icon, accepts, item })
       collect: (m) => ({ isOver: m.isOver(), canDrop: m.canDrop() }),
 
       canDrop: (source) => {
-        if (source.fromClothingSlot)                   return false;
+        if (isBusy)                                     return false;
+        if (source.fromClothingSlot)                    return false;
         if (source.inventory !== InventoryType.PLAYER) return false;
         const name = source.item?.name ?? '';
         const d    = Items[name];
@@ -146,28 +169,51 @@ const ClothingSlot: React.FC<Props> = ({ category, label, icon, accepts, item })
         const d       = Items[name];
         const type    = getClothingItemType(name);
 
-        // ── 1. Mise à jour Redux clothing ────────────────────────────────────
-        //    L'item reste dans l'inventaire — pas de clearSlot, pas de moveSlots.
-        dispatch(equipClothing({
-          category,
-          item: { name, label: d?.label ?? name, itemType: type },
-        }));
-
-        // ── 2. Application visuelle sur le ped via Lua ───────────────────────
-        //    On envoie uniquement invSlot + category.
-        //    Le Lua retrouve l'item, résout ses metadata (drawable, texture,
-        //    slotNum) via resolveClothingMeta, et appelle SetPedPropIndex /
-        //    SetPedComponentVariation. Aucun RemoveItem côté serveur.
-        fetchNui('applyClothingFromSlot', {
-          invSlot:  srcSlot,
-          category,
-          name,     // passé en fallback si le Lua ne trouve pas l'item par slot
-        });
-
         dispatch(closeTooltip());
+        setIsBusy(true);
+
+        // ── Appel serveur : équipement réel ──────────────────────────────────
+        //    - Le Lua retire l'item de l'inventaire (RemoveItem côté serveur)
+        //    - Si un item est déjà équipé dans ce slot, swap=true demande
+        //      au serveur de le ré-ajouter dans l'inventaire en échange
+        //    - Aucune mise à jour Redux/visuelle avant confirmation 'ok'
+        fetchNui<EquipResponse>('equipClothingItem', {
+          invSlot: srcSlot,
+          category,
+          name,
+          swap: Boolean(item),
+        })
+          .then((res) => {
+            if (!res?.ok) {
+              // Échec (slot incompatible, item déjà déplacé, inventaire plein
+              // pour le swap, etc.) — aucun changement visuel/Redux
+              return;
+            }
+
+            // 1. Équiper le nouvel item dans Redux
+            dispatch(equipClothing({
+              category,
+              item: { name, label: d?.label ?? name, itemType: type },
+            }));
+
+            // 2. Si un item était déjà équipé, il a été remis dans l'inventaire
+            //    par le serveur — le rafraîchissement de l'inventaire arrive
+            //    via l'event NUI 'refreshSlots' (déclenché côté Lua après le
+            //    callback serveur). Rien à faire ici pour l'item swappé.
+
+            // 3. Vider le slot source côté inventaire local (l'item a été
+            //    retiré côté serveur). Le Lua envoie aussi 'refreshSlots'
+            //    mais on anticipe pour éviter un flicker.
+            //    -> géré via dispatch(clearSlot) déclenché par l'event NUI
+            //       'clothingEquipped' dans index.tsx (cf. fichier index.tsx)
+          })
+          .catch(() => {
+            // erreur réseau / NUI — ne rien changer
+          })
+          .finally(() => setIsBusy(false));
       },
     }),
-    [category, stableAccepts, dispatch]
+    [category, stableAccepts, dispatch, item, isBusy]
   );
 
   // ── Ref combinée ─────────────────────────────────────────────────────────
@@ -176,18 +222,35 @@ const ClothingSlot: React.FC<Props> = ({ category, label, icon, accepts, item })
     [drag, drop]
   );
 
-  // ── Retrait visuel ───────────────────────────────────────────────────────
+  // ── Retrait visuel + réintégration inventaire ───────────────────────────
   const handleRemove = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
-      if (!item) return;
+      if (!item || isBusy) return;
 
-      // Retrait visuel uniquement — aucun RemoveItem, aucun appel serveur
-      fetchNui('removeClothing', { category });
-      dispatch(removeClothing(category));
+      setIsBusy(true);
       dispatch(closeTooltip());
+
+      // Le serveur :
+      //  1. Vérifie qu'un slot d'inventaire est libre (AddItem)
+      //  2. Si oui : ajoute l'item dans l'inventaire, retire l'état "équipé"
+      //  3. Si non : retourne { ok: false, reason: 'inventory_full' }
+      //     → le Lua affiche une notification, RIEN n'est modifié visuellement
+      fetchNui<RemoveResponse>('removeClothing', { category, name: item.name })
+        .then((res) => {
+          if (!res?.ok) {
+            // inventory_full ou autre — le vêtement reste équipé,
+            // la notification d'erreur est gérée côté Lua (lib.notify)
+            return;
+          }
+          dispatch(removeClothing(category));
+        })
+        .catch(() => {
+          // erreur réseau — ne rien changer
+        })
+        .finally(() => setIsBusy(false));
     },
-    [dispatch, category, item]
+    [dispatch, category, item, isBusy]
   );
 
   // ── Image URL ─────────────────────────────────────────────────────────────
@@ -202,8 +265,8 @@ const ClothingSlot: React.FC<Props> = ({ category, label, icon, accepts, item })
 
   // ── Style calculé ─────────────────────────────────────────────────────────
   const slotStyle = useMemo(
-    () => computeStyle({ isOver, canDrop, isSelected, isOutfit, isEquipped, isDragging, imageUrl }),
-    [isOver, canDrop, isSelected, isOutfit, isEquipped, isDragging, imageUrl]
+    () => computeStyle({ isOver, canDrop, isSelected, isOutfit, isEquipped, isDragging, isBusy, imageUrl }),
+    [isOver, canDrop, isSelected, isOutfit, isEquipped, isDragging, isBusy, imageUrl]
   );
 
   // ── Tooltip ───────────────────────────────────────────────────────────────
@@ -215,17 +278,18 @@ const ClothingSlot: React.FC<Props> = ({ category, label, icon, accepts, item })
         label:       item.label,
         description: item.itemType === 'clothing_tenu'
           ? 'Tenue complète'
-          : 'Vêtement équipé — reste dans l\'inventaire',
+          : 'Vêtement équipé',
       },
     };
   }, [item]);
 
   const handleClick = useCallback(() => {
+    if (isBusy) return;
     const next = isSelected ? null : category;
     dispatch(setSelectedSlot(next));
     if (next) fetchNui('pedPreviewZoomCategory', { category: next });
     else      fetchNui('pedPreviewResetCam', {});
-  }, [dispatch, isSelected, category]);
+  }, [dispatch, isSelected, category, isBusy]);
 
   const handleMouseEnter = useCallback(() => {
     if (!tooltipItem) return;
@@ -245,9 +309,10 @@ const ClothingSlot: React.FC<Props> = ({ category, label, icon, accepts, item })
     isEquipped         ? 'clothing-slot--equipped'  : '',
     isOutfit           ? 'clothing-slot--outfit'    : '',
     isDragging         ? 'clothing-slot--dragging'  : '',
+    isBusy             ? 'clothing-slot--busy'      : '',
     isOver && !canDrop ? 'clothing-slot--rejected'  : '',
     isOver && canDrop  ? 'clothing-slot--accept'    : '',
-  ].filter(Boolean).join(' '), [isSelected, isEquipped, isOutfit, isDragging, isOver, canDrop]);
+  ].filter(Boolean).join(' '), [isSelected, isEquipped, isOutfit, isDragging, isBusy, isOver, canDrop]);
 
   // ── Rendu ─────────────────────────────────────────────────────────────────
   return (
@@ -279,10 +344,11 @@ const ClothingSlot: React.FC<Props> = ({ category, label, icon, accepts, item })
             : <div className="clothing-slot__badge" />
           }
 
-          {/* Bouton retrait — visuel uniquement, l'item reste dans l'inventaire */}
+          {/* Bouton retrait — réintègre l'item dans l'inventaire */}
           <button
             className="clothing-slot__remove-btn"
             onClick={handleRemove}
+            disabled={isBusy}
             title="Retirer le vêtement"
             aria-label={`Retirer ${item.label}`}
           >
