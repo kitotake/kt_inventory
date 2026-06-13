@@ -93,12 +93,16 @@ export const canDropInSlot = (
   slotAccepts: ClothingCategory[],
   itemClothingSlot: ClothingCategory | undefined
 ): boolean => {
+  // ← AJOUTE CES LOGS
+  console.log('[canDropInSlot] itemCategory:', itemCategory);
+  console.log('[canDropInSlot] itemClothingSlot:', itemClothingSlot);
+  console.log('[canDropInSlot] slotAccepts:', slotAccepts);
+  console.log('[canDropInSlot] slotAccepts.includes(itemClothingSlot):', slotAccepts.includes(itemClothingSlot!));
+
   if (!itemCategory) return false;
   if (itemCategory !== 'clothing' && itemCategory !== 'clothing_tenu') return false;
-  // Tenue complète : acceptée partout (le Lua distribue sur tous les slots)
-
   if (itemCategory === 'clothing_tenu') return true;
-  // Pièce individuelle : le clothingSlot de l'item doit correspondre
   if (!itemClothingSlot) return false;
   return slotAccepts.includes(itemClothingSlot);
 };
+

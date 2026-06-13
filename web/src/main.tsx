@@ -1,4 +1,3 @@
-// main.tsx
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
@@ -19,14 +18,15 @@ if (isEnvBrowser()) {
   root!.style.backgroundPosition = 'center';
 }
 
+// Objet stable — défini hors du render pour éviter la réinitialisation du DndProvider
+const touchBackendOptions = { enableMouseEvents: true };
+
 createRoot(root!).render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <DndProvider backend={TouchBackend} options={{ enableMouseEvents: true }}>
-        <ItemNotificationsProvider>
-          <App />
-        </ItemNotificationsProvider>
-      </DndProvider>
-    </Provider>
-  </React.StrictMode>
-);
+  <Provider store={store}>
+    <DndProvider backend={TouchBackend} options={touchBackendOptions}>
+      <ItemNotificationsProvider>
+        <App />
+      </ItemNotificationsProvider>
+    </DndProvider>
+  </Provider>
+);  
