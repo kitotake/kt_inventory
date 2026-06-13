@@ -14,4 +14,5 @@ export type ItemData = {
   image?:        string;
   category?:     'clothing' | 'clothing_tenu' | string;
   clothingSlot?: ClothingCategory;
+  maxAmmo?:      number;
 };

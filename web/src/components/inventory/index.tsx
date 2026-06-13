@@ -20,8 +20,7 @@ import LeftInventory from './LeftInventory';
 import LeftInventoryClothing from './LeftInventoryClothing';
 import RightInventoryClothing from './RightInventoryClothing';
 import PlayerPreview from './PlayerPreview';
-import Tooltip from '../utils/Tooltip';
-import { closeTooltip } from '../../store/tooltip';
+ 
 import InventoryContext from './InventoryContext';
 import { closeContextMenu } from '../../store/contextMenu';
 import Fade from '../utils/transitions/Fade';
@@ -134,7 +133,7 @@ const Inventory: React.FC = () => {
             </div>
           </div>
 
-          <Tooltip />
+          
           <InventoryContext />
         </div>
       </Fade>

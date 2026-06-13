@@ -2,7 +2,7 @@
 import { useEffect, useRef } from 'react';
 import { noop } from '../utils/misc';
 import { fetchNui } from '../utils/fetchNui';
-import { closeTooltip } from '../store/tooltip';
+
 import { useAppDispatch } from '../store';
 import { closeContextMenu } from '../store/contextMenu';
 
@@ -19,7 +19,7 @@ export const useExitListener = (visibleSetter: FrameVisibleSetter) => {
     const keyHandler = (e: KeyboardEvent) => {
       if (LISTENED_KEYS.includes(e.code)) {
         setterRef.current(false);
-        dispatch(closeTooltip());
+       
         dispatch(closeContextMenu());
         fetchNui('exit');
       }

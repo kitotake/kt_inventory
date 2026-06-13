@@ -2,16 +2,17 @@
 import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import inventoryReducer  from './inventory';
-import tooltipReducer    from './tooltip';
 import contextMenuReducer from './contextMenu';
 import clothingReducer   from './clothing';
+import itemMetaReducer   from './itemMeta';
 
 export const store = configureStore({
   reducer: {
     inventory:   inventoryReducer,
-    tooltip:     tooltipReducer,
+   
     contextMenu: contextMenuReducer,
     clothing:    clothingReducer,
+    itemMeta:    itemMetaReducer,
   },
 });
 

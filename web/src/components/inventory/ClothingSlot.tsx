@@ -1,4 +1,9 @@
 // components/inventory/ClothingSlot.tsx
+// v3 :
+//   ✓ Suppression de dispatch(closeTooltip()) (tooltip retiré du projet)
+//   ✓ Retrait de l'import closeTooltip, openTooltip
+//   ✓ Retrait de tooltipItem, handleMouseEnter, handleMouseLeave
+
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDrag, useDrop }               from 'react-dnd';
 import { useAppDispatch, useAppSelector } from '../../store';
@@ -16,8 +21,8 @@ import {
   removeClothing,
 } from '../../store/clothing';
 import { fetchNui }                           from '../../utils/fetchNui';
-import { DragSource, InventoryType, SlotWithItem } from '../../typings';
-import { closeTooltip, openTooltip }          from '../../store/tooltip';
+import { clearSlot }                          from '../../store/inventory';
+import { DragSource, InventoryType } from '../../typings';
 import { getItemUrl }                         from '../../helpers';
 import { Items }                              from '../../store/items';
 import { getClothingImageUrlSync }            from '../../hooks/useClothingImage';
@@ -40,41 +45,17 @@ interface Props {
 const computeStyle = (p: {
   isOver:     boolean;
   canDrop:    boolean;
-  isSelected: boolean;
   isOutfit:   boolean;
   isEquipped: boolean;
   isDragging: boolean;
   isBusy:     boolean;
   imageUrl?:  string;
 }): React.CSSProperties => {
-  let border = '', bg = '', shadow = 'none';
-
-  if (p.isOver && p.canDrop) {
-    border = '1px dashed rgba(255,255,255,0.6)';
-    bg     = 'rgba(59,130,246,0.12)';
-  } else if (p.isOver) {
-    border = '1px dashed rgba(231,76,60,0.6)';
-    bg     = 'rgba(231,76,60,0.08)';
-  } else if (p.isSelected) {
-    border = '1px solid rgba(59,130,246,0.9)';
-    bg     = 'rgba(37,99,235,0.15)';
-    shadow = '0 0 12px rgba(59,130,246,0.35),inset 0 0 8px rgba(59,130,246,0.1)';
-  } else if (p.isOutfit) {
-    border = '1px solid rgba(167,139,250,0.6)';
-    bg     = 'rgba(109,40,217,0.08)';
-  } else if (p.isEquipped) {
-    border = '1px solid rgba(37,99,235,0.5)';
-    shadow = '0 0 6px rgba(37,99,235,0.2)';
-  }
-
   return {
     backgroundImage:    p.imageUrl ? `url(${p.imageUrl})` : 'none',
     backgroundSize:     '62%',
     backgroundPosition: 'center 40%',
     backgroundRepeat:   'no-repeat',
-    border,
-    backgroundColor:    bg,
-    boxShadow:          shadow,
     opacity:   p.isDragging ? 0.35 : p.isBusy ? 0.6 : 1,
     cursor:    p.isBusy ? 'wait' : undefined,
     transition:
@@ -142,7 +123,6 @@ const ClothingSlot: React.FC<Props> = ({ category, label, icon, accepts, item })
         const data     = Items[name];
         const itemType = getClothingItemType(name);
 
-        dispatch(closeTooltip());
         setIsBusy(true);
 
         if (isEnvBrowser()) {
@@ -150,6 +130,13 @@ const ClothingSlot: React.FC<Props> = ({ category, label, icon, accepts, item })
             category: categoryRef.current,
             item: { name, label: data?.label ?? name, itemType },
           }));
+
+          // ✅ FIX : vide le slot inventaire source (équivalent du
+          //          consumedInvSlot envoyé par le serveur en prod)
+          if (srcSlot && srcSlot > 0) {
+            dispatch(clearSlot({ slot: srcSlot }));
+          }
+
           setIsBusy(false);
           return;
         }
@@ -184,7 +171,6 @@ const ClothingSlot: React.FC<Props> = ({ category, label, icon, accepts, item })
     if (!itemRef.current || isBusyRef.current) return;
 
     setIsBusy(true);
-    dispatch(closeTooltip());
 
     if (isEnvBrowser()) {
       dispatch(removeClothing(categoryRef.current));
@@ -209,20 +195,9 @@ const ClothingSlot: React.FC<Props> = ({ category, label, icon, accepts, item })
   }, [item]);
 
   const slotStyle = useMemo(
-    () => computeStyle({ isOver, canDrop, isSelected, isOutfit, isEquipped, isDragging, isBusy, imageUrl }),
-    [isOver, canDrop, isSelected, isOutfit, isEquipped, isDragging, isBusy, imageUrl]
+    () => computeStyle({ isOver, canDrop, isOutfit, isEquipped, isDragging, isBusy, imageUrl }),
+    [isOver, canDrop, isOutfit, isEquipped, isDragging, isBusy, imageUrl]
   );
-
-  const tooltipItem = useMemo((): SlotWithItem | null => {
-    if (!item) return null;
-    return {
-      slot: 0, name: item.name, count: 1, weight: 0,
-      metadata: {
-        label:       item.label,
-        description: item.itemType === 'clothing_tenu' ? 'Tenue complète' : 'Vêtement équipé',
-      },
-    };
-  }, [item]);
 
   const handleClick = useCallback(() => {
     if (isBusyRef.current) return;
@@ -231,13 +206,6 @@ const ClothingSlot: React.FC<Props> = ({ category, label, icon, accepts, item })
     if (next) fetchNui('pedPreviewZoomCategory', { category: next });
     else      fetchNui('pedPreviewResetCam', {});
   }, [dispatch, isSelected, category]);
-
-  const handleMouseEnter = useCallback(() => {
-    if (!tooltipItem) return;
-    dispatch(openTooltip({ item: tooltipItem, inventoryType: 'player' }));
-  }, [dispatch, tooltipItem]);
-
-  const handleMouseLeave = useCallback(() => dispatch(closeTooltip()), [dispatch]);
 
   const className = useMemo(() => [
     'inventory-slot',
@@ -258,8 +226,6 @@ const ClothingSlot: React.FC<Props> = ({ category, label, icon, accepts, item })
       className={className}
       style={slotStyle}
       onClick={handleClick}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
     >
       {!item && (
         <>

@@ -1,10 +1,8 @@
 // components/inventory/InventorySlot.tsx
-// Correction v7 :
-//   [FIX-C1] (v6) → revu : le drop depuis un ClothingSlot n'effectue plus de
-//            dispatch(removeClothing) immédiat. On appelle 'removeClothing'
-//            côté Lua et on attend la confirmation serveur (ok=true) avant
-//            de mettre à jour Redux. Si ok=false (inventaire plein), rien
-//            ne change : le vêtement reste équipé, l'item ne réapparaît pas.
+// Correction v9 :
+//   ✓ Suppression de dispatch(closeTooltip()) (tooltip retiré du projet)
+//   ✓ Retrait de l'import closeTooltip, openTooltip
+//   ✓ Retrait de handleMouseEnter, handleMouseLeave, timerRef (devenus inutiles)
 
 import React, { useCallback, useMemo, useRef } from 'react';
 import { useDrag, useDrop }      from 'react-dnd';
@@ -17,10 +15,11 @@ import { onUse }                 from '../../dnd/onUse';
 import { Items }                 from '../../store/items';
 import { Locale }                from '../../store/locale';
 import { canCraftItem, canPurchaseItem, getItemUrl, isSlotWithItem } from '../../helpers';
-import { closeTooltip, openTooltip } from '../../store/tooltip';
 import { openContextMenu }       from '../../store/contextMenu';
 import { removeClothing }        from '../../store/clothing';
 import { fetchNui }              from '../../utils/fetchNui';
+import { isEnvBrowser }          from '../../utils/misc';
+import { refreshSlots }          from '../../store/inventory';
 import { DragSource, Inventory, InventoryType, Slot, SlotWithItem } from '../../typings';
 import type { ClothingDragSource } from './ClothingSlot';
 
@@ -67,7 +66,6 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
   { item, inventoryId, inventoryType, inventoryGroups }, ref
 ) => {
   const dispatch = useAppDispatch();
-  const timerRef = useRef<number | null>(null);
 
   const canPurchase = canPurchaseItem(item, { type: inventoryType, groups: inventoryGroups });
   const canCraft    = canCraftItem(item, inventoryType);
@@ -112,10 +110,36 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
       drop: (source) => {
         // [FIX-C1] Drop depuis un ClothingSlot → demande de retrait au serveur
         if (source.fromClothingSlot) {
-          dispatch(closeTooltip());
-
           const fromCategory = source.fromClothingSlot;
           const itemName     = source.item?.name;
+
+          // ── Mode browser (pnpm dev / debugData) ──────────────────────────
+          // Aucun backend Lua disponible : fetchNui ne renverra jamais
+          // { ok: true }. On applique donc le changement localement :
+          //  1. retire l'item équipé du ClothingSlot (Redux clothing)
+          //  2. place l'item dans le slot inventaire ciblé (Redux inventory)
+          if (isEnvBrowser()) {
+            if (!itemName) return;
+
+            const itemData = Items[itemName];
+
+            dispatch(removeClothing(fromCategory));
+            dispatch(
+              refreshSlots({
+                items: {
+                  item: {
+                    slot:     item.slot,
+                    name:     itemName,
+                    count:    1,
+                    weight:   itemData?.weight ?? 0,
+                    metadata: { label: itemData?.label ?? itemName },
+                  },
+                  inventory: InventoryType.PLAYER,
+                },
+              })
+            );
+            return;
+          }
 
           // On NE dispatch PAS removeClothing tout de suite.
           // Le serveur décide :
@@ -139,8 +163,6 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
           return;
         }
 
-        dispatch(closeTooltip());
-
         switch (source.inventory) {
           case InventoryType.SHOP:     onBuy(source,   { inventory: inventoryType, item: { slot: item.slot } }); break;
           case InventoryType.CRAFTING: onCraft(source, { inventory: inventoryType, item: { slot: item.slot } }); break;
@@ -161,7 +183,7 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
         );
       },
     }),
-    [inventoryType, item.slot, dispatch]
+    [inventoryType, item.slot, item.name, dispatch]
   );
 
   // [FIX-B8] connectRef stable
@@ -186,25 +208,11 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
   }, [dispatch, inventoryType, item]);
 
   const handleClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    dispatch(closeTooltip());
-    if (timerRef.current !== null) clearTimeout(timerRef.current);
     if (e.ctrlKey && isSlotWithItem(item) && inventoryType !== 'shop' && inventoryType !== 'crafting')
       onDrop({ item: item as SlotWithItem, inventory: inventoryType });
     else if (e.altKey && isSlotWithItem(item) && inventoryType === 'player')
       onUse(item);
-  }, [dispatch, inventoryType, item]);
-
-  const handleMouseEnter = useCallback(() => {
-    if (!isSlotWithItem(item)) return;
-    timerRef.current = window.setTimeout(() => {
-      dispatch(openTooltip({ item: item as SlotWithItem, inventoryType }));
-    }, 500);
-  }, [dispatch, inventoryType, item]);
-
-  const handleMouseLeave = useCallback(() => {
-    dispatch(closeTooltip());
-    if (timerRef.current !== null) { clearTimeout(timerRef.current); timerRef.current = null; }
-  }, [dispatch]);
+  }, [inventoryType, item]);
 
   const slotStyle = useMemo<React.CSSProperties>(() => {
     const imageUrl = item.name ? getItemUrl(item as SlotWithItem) : undefined;
@@ -224,7 +232,7 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
   return (
     <div ref={mergeRefs} onContextMenu={handleContext} onClick={handleClick} className="inventory-slot" style={slotStyle}>
       {hasItem && (
-        <div className="item-slot-wrapper" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+        <div className="item-slot-wrapper">
           <div className={inventoryType === 'player' && item.slot <= 5 ? 'item-hotslot-header-wrapper' : 'item-slot-header-wrapper'}>
             {inventoryType === 'player' && item.slot <= 5 && <div className="inventory-slot-number">{item.slot}</div>}
             <div className="item-slot-info-wrapper">
