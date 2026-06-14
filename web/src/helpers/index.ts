@@ -4,6 +4,10 @@
 //   2. resolveItemUrl : Promise.any() teste les candidats EN PARALLÈLE (plus rapide)
 //   3. getItemUrl : sentinelle null avant résolution → évite les doubles appels async
 //   4. useItemUrl : cleanup correct si itemName change pendant la résolution
+// NOUVEAU :
+//   5. canCraftItem → retourne le détail des ingrédients manquants (CraftCheckResult)
+//   6. canPurchaseItem → vérifie aussi le solde du joueur selon la devise de l'item
+//   7. getPlayerBalance → lit le solde (money / black_money / devise custom) depuis leftInventory.groups ou metadata
 
 import { useEffect, useState }  from 'react';
 import { isEqual }              from 'lodash';
@@ -18,45 +22,159 @@ import {
 
 // ── Inventory helpers ─────────────────────────────────────────────────────────
 
+/**
+ * Résultat détaillé d'une vérification de craft.
+ * - ok      : true si tous les ingrédients sont disponibles en quantité suffisante
+ * - missing : liste des ingrédients manquants avec quantité possédée / requise
+ */
+export interface CraftCheckResult {
+  ok: boolean;
+  missing: { name: string; label: string; have: number; need: number }[];
+}
+
+/**
+ * Résultat détaillé d'une vérification d'achat.
+ * - ok      : true si l'item est achetable (stock + grade + solde)
+ * - reason  : 'out_of_stock' | 'grade' | 'balance' | undefined (si ok)
+ */
+export interface PurchaseCheckResult {
+  ok: boolean;
+  reason?: 'out_of_stock' | 'grade' | 'balance';
+}
+
+// ── Soldes joueur ──────────────────────────────────────────────────────────────
+
+/**
+ * Lit le solde du joueur pour une devise donnée.
+ * Convention :
+ *  - 'money'        → leftInventory.groups.money (ou groups.cash en fallback)
+ *  - 'black_money'  → leftInventory.groups.black_money
+ *  - autre (custom) → somme du `count` des items dont `name === currency`
+ *    dans leftInventory.items (ex: jetons, gold_token, etc.)
+ */
+export const getPlayerBalance = (currency: string): number => {
+  const leftInventory = store.getState().inventory.leftInventory;
+  const groups = leftInventory.groups ?? {};
+
+  if (currency === 'money') {
+    return groups.money ?? groups.cash ?? 0;
+  }
+  if (currency === 'black_money') {
+    return groups.black_money ?? 0;
+  }
+
+  // Devise custom (jeton, item-currency) → on additionne les counts dans l'inventaire
+  return leftInventory.items.reduce((total, slot) => {
+    if (isSlotWithItem(slot) && slot.name === currency) return total + slot.count;
+    return total;
+  }, 0);
+};
+
 export const canPurchaseItem = (
   item: Slot,
   inventory: { type: Inventory['type']; groups: Inventory['groups'] }
 ): boolean => {
-  if (inventory.type !== 'shop' || !isSlotWithItem(item)) return true;
-  if (item.count !== undefined && item.count === 0) return false;
-  if (item.grade === undefined || !inventory.groups) return true;
-  const leftInventory = store.getState().inventory.leftInventory;
-  if (!leftInventory.groups) return false;
-  const reqGroups = Object.keys(inventory.groups);
-  if (Array.isArray(item.grade)) {
-    for (const g of reqGroups) {
-      if (leftInventory.groups[g] !== undefined && item.grade.includes(leftInventory.groups[g])) return true;
+  return checkPurchaseItem(item, inventory).ok;
+};
+
+/**
+ * Vérification détaillée d'achat (stock + grade + solde).
+ * Renvoie un objet { ok, reason } pour permettre un affichage thématisé
+ * (ex: "Stock épuisé" vs "Solde insuffisant" vs "Grade requis").
+ */
+export const checkPurchaseItem = (
+  item: Slot,
+  inventory: { type: Inventory['type']; groups: Inventory['groups'] }
+): PurchaseCheckResult => {
+  if (inventory.type !== 'shop' || !isSlotWithItem(item)) return { ok: true };
+
+  // 1. Stock
+  if (item.count !== undefined && item.count === 0) return { ok: false, reason: 'out_of_stock' };
+
+  // 2. Grade / groupes
+  if (item.grade !== undefined && inventory.groups) {
+    const leftInventory = store.getState().inventory.leftInventory;
+    if (!leftInventory.groups) return { ok: false, reason: 'grade' };
+
+    const reqGroups = Object.keys(inventory.groups);
+    let hasGrade = false;
+
+    if (Array.isArray(item.grade)) {
+      for (const g of reqGroups) {
+        if (leftInventory.groups[g] !== undefined && item.grade.includes(leftInventory.groups[g])) { hasGrade = true; break; }
+      }
+    } else {
+      for (const g of reqGroups) {
+        if (leftInventory.groups[g] !== undefined && leftInventory.groups[g] >= (item.grade as number)) { hasGrade = true; break; }
+      }
     }
-    return false;
+
+    if (!hasGrade) return { ok: false, reason: 'grade' };
   }
-  for (const g of reqGroups) {
-    if (leftInventory.groups[g] !== undefined && leftInventory.groups[g] >= (item.grade as number)) return true;
+
+  // 3. Solde (devise) — seulement si un prix > 0 est défini
+  if (item.price && item.price > 0) {
+    const currency = item.currency ?? 'money';
+    const balance  = getPlayerBalance(currency);
+    if (balance < item.price) return { ok: false, reason: 'balance' };
   }
-  return false;
+
+  return { ok: true };
 };
 
 export const canCraftItem = (item: Slot, inventoryType: string): boolean => {
-  if (!isSlotWithItem(item) || inventoryType !== 'crafting') return true;
-  if (!item.ingredients) return true;
-  const leftInventory = store.getState().inventory.leftInventory;
-  for (const [itemName, count] of Object.entries(item.ingredients)) {
-    const globalItem = Items[itemName];
-    if (count >= 1 && globalItem && globalItem.count >= count) continue;
-    const hasItem = leftInventory.items.some((p) => {
-      if (isSlotWithItem(p) && p.name === itemName) {
-        if (count < 1) return (p.metadata?.durability ?? 0) >= count * 100;
-        return true;
-      }
-      return false;
-    });
-    if (!hasItem) return false;
+  return checkCraftItem(item, inventoryType).ok;
+};
+
+/**
+ * Vérification détaillée de craft : renvoie ok + la liste des ingrédients
+ * manquants (nom technique, label affichable, quantité possédée/requise).
+ *
+ * Règles de comptage :
+ *  - count >= 1 : on compte les exemplaires possédés (Items[name].count global,
+ *                  sinon nombre de slots dans leftInventory portant ce nom).
+ *  - count < 1  : on interprète comme un seuil de durabilité (ex: 0.5 = 50%)
+ *                  sur UN item possédé (comportement legacy conservé).
+ */
+export const checkCraftItem = (item: Slot, inventoryType: string): CraftCheckResult => {
+  if (!isSlotWithItem(item) || inventoryType !== 'crafting' || !item.ingredients) {
+    return { ok: true, missing: [] };
   }
-  return true;
+
+  const leftInventory = store.getState().inventory.leftInventory;
+  const missing: CraftCheckResult['missing'] = [];
+
+  for (const [itemName, need] of Object.entries(item.ingredients)) {
+    const label = Items[itemName]?.label ?? itemName;
+
+    // Seuil de durabilité (legacy) : need < 1 → cherche un item avec durability suffisante
+    if (need < 1) {
+      const hasItem = leftInventory.items.some((p) => {
+        if (isSlotWithItem(p) && p.name === itemName) {
+          return (p.metadata?.durability ?? 0) >= need * 100;
+        }
+        return false;
+      });
+      if (!hasItem) missing.push({ name: itemName, label, have: 0, need: 1 });
+      continue;
+    }
+
+    // Quantité possédée : priorité au compteur global Items[name].count,
+    // sinon somme des counts des slots correspondants dans leftInventory.
+    const globalItem = Items[itemName];
+    let have = globalItem?.count ?? 0;
+
+    if (!have) {
+      have = leftInventory.items.reduce((total, p) => {
+        if (isSlotWithItem(p) && p.name === itemName) return total + p.count;
+        return total;
+      }, 0);
+    }
+
+    if (have < need) missing.push({ name: itemName, label, have, need });
+  }
+
+  return { ok: missing.length === 0, missing };
 };
 
 export const isSlotWithItem = (slot: Slot, strict = false): slot is SlotWithItem =>

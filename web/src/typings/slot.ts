@@ -18,6 +18,7 @@ export type SlotWithItem = Slot & {
   price?:      number;
   currency?:   string;
   ingredients?:{ [key: string]: number };
+  craftTime?:  number;        // ⬅ NOUVEAU — durée du craft en secondes
   duration?:   number;
   image?:      string;
   grade?:      number | number[];

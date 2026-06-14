@@ -1,8 +1,7 @@
 // components/inventory/index.tsx
-// v2 :
-//   ✓ event 'clothingEquipped' → si data.consumedInvSlot est fourni, on vide
-//     ce slot dans leftInventory immédiatement (anticipation visuelle avant
-//     le refreshSlots complet envoyé par le serveur)
+// v3 :
+//   ✓ Ajout de <DevModeSwitcher /> visible uniquement en mode navigateur (isEnvBrowser)
+//   ✓ Correction : suppression de closeTooltip (non défini dans ce fichier)
 
 import React, { useState } from 'react';
 import useNuiEvent from '../../hooks/useNuiEvent';
@@ -20,7 +19,9 @@ import LeftInventory from './LeftInventory';
 import LeftInventoryClothing from './LeftInventoryClothing';
 import RightInventoryClothing from './RightInventoryClothing';
 import PlayerPreview from './PlayerPreview';
- 
+import DevModeSwitcher from './DevModeSwitcher';
+import { isEnvBrowser } from '../../utils/misc';
+
 import InventoryContext from './InventoryContext';
 import { closeContextMenu } from '../../store/contextMenu';
 import Fade from '../utils/transitions/Fade';
@@ -34,7 +35,6 @@ const Inventory: React.FC = () => {
   useNuiEvent<false>('closeInventory', () => {
     setInventoryVisible(false);
     dispatch(closeContextMenu());
-    dispatch(closeTooltip());
   });
 
   useExitListener(setInventoryVisible);
@@ -51,9 +51,6 @@ const Inventory: React.FC = () => {
     dispatch(setAllEquipped(data));
   });
 
-  // Reçu depuis Lua handleClothingItem / equipClothingItem.
-  // consumedInvSlot (optionnel) : slot inventaire à vider immédiatement,
-  // en anticipation du refreshSlots complet envoyé par le serveur.
   useNuiEvent<{
     category: string;
     name: string;
@@ -129,11 +126,12 @@ const Inventory: React.FC = () => {
 
             {/* COLONNE DROITE : inventaire secondaire */}
             <div className="inventory-side inventory-side--right">
+              {/* Switcher de mode visible uniquement en dev browser */}
+              {isEnvBrowser() && <DevModeSwitcher />}
               <RightInventory />
             </div>
           </div>
 
-          
           <InventoryContext />
         </div>
       </Fade>

@@ -19,10 +19,15 @@ import { isEnvBrowser } from './utils/misc';
 
 // ── Peuple Items synchroniquement en mode browser ─────────────────────────────
 if (isEnvBrowser()) {
-  Items['iron']              = { name: 'iron',              label: 'Fer',               weight: 3000, stack: true,  close: false, usable: false, count: 0, category: 'material'      };
-  Items['water']             = { name: 'water',             label: 'Eau en bouteille',  weight: 500,  stack: true,  close: false, usable: true,  count: 0, category: 'consumable'    };
-  Items['bandage']           = { name: 'bandage',           label: 'Bandage',           weight: 115,  stack: true,  close: false, usable: true,  count: 0, category: 'medical'       };
-  Items['burger']            = { name: 'burger',            label: 'Burger',            weight: 20,   stack: true,  close: false, usable: true,  count: 0, category: 'consumable'    };
+  Items['iron']              = { name: 'iron',              label: 'Fer',               weight: 3000, stack: true,  close: false, usable: false, count: 5,  category: 'material'      };
+  Items['water']             = { name: 'water',             label: 'Eau en bouteille',  weight: 500,  stack: true,  close: false, usable: true,  count: 3,  category: 'consumable'    };
+  Items['bandage']           = { name: 'bandage',           label: 'Bandage',           weight: 115,  stack: true,  close: false, usable: true,  count: 5,  category: 'medical'       };
+  Items['burger']            = { name: 'burger',            label: 'Burger',            weight: 20,   stack: true,  close: false, usable: true,  count: 0,  category: 'consumable'    };
+  Items['plastic']           = { name: 'plastic',           label: 'Plastique',         weight: 200,  stack: true,  close: false, usable: false, count: 1,  category: 'material'      };
+  Items['cloth']              = { name: 'cloth',             label: 'Tissu',             weight: 80,   stack: true,  close: false, usable: false, count: 0,  category: 'material'      };
+  Items['medkit']            = { name: 'medkit',            label: 'Trousse de secours',weight: 800,  stack: true,  close: false, usable: true,  count: 0,  category: 'medical'       };
+  Items['weapon_pistol']     = { name: 'weapon_pistol',     label: 'Pistolet',          weight: 1200, stack: false, close: false, usable: false, count: 0,  category: 'weapon'        };
+  Items['gold_token']        = { name: 'gold_token',        label: 'Jeton doré',        weight: 0,    stack: true,  close: false, usable: false, count: 12, category: 'currency'      };
   Items['clothing_hat']      = { name: 'clothing_hat',      label: 'Chapeau',           weight: 100,  stack: false, close: false, usable: false, count: 0, category: 'clothing',     clothingSlot: 'hat'        };
   Items['clothing_mask']     = { name: 'clothing_mask',     label: 'Masque de ski',     weight: 115,  stack: false, close: false, usable: false, count: 0, category: 'clothing',     clothingSlot: 'mask'       };
   Items['clothing_glasses']  = { name: 'clothing_glasses',  label: 'Lunettes',          weight: 80,   stack: false, close: false, usable: false, count: 0, category: 'clothing',     clothingSlot: 'glasses'    };
@@ -42,6 +47,9 @@ if (isEnvBrowser()) {
   Items['clothing_tenu_001'] = { name: 'clothing_tenu_001', label: 'Tenue complète',    weight: 800,  stack: false, close: false, usable: false, count: 0, category: 'clothing_tenu' };
 }
 
+// debugData([{ action: 'setupInventory', data: { /* shop */ } }], 1000);
+// debugData([{ action: 'setupInventory', data: { /* crafting */ } }], 5000);
+
 debugData([
   {
     action: 'setupInventory',
@@ -49,36 +57,67 @@ debugData([
       leftInventory: {
         id: 'test', type: 'player', slots: 80, label: 'Bob Smith',
         weight: 3000, maxWeight: 25000,
+        // groups : utilisé par checkPurchaseItem (grade) ET getPlayerBalance (money/black_money)
+        groups: { money: 35, black_money: 0, police: 2 },
         items: [
           { slot:  1, name: 'iron',              weight: 3000, count: 5,  metadata: { description: 'Minerai de fer' } },
           { slot:  2, name: 'water',             weight: 500,  count: 3,  metadata: { description: 'Eau fraîche'    } },
           { slot:  3, name: 'bandage',           weight: 115,  count: 5,  metadata: { durability: 75 } },
-          { slot:  4, name: 'clothing_hat',      weight: 100,  count: 1,  metadata: { texture: 0, label: 'Chapeau'          } },
-          { slot:  5, name: 'clothing_mask',     weight: 115,  count: 1,  metadata: { texture: 0, label: 'Masque de ski'     } },
-          { slot:  6, name: 'clothing_glasses',  weight: 80,   count: 1,  metadata: { texture: 0, label: 'Lunettes'          } },
-          { slot:  7, name: 'clothing_chain',    weight: 90,   count: 1,  metadata: { texture: 0, label: 'Écharpe'           } },
-          { slot:  8, name: 'clothing_gloves',   weight: 100,  count: 1,  metadata: { texture: 0, label: 'Gants'             } },
-          { slot:  9, name: 'clothing_top',      weight: 300,  count: 1,  metadata: { texture: 0, label: 'Veste'             } },
-          { slot: 10, name: 'clothing_watch',    weight: 50,   count: 1,  metadata: { texture: 0, label: 'Montre'            } },
-          { slot: 11, name: 'clothing_pants',    weight: 250,  count: 1,  metadata: { texture: 0, label: 'Pantalon'          } },
-          { slot: 12, name: 'clothing_cap',      weight: 80,   count: 1,  metadata: { texture: 0, label: 'Casquette'         } },
-          { slot: 13, name: 'clothing_hair',     weight: 0,    count: 1,  metadata: { texture: 0, label: 'Coiffure'          } },
-          { slot: 14, name: 'clothing_bracelet', weight: 40,   count: 1,  metadata: { texture: 0, label: 'Bracelet'          } },
-          { slot: 15, name: 'clothing_bag',      weight: 200,  count: 1,  metadata: { texture: 0, label: 'Sac à dos'         } },
-          { slot: 16, name: 'clothing_shoes',    weight: 150,  count: 1,  metadata: { texture: 0, label: 'Chaussures'        } },
-          { slot: 17, name: 'clothing_armor',    weight: 500,  count: 1,  metadata: { texture: 0, label: 'Gilet pare-balles' } },
-          { slot: 18, name: 'clothing_under',    weight: 80,   count: 1,  metadata: { texture: 0, label: 'Sous-vêtement'     } },
-          { slot: 19, name: 'clothing_ears',     weight: 20,   count: 1,  metadata: { texture: 0, label: "Boucles d'oreille" } },
-          { slot: 20, name: 'clothing_tenu_001', weight: 800,  count: 1,  metadata: { texture: 0, label: 'Tenue complète'    } },
+          { slot:  4, name: 'plastic',           weight: 200,  count: 1,  metadata: {} },
+          { slot:  5, name: 'gold_token',        weight: 0,    count: 12, metadata: {} },
+          { slot:  6, name: 'clothing_hat',      weight: 100,  count: 1,  metadata: { texture: 0, label: 'Chapeau'          } },
+          { slot:  7, name: 'clothing_mask',     weight: 115,  count: 1,  metadata: { texture: 0, label: 'Masque de ski'     } },
+          { slot:  8, name: 'clothing_glasses',  weight: 80,   count: 1,  metadata: { texture: 0, label: 'Lunettes'          } },
+          { slot:  9, name: 'clothing_chain',    weight: 90,   count: 1,  metadata: { texture: 0, label: 'Écharpe'           } },
+          { slot: 10, name: 'clothing_gloves',   weight: 100,  count: 1,  metadata: { texture: 0, label: 'Gants'             } },
+          { slot: 11, name: 'clothing_top',      weight: 300,  count: 1,  metadata: { texture: 0, label: 'Veste'             } },
+          { slot: 12, name: 'clothing_watch',    weight: 50,   count: 1,  metadata: { texture: 0, label: 'Montre'            } },
+          { slot: 13, name: 'clothing_pants',    weight: 250,  count: 1,  metadata: { texture: 0, label: 'Pantalon'          } },
+          { slot: 14, name: 'clothing_cap',      weight: 80,   count: 1,  metadata: { texture: 0, label: 'Casquette'         } },
+          { slot: 15, name: 'clothing_hair',     weight: 0,    count: 1,  metadata: { texture: 0, label: 'Coiffure'          } },
+          { slot: 16, name: 'clothing_bracelet', weight: 40,   count: 1,  metadata: { texture: 0, label: 'Bracelet'          } },
+          { slot: 17, name: 'clothing_bag',      weight: 200,  count: 1,  metadata: { texture: 0, label: 'Sac à dos'         } },
+          { slot: 18, name: 'clothing_shoes',    weight: 150,  count: 1,  metadata: { texture: 0, label: 'Chaussures'        } },
+          { slot: 19, name: 'clothing_armor',    weight: 500,  count: 1,  metadata: { texture: 0, label: 'Gilet pare-balles' } },
+          { slot: 20, name: 'clothing_under',    weight: 80,   count: 1,  metadata: { texture: 0, label: 'Sous-vêtement'     } },
+          { slot: 21, name: 'clothing_ears',     weight: 20,   count: 1,  metadata: { texture: 0, label: "Boucles d'oreille" } },
+          { slot: 22, name: 'clothing_tenu_001', weight: 800,  count: 1,  metadata: { texture: 0, label: 'Tenue complète'    } },
         ],
       },
       rightInventory: {
         id: 'shop', type: 'shop', slots: 30, label: 'Boutique',
         weight: 0, maxWeight: 100000,
+        // groups requis sur l'inventaire shop pour activer la vérif de grade
+        groups: { police: 0 },
         items: [
-          { slot: 1, name: 'water',   weight: 5,   price: 10, count: 999 },
-          { slot: 2, name: 'bandage', weight: 115, price: 50, count: 50  },
-          { slot: 3, name: 'burger',  weight: 20,  price: 15, count: 100 },
+          // achetable normalement (argent suffisant)
+          { slot: 1, name: 'water',   weight: 5,   price: 10, currency: 'money', count: 999 },
+          // solde insuffisant : prix 50, joueur n'a que 35 money
+          { slot: 2, name: 'bandage', weight: 115, price: 50, currency: 'money', count: 50  },
+          // rupture de stock
+          { slot: 3, name: 'burger',  weight: 20,  price: 15, currency: 'money', count: 0   },
+          // grade requis : police niveau 3, joueur est police niveau 2
+          { slot: 4, name: 'weapon_pistol', weight: 1200, price: 500, currency: 'money', count: 5, grade: 3 },
+          // devise custom : gold_token, prix 10, joueur en a 12 → achetable
+          { slot: 5, name: 'medkit', weight: 800, price: 10, currency: 'gold_token', count: 20 },
+        ],
+      },
+    },
+  },
+  {
+    action: 'setupInventory',
+    data: {
+      // Inventaire crafting affiché à droite (remplace le shop si besoin de tester séparément)
+      rightInventory: {
+        id: 'crafting', type: 'crafting', slots: 30, label: 'Atelier',
+        weight: 0, maxWeight: 100000,
+        items: [
+          // OK : 2 iron requis, joueur en a 5 → craftable, 8s
+          { slot: 1, name: 'bandage', weight: 115, count: 1, craftTime: 8,  ingredients: { iron: 2, cloth: 1 } },
+          // KO : 10 water requis, joueur en a 3 ; 1 plastic requis, joueur en a 1 (ok)
+          { slot: 2, name: 'medkit',  weight: 800, count: 1, craftTime: 15, ingredients: { water: 10, plastic: 1 } },
+          // KO : burger nécessite 2 cloth (joueur a 0) — craft rapide 3s
+          { slot: 3, name: 'burger',  weight: 20,  count: 1, craftTime: 3,  ingredients: { cloth: 2 } },
         ],
       },
     },

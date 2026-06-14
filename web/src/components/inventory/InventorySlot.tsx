@@ -1,8 +1,14 @@
 // components/inventory/InventorySlot.tsx
-// Correction v9 :
+// Correction v12 :
 //   ✓ Suppression de dispatch(closeTooltip()) (tooltip retiré du projet)
 //   ✓ Retrait de l'import closeTooltip, openTooltip
 //   ✓ Retrait de handleMouseEnter, handleMouseLeave, timerRef (devenus inutiles)
+//   ✓ Thème shop/crafting : classes inventory-slot--shop / --crafting / --locked
+//   ✓ LockOverlay minimal (cadenas seul) — le détail (temps, ingrédients
+//     manquants, raison d'indisponibilité) est désormais dans InventoryContext
+//   ✓ Clic sur un slot shop/crafting (avec item) → ouvre InventoryContext
+//     pour afficher le détail, au lieu d'un simple onClick onUse/onDrop
+//   ✓ ShopPrice : variante "unavailable" (grisé + barré) quand !canPurchase
 
 import React, { useCallback, useMemo, useRef } from 'react';
 import { useDrag, useDrop }      from 'react-dnd';
@@ -14,7 +20,7 @@ import { onCraft }               from '../../dnd/onCraft';
 import { onUse }                 from '../../dnd/onUse';
 import { Items }                 from '../../store/items';
 import { Locale }                from '../../store/locale';
-import { canCraftItem, canPurchaseItem, getItemUrl, isSlotWithItem } from '../../helpers';
+import { checkCraftItem, checkPurchaseItem, getItemUrl, isSlotWithItem } from '../../helpers';
 import { openContextMenu }       from '../../store/contextMenu';
 import { removeClothing }        from '../../store/clothing';
 import { fetchNui }              from '../../utils/fetchNui';
@@ -38,12 +44,12 @@ interface SlotProps {
 }
 
 // ── ShopPrice — sous-composant mémoïsé ───────────────────────────────────────
-const ShopPrice: React.FC<{ item: SlotWithItem }> = React.memo(({ item }) => {
+const ShopPrice: React.FC<{ item: SlotWithItem; unavailable?: boolean }> = React.memo(({ item, unavailable }) => {
   if (!item.price || item.price === 0) return null;
   const isCustom = item.currency && item.currency !== 'money' && item.currency !== 'black_money';
   if (isCustom) {
     return (
-      <div className="item-slot-currency-wrapper">
+      <div className={`item-slot-currency-wrapper${unavailable ? ' item-slot-currency-wrapper--unavailable' : ''}`}>
         <img
           src={item.currency ? (getItemUrl(item.currency) ?? '') : ''}
           alt="currency"
@@ -54,12 +60,34 @@ const ShopPrice: React.FC<{ item: SlotWithItem }> = React.memo(({ item }) => {
     );
   }
   return (
-    <div className="item-slot-price-wrapper" style={{ color: !item.currency || item.currency === 'money' ? '#22c55e' : '#ef4444' }}>
+    <div
+      className={`item-slot-price-wrapper${unavailable ? ' item-slot-price-wrapper--unavailable' : ''}`}
+      style={!unavailable ? { color: !item.currency || item.currency === 'money' ? '#22c55e' : '#ef4444' } : undefined}
+    >
       <p>{item.price.toLocaleString('en-us')} {Locale.$ ?? '$'}</p>
     </div>
   );
 });
 ShopPrice.displayName = 'ShopPrice';
+
+// ── LockOverlay — cadenas minimal (détail déporté vers InventoryContext) ─────
+const LockOverlay: React.FC = React.memo(() => (
+  <div className="inventory-slot__lock-overlay" aria-hidden="true">
+    
+  </div>
+));
+LockOverlay.displayName = 'LockOverlay';
+
+// ── CraftTimeIcon — petit indicateur discret (coin) si craftTime défini ──────
+const CraftTimeIcon: React.FC = React.memo(() => (
+  <div className="inventory-slot__craft-time-icon" aria-hidden="true" title="Voir le détail">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="9" />
+      <polyline points="12 7 12 12 15 15" />
+    </svg>
+  </div>
+));
+CraftTimeIcon.displayName = 'CraftTimeIcon';
 
 // ── InventorySlot ─────────────────────────────────────────────────────────────
 const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> = (
@@ -67,22 +95,32 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
 ) => {
   const dispatch = useAppDispatch();
 
-  const canPurchase = canPurchaseItem(item, { type: inventoryType, groups: inventoryGroups });
-  const canCraft    = canCraftItem(item, inventoryType);
-
   // [FIX-B6] inventoryGroups sérialisé pour éviter les re-créations de canDrag
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const groupsKey = useMemo(() => JSON.stringify(inventoryGroups), [inventoryGroups]);
 
+  // Vérifications shop / craft — utilisées uniquement pour le verrouillage visuel.
+  // Le détail (raison, ingrédients manquants, temps) est calculé dans InventoryContext.
+  const canPurchase = useMemo(
+    () => checkPurchaseItem(item, { type: inventoryType, groups: inventoryGroups }).ok,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [item.slot, item.name, (item as SlotWithItem).count, (item as SlotWithItem).price, (item as SlotWithItem).currency, (item as SlotWithItem).grade, inventoryType, groupsKey]
+  );
+
+  const canCraft = useMemo(
+    () => checkCraftItem(item, inventoryType).ok,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [item.slot, item.name, JSON.stringify((item as SlotWithItem).ingredients), inventoryType]
+  );
+
   // [FIX-B9] Logique conditionnelle par type d'inventaire
   const canDrag = useCallback(
     () => {
-      if (inventoryType === InventoryType.SHOP)     return canPurchaseItem(item, { type: inventoryType, groups: inventoryGroups });
-      if (inventoryType === InventoryType.CRAFTING) return canCraftItem(item, inventoryType);
+      if (inventoryType === InventoryType.SHOP)     return canPurchase;
+      if (inventoryType === InventoryType.CRAFTING) return canCraft;
       return true;
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [item.slot, item.name, inventoryType, groupsKey]
+    [inventoryType, canPurchase, canCraft]
   );
 
   const [{ isDragging }, drag] = useDrag<DragSource, void, { isDragging: boolean }>(
@@ -201,36 +239,69 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
     [connectRef, ref]
   );
 
+  // Clic droit : menu contextuel classique (inventaire joueur uniquement, comportement inchangé)
   const handleContext = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     if (inventoryType !== 'player' || !isSlotWithItem(item)) return;
-    dispatch(openContextMenu({ item: item as SlotWithItem, coords: { x: e.clientX, y: e.clientY } }));
-  }, [dispatch, inventoryType, item]);
+    dispatch(openContextMenu({
+      item: item as SlotWithItem,
+      coords: { x: e.clientX, y: e.clientY },
+      inventoryType,
+      inventoryGroups,
+    }));
+  }, [dispatch, inventoryType, inventoryGroups, item]);
 
+  // Clic gauche :
+  //  - player : comportement existant (ctrl=drop, alt=use)
+  //  - shop/crafting avec item : ouvre InventoryContext pour voir le détail
+  //    (temps de craft, ingrédients manquants, raison d'indisponibilité)
   const handleClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (inventoryType === 'shop' || inventoryType === 'crafting') {
+      if (!isSlotWithItem(item)) return;
+      dispatch(openContextMenu({
+        item: item as SlotWithItem,
+        coords: { x: e.clientX, y: e.clientY },
+        inventoryType,
+        inventoryGroups,
+      }));
+      return;
+    }
+
     if (e.ctrlKey && isSlotWithItem(item) && inventoryType !== 'shop' && inventoryType !== 'crafting')
       onDrop({ item: item as SlotWithItem, inventory: inventoryType });
     else if (e.altKey && isSlotWithItem(item) && inventoryType === 'player')
       onUse(item);
-  }, [inventoryType, item]);
+  }, [dispatch, inventoryType, inventoryGroups, item]);
 
   const slotStyle = useMemo<React.CSSProperties>(() => {
     const imageUrl = item.name ? getItemUrl(item as SlotWithItem) : undefined;
     const backgroundImage = imageUrl ? `url(${imageUrl})` : 'none';
     return {
-      filter:          !canPurchase || !canCraft ? 'brightness(70%) grayscale(100%)' : undefined,
       opacity:         isDragging ? 0.35 : 1.0,
       backgroundImage,
       border:          isOver ? '1px dashed rgba(59,130,246,0.5)' : '',
       backgroundColor: isOver ? 'rgba(37,99,235,0.08)' : '',
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isDragging, isOver, canPurchase, canCraft, item.name]);
+  }, [isDragging, isOver, item.name]);
 
-  const hasItem = isSlotWithItem(item);
+  const hasItem    = isSlotWithItem(item);
+  const isShop     = inventoryType === InventoryType.SHOP;
+  const isCrafting = inventoryType === InventoryType.CRAFTING;
+  const isLocked   = hasItem && ((isShop && !canPurchase) || (isCrafting && !canCraft));
+  const hasCraftTime = isCrafting && (item as SlotWithItem).craftTime !== undefined;
+
+  const className = useMemo(() => [
+    'inventory-slot',
+    isShop     ? 'inventory-slot--shop'     : '',
+    isCrafting ? 'inventory-slot--crafting' : '',
+    isLocked   ? 'inventory-slot--locked'   : '',
+    (isShop || isCrafting) && hasItem ? 'inventory-slot--clickable' : '',
+  ].filter(Boolean).join(' '),
+  [isShop, isCrafting, isLocked, hasItem]);
 
   return (
-    <div ref={mergeRefs} onContextMenu={handleContext} onClick={handleClick} className="inventory-slot" style={slotStyle}>
+    <div ref={mergeRefs} onContextMenu={handleContext} onClick={handleClick} className={className} style={slotStyle}>
       {hasItem && (
         <div className="item-slot-wrapper">
           <div className={inventoryType === 'player' && item.slot <= 5 ? 'item-hotslot-header-wrapper' : 'item-slot-header-wrapper'}>
@@ -250,13 +321,19 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
             {inventoryType !== 'shop' && (item as SlotWithItem).durability !== undefined && (
               <WeightBar percent={(item as SlotWithItem).durability!} durability />
             )}
-            {inventoryType === 'shop' && <ShopPrice item={item as SlotWithItem} />}
+            {isShop && <ShopPrice item={item as SlotWithItem} unavailable={!canPurchase} />}
             <div className="inventory-slot-label-box">
               <div className="inventory-slot-label-text">
                 {item.metadata?.label ? (item.metadata.label as string) : Items[item.name!]?.label ?? item.name}
               </div>
             </div>
           </div>
+
+          {/* Indicateur discret "a un temps de craft / détail dispo" */}
+          {hasCraftTime && !isLocked && <CraftTimeIcon />}
+
+          {/* Cadenas minimal — clic ouvre InventoryContext pour le détail */}
+          {isLocked && <LockOverlay />}
         </div>
       )}
     </div>

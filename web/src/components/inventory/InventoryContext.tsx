@@ -1,7 +1,14 @@
 // components/inventory/InventoryContext.tsx
-// v7 :
+// v8 :
 //   ✓ Fix input rename : ajout de stopPropagation sur onChange, onKeyDown,
 //     onKeyUp et onMouseDown pour empêcher le Menu de capturer les événements
+//   ✓ NOUVEAU : section "Craft" (temps de fabrication + ingrédients manquants
+//     détaillés) affichée quand contextMenu.inventoryType === 'crafting'
+//   ✓ NOUVEAU : section "Achat" (raison d'indisponibilité : stock / solde /
+//     grade) affichée quand contextMenu.inventoryType === 'shop'
+//   ✓ Les sections existantes (renommer, use/give/drop, metadata...) sont
+//     masquées pour shop/crafting — ces inventaires ne sont pas "possédés"
+//     par le joueur et n'ont donc pas de metadata personnalisée
 
 import { onUse } from '../../dnd/onUse';
 import { onGive } from '../../dnd/onGive';
@@ -10,14 +17,15 @@ import { Items } from '../../store/items';
 import { fetchNui } from '../../utils/fetchNui';
 import { isEnvBrowser } from '../../utils/misc';
 import { Locale } from '../../store/locale';
-import { isSlotWithItem } from '../../helpers';
+import { isSlotWithItem, checkCraftItem, checkPurchaseItem } from '../../helpers';
 import { setClipboard } from '../../utils/setClipboard';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { refreshSlots } from '../../store/inventory';
 import { setSlotPending, selectPendingSlots } from '../../store/itemMeta';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Menu, MenuItem } from '../utils/menu/Menu';
 import Divider from '../utils/Divider';
+import { InventoryType, SlotWithItem } from '../../typings';
 
 interface DataProps {
   action:     string;
@@ -119,11 +127,151 @@ const formatAmmoPercent = (ammo?: number, maxAmmo?: number): string | null => {
   return `${pct}%`;
 };
 
+const formatCraftTime = (seconds: number): string => {
+  if (seconds < 60) return `${seconds}s`;
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return s > 0 ? `${m}m ${s}s` : `${m}m`;
+};
+
+const PURCHASE_REASON_LABEL: Record<string, string> = {
+  out_of_stock: 'Stock épuisé',
+  grade:        'Accès / grade insuffisant',
+  balance:      'Solde insuffisant',
+};
+
+const CURRENCY_LABEL = (currency?: string): string => {
+  if (!currency || currency === 'money')       return Locale.$ ?? '$';
+  if (currency === 'black_money')              return Locale.ui_dirty_money ?? 'argent sale';
+  return Items[currency]?.label ?? currency;
+};
+
+// ── Section Craft ────────────────────────────────────────────────────────
+
+const CraftSection: React.FC<{ item: SlotWithItem }> = ({ item }) => {
+  const check = useMemo(
+    () => checkCraftItem(item, InventoryType.CRAFTING),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [item.slot, item.name, JSON.stringify(item.ingredients)]
+  );
+
+  const hasIngredients = item.ingredients && Object.keys(item.ingredients).length > 0;
+  const craftTime      = item.craftTime;
+
+  if (!hasIngredients && craftTime === undefined) return null;
+
+  return (
+    <>
+      <div style={STYLE_SECTION} onClick={(e) => e.stopPropagation()}>
+        {craftTime !== undefined && (
+          <div style={STYLE_ROW}>
+            <span style={STYLE_LABEL}>Temps de fabrication</span>
+            <span style={STYLE_VALUE}>{formatCraftTime(craftTime)}</span>
+          </div>
+        )}
+
+        {hasIngredients && (
+          <div style={STYLE_ROW}>
+            <span style={STYLE_LABEL}>Statut</span>
+            <span style={{ ...STYLE_VALUE, color: check.ok ? '#22c55e' : '#ef4444', fontWeight: 600 }}>
+              {check.ok ? 'Fabriquable' : 'Ingrédients manquants'}
+            </span>
+          </div>
+        )}
+
+        {hasIngredients && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', marginTop: '2px' }}>
+            <span style={{ ...STYLE_LABEL, marginBottom: '1px' }}>Ingrédients requis</span>
+            {Object.entries(item.ingredients!).map(([name, need]) => {
+              const missingEntry = check.missing.find((m) => m.name === name);
+              const label = Items[name]?.label ?? name;
+              const ok    = !missingEntry;
+
+              // Affichage : pour need < 1 (seuil durabilité legacy), pas de quantité numérique
+              const qtyDisplay = need < 1
+                ? (ok ? 'OK' : 'requis')
+                : `${missingEntry ? missingEntry.have : need}/${need}`;
+
+              return (
+                <div key={name} style={STYLE_ROW}>
+                  <span style={{ ...STYLE_VALUE, textAlign: 'left', color: ok ? '#c8cad0' : 'rgba(252,165,165,0.95)' }}>
+                    {label}
+                  </span>
+                  <span style={{ ...STYLE_VALUE, fontWeight: 600, color: ok ? '#22c55e' : 'rgba(252,165,165,0.95)' }}>
+                    {qtyDisplay}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+      <Divider />
+    </>
+  );
+};
+
+// ── Section Achat (shop) ────────────────────────────────────────────────
+
+const PurchaseSection: React.FC<{
+  item: SlotWithItem;
+  inventoryGroups: Record<string, number> | null;
+}> = ({ item, inventoryGroups }) => {
+  const check = useMemo(
+    () => checkPurchaseItem(item, { type: InventoryType.SHOP, groups: inventoryGroups ?? undefined }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [item.slot, item.name, item.count, item.price, item.currency, item.grade, JSON.stringify(inventoryGroups)]
+  );
+
+  if (!item.price) return null;
+
+  return (
+    <>
+      <div style={STYLE_SECTION} onClick={(e) => e.stopPropagation()}>
+        <div style={STYLE_ROW}>
+          <span style={STYLE_LABEL}>Prix</span>
+          <span style={STYLE_VALUE}>{item.price.toLocaleString('en-us')} {CURRENCY_LABEL(item.currency)}</span>
+        </div>
+
+        {item.count !== undefined && (
+          <div style={STYLE_ROW}>
+            <span style={STYLE_LABEL}>Stock</span>
+            <span style={{ ...STYLE_VALUE, color: item.count === 0 ? 'rgba(252,165,165,0.95)' : undefined }}>
+              {item.count.toLocaleString('en-us')}
+            </span>
+          </div>
+        )}
+
+        {item.grade !== undefined && (
+          <div style={STYLE_ROW}>
+            <span style={STYLE_LABEL}>Accès requis</span>
+            <span style={STYLE_VALUE}>
+              {Array.isArray(item.grade) ? `Grade(s) ${item.grade.join(', ')}` : `Grade ≥ ${item.grade}`}
+            </span>
+          </div>
+        )}
+
+        <div style={STYLE_ROW}>
+          <span style={STYLE_LABEL}>Statut</span>
+          <span style={{ ...STYLE_VALUE, color: check.ok ? '#22c55e' : '#ef4444', fontWeight: 600 }}>
+            {check.ok ? 'Achetable' : (check.reason ? PURCHASE_REASON_LABEL[check.reason] : 'Indisponible')}
+          </span>
+        </div>
+      </div>
+      <Divider />
+    </>
+  );
+};
+
+// ── InventoryContext ────────────────────────────────────────────────────
+
 const InventoryContext: React.FC = () => {
   const dispatch    = useAppDispatch();
   const contextMenu = useAppSelector((state) => state.contextMenu);
   const pendingSlots = useAppSelector(selectPendingSlots);
   const item        = contextMenu.item;
+  const ctxInventoryType   = contextMenu.inventoryType;
+  const ctxInventoryGroups = contextMenu.inventoryGroups;
 
   const [renameValue, setRenameValue]   = useState('');
   const [showMetadata, setShowMetadata] = useState(false);
@@ -281,6 +429,55 @@ const InventoryContext: React.FC = () => {
   if (!item) {
     return <Menu><MenuItem onClick={() => {}} label="" disabled /></Menu>;
   }
+
+  // ── Branches shop / crafting : menu réduit, sections dédiées uniquement ──
+  // Ces inventaires ne sont pas "possédés" par le joueur : pas de rename,
+  // pas de metadata personnalisée, pas d'actions use/give/drop.
+  if (ctxInventoryType === InventoryType.CRAFTING) {
+    return (
+      <Menu>
+        <div style={{ ...STYLE_SECTION, paddingBottom: 0 }} onClick={(e) => e.stopPropagation()}>
+          <div style={STYLE_ROW}>
+            <span style={{ ...STYLE_LABEL, fontSize: '12px', fontWeight: 600, color: '#c8cad0' }}>
+              {item.metadata?.label ? (item.metadata.label as string) : Items[item.name]?.label ?? item.name}
+            </span>
+          </div>
+        </div>
+        <Divider />
+        <CraftSection item={item} />
+        <div style={STYLE_SECTION} onClick={(e) => e.stopPropagation()}>
+          <div style={STYLE_ROW}>
+            <span style={STYLE_LABEL}>Poids</span>
+            <span style={STYLE_VALUE}>{formatWeight(item.weight)}</span>
+          </div>
+        </div>
+      </Menu>
+    );
+  }
+
+  if (ctxInventoryType === InventoryType.SHOP) {
+    return (
+      <Menu>
+        <div style={{ ...STYLE_SECTION, paddingBottom: 0 }} onClick={(e) => e.stopPropagation()}>
+          <div style={STYLE_ROW}>
+            <span style={{ ...STYLE_LABEL, fontSize: '12px', fontWeight: 600, color: '#c8cad0' }}>
+              {item.metadata?.label ? (item.metadata.label as string) : Items[item.name]?.label ?? item.name}
+            </span>
+          </div>
+        </div>
+        <Divider />
+        <PurchaseSection item={item} inventoryGroups={ctxInventoryGroups ?? null} />
+        <div style={STYLE_SECTION} onClick={(e) => e.stopPropagation()}>
+          <div style={STYLE_ROW}>
+            <span style={STYLE_LABEL}>Poids</span>
+            <span style={STYLE_VALUE}>{formatWeight(item.weight)}</span>
+          </div>
+        </div>
+      </Menu>
+    );
+  }
+
+  // ── Branche par défaut : inventaire joueur (comportement existant) ───────
 
   const itemData      = Items[item.name];
   const ammoPercent   = formatAmmoPercent(item.metadata?.ammo, itemData?.maxAmmo);
