@@ -1664,3 +1664,205 @@ button:active {
   }
 }
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// WEAPON ATTACHMENTS CANVAS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.weapon-attach-canvas {
+  position: relative;
+  width: calc($gridCols * ($gridSize + $gridGap));
+  height: calc($gridCols * ($gridSize + $gridGap));
+  background: rgba(10, 11, 18, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+// Slot positionné en absolu autour de l'arme
+.weapon-attach-slot-wrapper {
+  position: absolute;
+  z-index: 2;
+
+  // Le InventorySlot à l'intérieur garde son style habituel
+  .inventory-slot {
+    width: $gridSize;
+    height: $gridSize;
+
+    // Thème accessoire : accent violet
+    border-color: rgba(124, 58, 237, 0.20);
+
+    &:hover {
+      border-color: rgba(167, 139, 250, 0.55);
+      transform: scale(1.06);
+      z-index: 5;
+    }
+
+    // Slot équipé : accent bleu
+    &:has(.item-slot-wrapper) {
+      border-color: rgba(59, 130, 246, 0.40);
+      background-color: rgba(10, 11, 18, 0.80);
+    }
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// WEAPON CENTER HINT (colonne centrale en mode weapon)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.inventory-center-column--weapon {
+  justify-content: center;
+  align-items: center;
+}
+
+.weapon-center-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1vh;
+  color: rgba(140, 145, 165, 0.35);
+
+  i {
+    font-size: 5vh;
+  }
+
+  span {
+    font-size: 11px;
+    text-align: center;
+    line-height: 1.6;
+    letter-spacing: 0.04em;
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// SHOP BUY PANEL (colonne centrale en mode shop)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.inventory-center-column--shop {
+  justify-content: flex-start;
+}
+
+.shop-buy-panel {
+  width: 100%;
+  background: rgba(10, 11, 18, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.shop-buy-panel__header {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+}
+
+.shop-buy-panel__item-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: $textColor;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.shop-buy-panel__placeholder {
+  font-size: 12px;
+  color: $textColorMuted;
+  font-style: italic;
+}
+
+.shop-buy-panel__body {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.shop-buy-panel__field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.shop-buy-panel__field-label {
+  font-size: 10px;
+  color: $textColorMuted;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 500;
+}
+
+.shop-buy-panel__qty-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.shop-buy-panel__qty-btn {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  background: rgba(20, 22, 35, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  color: $textColor;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: $mainFont;
+  transition: background-color 100ms ease, border-color 100ms ease;
+
+  &:hover:not(:disabled) {
+    background: rgba(37, 99, 235, 0.18);
+    border-color: rgba(59, 130, 246, 0.4);
+  }
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+}
+
+.shop-buy-panel__qty-input {
+  // Hérite de .inventory-control-input, override la largeur
+  flex: 1;
+  min-width: 0;
+  padding: 5px 4px;
+  font-size: 14px;
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.shop-buy-panel__stock {
+  font-size: 10px;
+  color: $textColorMuted;
+  text-align: right;
+}
+
+.shop-buy-panel__total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.shop-buy-panel__total-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: $textColorMuted;
+  transition: color 150ms ease;
+}
+
+.shop-buy-panel__buy-btn {
+  // Hérite de .inventory-control-button
+  margin-top: 2px;
+  transition: background-color 150ms ease, opacity 150ms ease, transform 80ms ease;
+}

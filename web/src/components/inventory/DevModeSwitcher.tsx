@@ -7,9 +7,7 @@ import { useAppDispatch } from '../../store';
 import { setupInventory } from '../../store/inventory';
 import { isEnvBrowser } from '../../utils/misc';
 
-// ── Types de modes disponibles ────────────────────────────────
-
-type DevMode = 'shop' | 'crafting' | 'player' | 'container';
+type DevMode = 'shop' | 'crafting' | 'player' | 'container' | 'weapon';
 
 interface ModeConfig {
   label:    string;
@@ -18,8 +16,6 @@ interface ModeConfig {
   color:    string;
   inventory: any;
 }
-
-// ── Données de démo par mode ──────────────────────────────────
 
 const MODES: Record<DevMode, ModeConfig> = {
   shop: {
@@ -30,11 +26,12 @@ const MODES: Record<DevMode, ModeConfig> = {
     inventory: {
       id: 'shop_demo', type: 'shop', slots: 30, label: 'Boutique',
       weight: 0, maxWeight: 100000,
+      groups: { police: 0 },
       items: [
-        { slot: 1, name: 'water',   weight: 5,   price: 10,  count: 999 },
-        { slot: 2, name: 'bandage', weight: 115, price: 50,  count: 50  },
-        { slot: 3, name: 'burger',  weight: 20,  price: 15,  count: 100 },
-        { slot: 4, name: 'iron',    weight: 3000,price: 200, count: 30  },
+        { slot: 1, name: 'water',   weight: 5,    price: 10,  currency: 'money', count: 999 },
+        { slot: 2, name: 'bandage', weight: 115,  price: 50,  currency: 'money', count: 50  },
+        { slot: 3, name: 'burger',  weight: 20,   price: 15,  currency: 'money', count: 100 },
+        { slot: 4, name: 'iron',    weight: 3000, price: 200, currency: 'money', count: 30  },
       ],
     },
   },
@@ -48,16 +45,9 @@ const MODES: Record<DevMode, ModeConfig> = {
       id: 'crafting_demo', type: 'crafting', slots: 20, label: 'Atelier',
       weight: 0, maxWeight: 0,
       items: [
-        {
-          slot: 1, name: 'bandage', weight: 115, count: 1,
-          duration: 3000,
-          ingredients: { iron: 2, water: 1 },
-        },
-        {
-          slot: 2, name: 'burger', weight: 20, count: 1,
-          duration: 5000,
-          ingredients: { water: 1 },
-        },
+        { slot: 1, name: 'bandage', weight: 115, count: 1, craftTime: 3,  ingredients: { iron: 2, water: 1 } },
+        { slot: 2, name: 'medkit',  weight: 800, count: 1, craftTime: 15, ingredients: { water: 10, plastic: 1 } },
+        { slot: 3, name: 'burger',  weight: 20,  count: 1, craftTime: 3,  ingredients: { cloth: 2 } },
       ],
     },
   },
@@ -92,15 +82,35 @@ const MODES: Record<DevMode, ModeConfig> = {
       ],
     },
   },
-};
 
-// ── Composant ─────────────────────────────────────────────────
+  // ── Nouveau mode weapon_attachment ────────────────────────────────────
+  weapon: {
+    label:   'Arme',
+    icon:    'ti-gun',
+    tooltip: 'Accessoires arme (weapon_attachment)',
+    color:   'var(--dev-mode-weapon)',
+    inventory: {
+      id: 'weapon_pistol_1', type: 'weapon_attachment', slots: 6, label: 'Pistolet — Accessoires',
+      weight: 0, maxWeight: 0,
+      // Slots vides — le joueur drag ses accessoires depuis leftInventory
+      // Le Lua envoie les slots déjà équipés si l'arme en a
+      items: [
+        { slot: 1 }, // scope      (top)
+        { slot: 2 }, // suppressor (right)
+        { slot: 3 }, // magazine   (bottom)
+        { slot: 4 }, // flashlight (left)
+        { slot: 5 }, // grip       (bas-gauche)
+        { slot: 6 }, // laser      (bas-droit)
+      ],
+    },
+  },
+};
 
 const DevModeSwitcher: React.FC = () => {
   if (!isEnvBrowser()) return null;
 
-  const dispatch   = useAppDispatch();
-  const [active, setActive] = useState<DevMode>('shop');
+  const dispatch = useAppDispatch();
+  const [active, setActive]       = useState<DevMode>('shop');
   const [animating, setAnimating] = useState(false);
 
   const handleSwitch = (mode: DevMode) => {
@@ -116,8 +126,8 @@ const DevModeSwitcher: React.FC = () => {
       <span className="dev-mode-switcher__badge">DEV</span>
       <div className="dev-mode-switcher__buttons">
         {(Object.keys(MODES) as DevMode[]).map((mode) => {
-          const cfg    = MODES[mode];
-          const isSel  = active === mode;
+          const cfg   = MODES[mode];
+          const isSel = active === mode;
           return (
             <button
               key={mode}

@@ -1,14 +1,10 @@
 // components/inventory/index.tsx
-// v3 :
-//   ✓ Ajout de <DevModeSwitcher /> visible uniquement en mode navigateur (isEnvBrowser)
-//   ✓ Correction : suppression de closeTooltip (non défini dans ce fichier)
-
 import React, { useState } from 'react';
 import useNuiEvent from '../../hooks/useNuiEvent';
 import InventoryControl from './InventoryControl';
 import InventoryHotbar from './InventoryHotbar';
-import { useAppDispatch } from '../../store';
-import { refreshSlots, setAdditionalMetadata, setupInventory, clearSlot } from '../../store/inventory';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { refreshSlots, setAdditionalMetadata, setupInventory, clearSlot, closeAndReset, selectLayoutMode, selectRightInventory } from '../../store/inventory';
 import { setAllEquipped, equipClothing, removeClothing, equipOutfit } from '../../store/clothing';
 import { useExitListener } from '../../hooks/useExitListener';
 import type { Inventory as InventoryProps } from '../../typings';
@@ -28,13 +24,28 @@ import Fade from '../utils/transitions/Fade';
 
 const Inventory: React.FC = () => {
   const [inventoryVisible, setInventoryVisible] = useState(false);
-  const dispatch = useAppDispatch();
+  const dispatch   = useAppDispatch();
+  const layoutMode = useAppSelector(selectLayoutMode);
+
+  // ── Panneaux visibles selon le layoutMode ─────────────────────────────
+  // default   → clothing G + preview + clothing D + inv D
+  // weapon    → pas de clothing, pas de preview → inv D (weapon attach) centré
+  // crafting  → idem shop sans buy panel
+  // exchange  → pas de clothing, preview, inv D (autre joueur)
+
+  const showLeftClothing  = layoutMode === 'default' || layoutMode === 'exchange';
+  const showPreview       = layoutMode === 'default' || layoutMode === 'exchange';
+  const showRightClothing = layoutMode === 'default' || layoutMode === 'exchange';
+
+  // En mode weapon, le centre affiche juste un label
+  const showWeaponCenter  = layoutMode === 'weapon';
 
   useNuiEvent<boolean>('setInventoryVisible', setInventoryVisible);
 
   useNuiEvent<false>('closeInventory', () => {
     setInventoryVisible(false);
     dispatch(closeContextMenu());
+    dispatch(closeAndReset());
   });
 
   useExitListener(setInventoryVisible);
@@ -58,17 +69,14 @@ const Inventory: React.FC = () => {
     itemType?: string;
     consumedInvSlot?: number;
   }>('clothingEquipped', (data) => {
-    dispatch(
-      equipClothing({
-        category: data.category as any,
-        item: {
-          name: data.name,
-          label: data.label,
-          itemType: (data.itemType ?? getClothingItemType(data.name)) as any,
-        },
-      })
-    );
-
+    dispatch(equipClothing({
+      category: data.category as any,
+      item: {
+        name:     data.name,
+        label:    data.label,
+        itemType: (data.itemType ?? getClothingItemType(data.name)) as any,
+      },
+    }));
     if (typeof data.consumedInvSlot === 'number' && data.consumedInvSlot > 0) {
       dispatch(clearSlot({ slot: data.consumedInvSlot }));
     }
@@ -79,22 +87,14 @@ const Inventory: React.FC = () => {
   });
 
   useNuiEvent<{
-    name: string;
+    name:  string;
     label: string;
     slots: Partial<Record<string, { name: string; label: string }>>;
   }>('outfitEquipped', (data) => {
-    dispatch(
-      equipOutfit({
-        name: data.name,
-        label: data.label,
-        slots: data.slots as any,
-      })
-    );
+    dispatch(equipOutfit({ name: data.name, label: data.label, slots: data.slots as any }));
   });
 
-  useNuiEvent('refreshSlots', (data) => {
-    dispatch(refreshSlots(data));
-  });
+  useNuiEvent('refreshSlots', (data) => { dispatch(refreshSlots(data)); });
 
   useNuiEvent('displayMetadata', (data: Array<{ metadata: string; value: string }>) => {
     dispatch(setAdditionalMetadata(data));
@@ -105,28 +105,41 @@ const Inventory: React.FC = () => {
       <Fade in={inventoryVisible}>
         <div className="inventory-wrapper">
           <div className="inventory-main-row">
-            {/* COLONNE GAUCHE : inventaire items */}
+
+            {/* COLONNE GAUCHE — toujours visible */}
             <div className="inventory-side inventory-side--left">
               <LeftInventory />
             </div>
 
-            {/* CLOTHING GAUCHE */}
-            <LeftInventoryClothing />
+            {/* CLOTHING GAUCHE — masqué en mode weapon/shop/crafting */}
+            {showLeftClothing && <LeftInventoryClothing />}
 
-            {/* CENTRE : preview ped dominant */}
-            <div className="inventory-center-column">
-              <PlayerPreview />
-              <div className="inventory-center-controls">
-                <InventoryControl />
+            {/* CENTRE — default / exchange : preview + contrôles */}
+            {showPreview && (
+              <div className="inventory-center-column">
+                <PlayerPreview />
+                <div className="inventory-center-controls">
+                  <InventoryControl />
+                </div>
               </div>
-            </div>
+            )}
 
-            {/* CLOTHING DROITE */}
-            <RightInventoryClothing />
+          
+            {/* CENTRE — mode weapon : label arme */}
+            {showWeaponCenter && (
+              <div className="inventory-center-column inventory-center-column--weapon">
+                <div className="weapon-center-hint">
+                  <i className="ti ti-gun" aria-hidden="true" />
+                  <span>Glisser un accessoire<br />sur un slot</span>
+                </div>
+              </div>
+            )}
 
-            {/* COLONNE DROITE : inventaire secondaire */}
+            {/* CLOTHING DROITE — masqué en mode weapon/shop/crafting */}
+            {showRightClothing && <RightInventoryClothing />}
+
+            {/* COLONNE DROITE */}
             <div className="inventory-side inventory-side--right">
-              {/* Switcher de mode visible uniquement en dev browser */}
               {isEnvBrowser() && <DevModeSwitcher />}
               <RightInventory />
             </div>
@@ -139,6 +152,12 @@ const Inventory: React.FC = () => {
       <InventoryHotbar />
     </>
   );
+};
+
+// Lit l'inventaire droit et le passe au ShopBuyPanel
+const ShopBuyPanelWrapper: React.FC = () => {
+  const rightInventory = useAppSelector(selectRightInventory);
+
 };
 
 export default Inventory;

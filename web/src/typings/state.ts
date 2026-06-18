@@ -1,6 +1,7 @@
 // typings/state.ts
 import { Inventory } from './inventory';
-import { Slot } from './slot';
+
+export type LayoutMode = 'default' | 'weapon' | 'shop' | 'crafting' | 'exchange';
 
 export type State = {
   leftInventory:      Inventory;
@@ -8,6 +9,7 @@ export type State = {
   itemAmount:         number;
   shiftPressed:       boolean;
   isBusy:             boolean;
+  layoutMode:         LayoutMode;
   additionalMetadata: Array<{ metadata: string; value: string }>;
   history?: {
     leftInventory:  Inventory;

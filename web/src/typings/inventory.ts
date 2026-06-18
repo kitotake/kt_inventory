@@ -2,10 +2,11 @@
 import { Slot } from './slot';
 
 export enum InventoryType {
-  PLAYER    = 'player',
-  SHOP      = 'shop',
-  CONTAINER = 'container',
-  CRAFTING  = 'crafting',
+  PLAYER            = 'player',
+  SHOP              = 'shop',
+  CONTAINER         = 'container',
+  CRAFTING          = 'crafting',
+  WEAPON_ATTACHMENT = 'weapon_attachment',
 }
 
 export type Inventory = {

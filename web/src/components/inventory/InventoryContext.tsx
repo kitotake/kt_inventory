@@ -1,15 +1,4 @@
 // components/inventory/InventoryContext.tsx
-// v8 :
-//   ✓ Fix input rename : ajout de stopPropagation sur onChange, onKeyDown,
-//     onKeyUp et onMouseDown pour empêcher le Menu de capturer les événements
-//   ✓ NOUVEAU : section "Craft" (temps de fabrication + ingrédients manquants
-//     détaillés) affichée quand contextMenu.inventoryType === 'crafting'
-//   ✓ NOUVEAU : section "Achat" (raison d'indisponibilité : stock / solde /
-//     grade) affichée quand contextMenu.inventoryType === 'shop'
-//   ✓ Les sections existantes (renommer, use/give/drop, metadata...) sont
-//     masquées pour shop/crafting — ces inventaires ne sont pas "possédés"
-//     par le joueur et n'ont donc pas de metadata personnalisée
-
 import { onUse } from '../../dnd/onUse';
 import { onGive } from '../../dnd/onGive';
 import { onDrop } from '../../dnd/onDrop';
@@ -17,10 +6,10 @@ import { Items } from '../../store/items';
 import { fetchNui } from '../../utils/fetchNui';
 import { isEnvBrowser } from '../../utils/misc';
 import { Locale } from '../../store/locale';
-import { isSlotWithItem, checkCraftItem, checkPurchaseItem } from '../../helpers';
+import { isSlotWithItem, checkCraftItem, checkPurchaseItem, getItemUrl } from '../../helpers';
 import { setClipboard } from '../../utils/setClipboard';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { refreshSlots } from '../../store/inventory';
+import { refreshSlots, setLayoutMode, setupInventory } from '../../store/inventory';
 import { setSlotPending, selectPendingSlots } from '../../store/itemMeta';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Menu, MenuItem } from '../utils/menu/Menu';
@@ -141,12 +130,15 @@ const PURCHASE_REASON_LABEL: Record<string, string> = {
 };
 
 const CURRENCY_LABEL = (currency?: string): string => {
-  if (!currency || currency === 'money')       return Locale.$ ?? '$';
-  if (currency === 'black_money')              return Locale.ui_dirty_money ?? 'argent sale';
+  if (!currency || currency === 'money')  return Locale.$ ?? '$';
+  if (currency === 'black_money')         return Locale.ui_dirty_money ?? 'argent sale';
   return Items[currency]?.label ?? currency;
 };
 
-// ── Section Craft ────────────────────────────────────────────────────────
+const isWeapon = (name?: string): boolean =>
+  Boolean(name && (name.startsWith('weapon_') || Items[name]?.category === 'weapon'));
+
+// ── Section Craft avec images ─────────────────────────────────────────────
 
 const CraftSection: React.FC<{ item: SlotWithItem }> = ({ item }) => {
   const check = useMemo(
@@ -180,24 +172,59 @@ const CraftSection: React.FC<{ item: SlotWithItem }> = ({ item }) => {
         )}
 
         {hasIngredients && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', marginTop: '2px' }}>
-            <span style={{ ...STYLE_LABEL, marginBottom: '1px' }}>Ingrédients requis</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '4px' }}>
+            <span style={{ ...STYLE_LABEL, marginBottom: '2px' }}>Ingrédients requis</span>
             {Object.entries(item.ingredients!).map(([name, need]) => {
               const missingEntry = check.missing.find((m) => m.name === name);
-              const label = Items[name]?.label ?? name;
-              const ok    = !missingEntry;
+              const label        = Items[name]?.label ?? name;
+              const ok           = !missingEntry;
+              const imgUrl       = getItemUrl(name);
 
-              // Affichage : pour need < 1 (seuil durabilité legacy), pas de quantité numérique
               const qtyDisplay = need < 1
                 ? (ok ? 'OK' : 'requis')
                 : `${missingEntry ? missingEntry.have : need}/${need}`;
 
               return (
-                <div key={name} style={STYLE_ROW}>
-                  <span style={{ ...STYLE_VALUE, textAlign: 'left', color: ok ? '#c8cad0' : 'rgba(252,165,165,0.95)' }}>
+                <div key={name} style={{
+                  display: 'flex', alignItems: 'center', gap: '7px',
+                  background: ok ? 'transparent' : 'rgba(220,38,38,0.05)',
+                  borderRadius: '3px', padding: '3px 2px',
+                }}>
+                  {/* Image de l'ingrédient */}
+                  <div style={{
+                    width: '26px', height: '26px',
+                    background: 'rgba(10,11,18,0.7)',
+                    border: `1px solid ${ok ? 'rgba(255,255,255,0.07)' : 'rgba(220,38,38,0.25)'}`,
+                    borderRadius: '3px',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    flexShrink: 0, overflow: 'hidden',
+                  }}>
+                    {imgUrl
+                      ? <img
+                          src={imgUrl}
+                          alt={label}
+                          style={{ width: '20px', height: '20px', objectFit: 'contain', imageRendering: '-webkit-optimize-contrast' }}
+                          onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+                        />
+                      : <span style={{ fontSize: '9px', color: 'rgba(140,145,165,0.5)' }}>?</span>
+                    }
+                  </div>
+                  {/* Label */}
+                  <span style={{
+                    flex: 1, fontSize: '11px',
+                    color: ok ? '#c8cad0' : 'rgba(252,165,165,0.95)',
+                    overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                  }}>
                     {label}
                   </span>
-                  <span style={{ ...STYLE_VALUE, fontWeight: 600, color: ok ? '#22c55e' : 'rgba(252,165,165,0.95)' }}>
+                  {/* Quantité */}
+                  <span style={{
+                    fontSize: '10px', fontWeight: 600,
+                    color: ok ? '#22c55e' : 'rgba(252,165,165,0.95)',
+                    background: ok ? 'rgba(22,163,74,0.10)' : 'rgba(220,38,38,0.10)',
+                    border: `1px solid ${ok ? 'rgba(22,163,74,0.2)' : 'rgba(220,38,38,0.2)'}`,
+                    borderRadius: '3px', padding: '1px 5px', whiteSpace: 'nowrap',
+                  }}>
                     {qtyDisplay}
                   </span>
                 </div>
@@ -211,7 +238,7 @@ const CraftSection: React.FC<{ item: SlotWithItem }> = ({ item }) => {
   );
 };
 
-// ── Section Achat (shop) ────────────────────────────────────────────────
+// ── Section Achat (shop) ──────────────────────────────────────────────────
 
 const PurchaseSection: React.FC<{
   item: SlotWithItem;
@@ -232,7 +259,6 @@ const PurchaseSection: React.FC<{
           <span style={STYLE_LABEL}>Prix</span>
           <span style={STYLE_VALUE}>{item.price.toLocaleString('en-us')} {CURRENCY_LABEL(item.currency)}</span>
         </div>
-
         {item.count !== undefined && (
           <div style={STYLE_ROW}>
             <span style={STYLE_LABEL}>Stock</span>
@@ -241,7 +267,6 @@ const PurchaseSection: React.FC<{
             </span>
           </div>
         )}
-
         {item.grade !== undefined && (
           <div style={STYLE_ROW}>
             <span style={STYLE_LABEL}>Accès requis</span>
@@ -250,7 +275,6 @@ const PurchaseSection: React.FC<{
             </span>
           </div>
         )}
-
         <div style={STYLE_ROW}>
           <span style={STYLE_LABEL}>Statut</span>
           <span style={{ ...STYLE_VALUE, color: check.ok ? '#22c55e' : '#ef4444', fontWeight: 600 }}>
@@ -263,23 +287,21 @@ const PurchaseSection: React.FC<{
   );
 };
 
-// ── InventoryContext ────────────────────────────────────────────────────
+// ── InventoryContext ──────────────────────────────────────────────────────
 
 const InventoryContext: React.FC = () => {
-  const dispatch    = useAppDispatch();
-  const contextMenu = useAppSelector((state) => state.contextMenu);
-  const pendingSlots = useAppSelector(selectPendingSlots);
-  const item        = contextMenu.item;
+  const dispatch         = useAppDispatch();
+  const contextMenu      = useAppSelector((state) => state.contextMenu);
+  const pendingSlots     = useAppSelector(selectPendingSlots);
+  const item             = contextMenu.item;
   const ctxInventoryType   = contextMenu.inventoryType;
   const ctxInventoryGroups = contextMenu.inventoryGroups;
 
-  const [renameValue, setRenameValue]   = useState('');
-  const [showMetadata, setShowMetadata] = useState(false);
-  const [showMoreVars, setShowMoreVars] = useState(false);
-  const [showMetaData, setShowMetaData] = useState(false);
+  const [renameValue,   setRenameValue]   = useState('');
+  const [showMetadata,  setShowMetadata]  = useState(false);
+  const [showMoreVars,  setShowMoreVars]  = useState(false);
+  const [showMetaData,  setShowMetaData]  = useState(false);
 
-  // Réinitialise les sections repliables et le champ de rename à chaque
-  // ouverture sur un nouvel item
   useEffect(() => {
     if (!item) return;
     const currentLabel = (item.metadata?.label as string | undefined)
@@ -306,111 +328,101 @@ const InventoryContext: React.FC = () => {
     }
   };
 
-  // ── Renommer ────────────────────────────────────────────────────────────
-  const applyLocalRename = (newLabel: string) => {
+  // ── Ouvre les accessoires arme ────────────────────────────────────────
+  const handleOpenAttachments = () => {
     if (!item) return;
-    const trimmed = newLabel.trim();
-    const defaultLabel = Items[item.name]?.label ?? item.name;
+    dispatch(setLayoutMode('weapon'));
 
-    const nextMetadata = { ...item.metadata };
-    if (trimmed === '' || trimmed === defaultLabel) {
-      delete nextMetadata.label;
-    } else {
-      nextMetadata.label = trimmed;
+    if (isEnvBrowser()) {
+      // En dev : simule un inventaire weapon_attachment
+      dispatch(setupInventory({
+        rightInventory: {
+          id: `weapon_${item.name}_${item.slot}`,
+          type: 'weapon_attachment',
+          slots: 6,
+          label: `Accessoires — ${Items[item.name]?.label ?? item.name}`,
+          weight: 0,
+          maxWeight: 0,
+          items: [
+            { slot: 1, name: 'scope_adv',      weight: 200, count: 1, metadata: { label: 'Lunette x4',        attachSlot: 'scope'      } },
+            { slot: 2, name: 'suppressor_std',  weight: 350, count: 1, metadata: { label: 'Silencieux std',    attachSlot: 'suppressor' } },
+            { slot: 3, name: 'mag_extended',    weight: 180, count: 1, metadata: { label: 'Chargeur étendu',   attachSlot: 'magazine'   } },
+            { slot: 4, name: 'flashlight',      weight: 120, count: 1, metadata: { label: 'Lampe tactique',    attachSlot: 'flashlight' } },
+            { slot: 5, name: 'grip_std',        weight: 90,  count: 1, metadata: { label: 'Grip standard',     attachSlot: 'grip'       } },
+            { slot: 6, name: 'laser_red',       weight: 80,  count: 1, metadata: { label: 'Laser rouge',       attachSlot: 'laser'      } },
+          ],
+        },
+      }));
+      return;
     }
 
-    dispatch(refreshSlots({
-      items: {
-        item: { ...item, metadata: nextMetadata },
-      },
-    }));
+    fetchNui('openWeaponAttachments', { slot: item.slot, name: item.name });
+  };
+
+  // ── Renommer ──────────────────────────────────────────────────────────
+  const applyLocalRename = (newLabel: string) => {
+    if (!item) return;
+    const trimmed      = newLabel.trim();
+    const defaultLabel = Items[item.name]?.label ?? item.name;
+    const nextMetadata = { ...item.metadata };
+    if (trimmed === '' || trimmed === defaultLabel) delete nextMetadata.label;
+    else nextMetadata.label = trimmed;
+    dispatch(refreshSlots({ items: { item: { ...item, metadata: nextMetadata } } }));
   };
 
   const handleRename = () => {
     if (!item) return;
     const trimmed = renameValue.trim();
     const currentLabel = (item.metadata?.label as string | undefined)
-      ?? Items[item.name]?.label
-      ?? item.name;
-
+      ?? Items[item.name]?.label ?? item.name;
     if (trimmed === '' || trimmed === currentLabel) return;
-
-    // Optimiste : on applique localement tout de suite
     applyLocalRename(trimmed);
-
     if (isEnvBrowser()) return;
-
-    fetchNui('renameItem', { slot: item.slot, label: trimmed }).catch((err) => {
-      console.error('[InventoryContext] renameItem error:', err);
-    });
+    fetchNui('renameItem', { slot: item.slot, label: trimmed }).catch(console.error);
   };
 
   const handleRenameKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') { e.preventDefault(); handleRename(); }
   };
 
-  // ── Nettoyer ────────────────────────────────────────────────────────────
   const handleClean = () => {
     if (!item) return;
-
     const defaultLabel = Items[item.name]?.label ?? item.name;
     const nextMetadata = { ...item.metadata };
     delete nextMetadata.label;
     delete nextMetadata.description;
-
-    dispatch(refreshSlots({
-      items: { item: { ...item, metadata: nextMetadata } },
-    }));
+    dispatch(refreshSlots({ items: { item: { ...item, metadata: nextMetadata } } }));
     setRenameValue(defaultLabel);
-
     if (isEnvBrowser()) return;
-
     dispatch(setSlotPending({ slot: item.slot, pending: true }));
     fetchNui('cleanItem', { slot: item.slot })
-      .catch((err) => console.error('[InventoryContext] cleanItem error:', err))
+      .catch(console.error)
       .finally(() => dispatch(setSlotPending({ slot: item.slot, pending: false })));
   };
 
-  // ── Poser au sol / Ramasser ─────────────────────────────────────────────
   const handleToggleGround = () => {
     if (!item) return;
     const nextOnGround = !(item.metadata?.onGround === true);
-
     if (isEnvBrowser()) {
-      // Toggle local pour debug visuel — aucun backend pour confirmer
-      const nextMetadata = { ...item.metadata, onGround: nextOnGround };
-      dispatch(refreshSlots({
-        items: { item: { ...item, metadata: nextMetadata } },
-      }));
+      dispatch(refreshSlots({ items: { item: { ...item, metadata: { ...item.metadata, onGround: nextOnGround } } } }));
       return;
     }
-
     dispatch(setSlotPending({ slot: item.slot, pending: true }));
     fetchNui('placeOnGround', { slot: item.slot, onGround: nextOnGround })
       .then((res: any) => {
-        if (res?.ok !== false) {
-          const nextMetadata = { ...item.metadata, onGround: nextOnGround };
-          dispatch(refreshSlots({
-            items: { item: { ...item, metadata: nextMetadata } },
-          }));
-        }
+        if (res?.ok !== false)
+          dispatch(refreshSlots({ items: { item: { ...item, metadata: { ...item.metadata, onGround: nextOnGround } } } }));
       })
-      .catch((err) => console.error('[InventoryContext] placeOnGround error:', err))
+      .catch(console.error)
       .finally(() => dispatch(setSlotPending({ slot: item.slot, pending: false })));
   };
 
-  // ── Actualiser les variables ───────────────────────────────────────────
   const handleRefreshMeta = () => {
     if (!item) return;
-
-    if (isEnvBrowser()) {
-      console.log('[InventoryContext] refreshItemMetadata (browser, no-op):', item.slot);
-      return;
-    }
-
+    if (isEnvBrowser()) return;
     dispatch(setSlotPending({ slot: item.slot, pending: true }));
     fetchNui('refreshItemMetadata', { slot: item.slot })
-      .catch((err) => console.error('[InventoryContext] refreshItemMetadata error:', err))
+      .catch(console.error)
       .finally(() => dispatch(setSlotPending({ slot: item.slot, pending: false })));
   };
 
@@ -430,9 +442,7 @@ const InventoryContext: React.FC = () => {
     return <Menu><MenuItem onClick={() => {}} label="" disabled /></Menu>;
   }
 
-  // ── Branches shop / crafting : menu réduit, sections dédiées uniquement ──
-  // Ces inventaires ne sont pas "possédés" par le joueur : pas de rename,
-  // pas de metadata personnalisée, pas d'actions use/give/drop.
+  // ── Crafting ──────────────────────────────────────────────────────────
   if (ctxInventoryType === InventoryType.CRAFTING) {
     return (
       <Menu>
@@ -455,6 +465,7 @@ const InventoryContext: React.FC = () => {
     );
   }
 
+  // ── Shop ──────────────────────────────────────────────────────────────
   if (ctxInventoryType === InventoryType.SHOP) {
     return (
       <Menu>
@@ -477,18 +488,17 @@ const InventoryContext: React.FC = () => {
     );
   }
 
-  // ── Branche par défaut : inventaire joueur (comportement existant) ───────
-
+  // ── Inventaire joueur ─────────────────────────────────────────────────
   const itemData      = Items[item.name];
   const ammoPercent   = formatAmmoPercent(item.metadata?.ammo, itemData?.maxAmmo);
   const onGround      = item.metadata?.onGround === true;
   const componentList = Array.isArray(item.metadata?.components)
-    ? (item.metadata?.components as string[])
-    : null;
+    ? (item.metadata?.components as string[]) : null;
+  const itemIsWeapon  = isWeapon(item.name);
 
   return (
     <Menu>
-      {/* ── Renommer ───────────────────────────────────────────────────── */}
+      {/* ── Renommer ────────────────────────────────────────────── */}
       <div style={STYLE_SECTION} onClick={(e) => e.stopPropagation()}>
         <div style={STYLE_ROW}>
           <input
@@ -497,14 +507,8 @@ const InventoryContext: React.FC = () => {
             value={renameValue}
             placeholder={Items[item.name]?.label ?? item.name}
             disabled={isPending}
-            onChange={(e) => {
-              e.stopPropagation();
-              setRenameValue(e.target.value);
-            }}
-            onKeyDown={(e) => {
-              e.stopPropagation();
-              handleRenameKeyDown(e);
-            }}
+            onChange={(e) => { e.stopPropagation(); setRenameValue(e.target.value); }}
+            onKeyDown={(e) => { e.stopPropagation(); handleRenameKeyDown(e); }}
             onKeyUp={(e) => e.stopPropagation()}
             onMouseDown={(e) => e.stopPropagation()}
             onBlur={handleRename}
@@ -514,12 +518,17 @@ const InventoryContext: React.FC = () => {
 
       <Divider />
 
-      {/* ── Actions principales ──────────────────────────────────────────── */}
+      {/* ── Actions ─────────────────────────────────────────────── */}
       <MenuItem onClick={() => handleClick({ action: 'use' })}  label={Locale.ui_use  || 'Utiliser'} />
       <MenuItem onClick={() => handleClick({ action: 'give' })} label={Locale.ui_give || 'Donner'} />
       <MenuItem onClick={() => handleClick({ action: 'drop' })} label={Locale.ui_drop || 'Jeter'} />
       <MenuItem onClick={handleToggleGround} label={onGround ? 'Ramasser' : 'Poser au sol'} disabled={isPending} />
       <MenuItem onClick={handleClean} label="Nettoyer" disabled={isPending} />
+
+      {/* ── Option Accessoires (armes uniquement) ───────────────── */}
+      {itemIsWeapon && (
+        <MenuItem onClick={handleOpenAttachments} label="Accessoires" />
+      )}
 
       {item.metadata?.ammo > 0 && (
         <MenuItem onClick={() => handleClick({ action: 'removeAmmo' })} label={Locale.ui_remove_ammo} />
@@ -528,16 +537,20 @@ const InventoryContext: React.FC = () => {
         <MenuItem onClick={() => handleClick({ action: 'copy', serial: item.metadata?.serial })} label={Locale.ui_copy} />
       )}
 
-      {/* ── Accessoires (anciennement "components") ─────────────────────── */}
+      {/* ── Accessoires montés sur l'arme ───────────────────────── */}
       {componentList && componentList.length > 0 && (
         <Menu label="Accessoires">
           {componentList.map((component: string, index: number) => (
-            <MenuItem key={index} onClick={() => handleClick({ action: 'remove', component, slot: item.slot })} label={Items[component]?.label || ''} />
+            <MenuItem
+              key={index}
+              onClick={() => handleClick({ action: 'remove', component, slot: item.slot })}
+              label={Items[component]?.label || ''}
+            />
           ))}
         </Menu>
       )}
 
-      {/* ── Boutons custom ────────────────────────────────────────────────── */}
+      {/* ── Boutons custom ──────────────────────────────────────── */}
       {(Items[item.name]?.buttons?.length || 0) > 0 && (
         <>
           {groupButtons(Items[item.name]?.buttons).map((group: Group, index: number) => (
@@ -560,93 +573,54 @@ const InventoryContext: React.FC = () => {
 
       <Divider />
 
-      {/* ── Toggle section metadata ──────────────────────────────────────── */}
+      {/* ── Toggle infos ────────────────────────────────────────── */}
       <div style={STYLE_TOGGLE_ROW} onClick={(e) => e.stopPropagation()}>
         <span style={STYLE_LABEL}>Informations</span>
-        <span
-          style={STYLE_TOGGLE_BTN}
-          onClick={() => {
-            const next = !showMetadata;
-            setShowMetadata(next);
-            if (!next) setShowMoreVars(false); // referme aussi les variables avancées
-          }}
-        >
+        <span style={STYLE_TOGGLE_BTN} onClick={() => { const n = !showMetadata; setShowMetadata(n); if (!n) setShowMoreVars(false); }}>
           {showMetadata ? 'Voir -' : 'Voir +'}
         </span>
       </div>
 
-      {/* ── Infos lecture-seule (poids, durabilité, munitions, sol) ─────────── */}
       {showMetadata && (
         <div style={STYLE_SECTION} onClick={(e) => e.stopPropagation()}>
           <div style={STYLE_ROW}>
             <span style={STYLE_LABEL}>Poids</span>
             <span style={STYLE_VALUE}>{formatWeight(item.weight)}</span>
           </div>
-
           {item.durability !== undefined && (
             <div style={STYLE_ROW}>
               <span style={STYLE_LABEL}>{Locale.ui_durability ?? 'Durabilité'}</span>
               <span style={STYLE_VALUE}>{Math.trunc(item.durability)}%</span>
             </div>
           )}
-
           {ammoPercent !== null && (
             <div style={STYLE_ROW}>
               <span style={STYLE_LABEL}>Munitions</span>
               <span style={STYLE_VALUE}>{ammoPercent}</span>
             </div>
           )}
-
           <div style={STYLE_ROW}>
             <span style={STYLE_LABEL}>Posée au sol</span>
             <span style={STYLE_VALUE}>{onGround ? 'Oui' : 'Non'}</span>
           </div>
 
-          {/* ── Voir plus de variables ──────────────────────────────────── */}
-          <div
-            style={STYLE_TOGGLE}
-            onClick={(e) => { e.stopPropagation(); setShowMoreVars((v) => !v); }}
-          >
+          <div style={STYLE_TOGGLE} onClick={(e) => { e.stopPropagation(); setShowMoreVars((v) => !v); }}>
             {showMoreVars ? 'Voir moins de variables' : 'Voir + de variables'}
           </div>
 
           {showMoreVars && (
             <>
-              <div style={STYLE_ROW}>
-                <span style={STYLE_LABEL}>Nom</span>
-                <span style={STYLE_VALUE}>{item.name}</span>
-              </div>
-              <div style={STYLE_ROW}>
-                <span style={STYLE_LABEL}>Date de création</span>
-                <span style={STYLE_VALUE}>{item.metadata?.createdAt ?? 'Inconnue'}</span>
-              </div>
-              <div style={STYLE_ROW}>
-                <span style={STYLE_LABEL}>Provenance</span>
-                <span style={STYLE_VALUE}>{formatOrigin(item.metadata?.origin)}</span>
-              </div>
-
-              <div style={STYLE_ROW}>
-                <span style={STYLE_LABEL}>ID</span>
-                <span style={STYLE_VALUE}>{item.metadata?.uniqueId ?? '—'}</span>
-              </div>
-
-              <div
-                style={{ ...STYLE_TOGGLE, marginTop: '2px' }}
-                onClick={(e) => { e.stopPropagation(); handleRefreshMeta(); }}
-              >
+              <div style={STYLE_ROW}><span style={STYLE_LABEL}>Nom</span><span style={STYLE_VALUE}>{item.name}</span></div>
+              <div style={STYLE_ROW}><span style={STYLE_LABEL}>Date de création</span><span style={STYLE_VALUE}>{item.metadata?.createdAt ?? 'Inconnue'}</span></div>
+              <div style={STYLE_ROW}><span style={STYLE_LABEL}>Provenance</span><span style={STYLE_VALUE}>{formatOrigin(item.metadata?.origin)}</span></div>
+              <div style={STYLE_ROW}><span style={STYLE_LABEL}>ID</span><span style={STYLE_VALUE}>{item.metadata?.uniqueId ?? '—'}</span></div>
+              <div style={{ ...STYLE_TOGGLE, marginTop: '2px' }} onClick={(e) => { e.stopPropagation(); handleRefreshMeta(); }}>
                 {isPending ? 'Actualisation…' : 'Actualiser les variables'}
               </div>
             </>
           )}
 
-          {/* ── Voir + de MetaData (debug brut) ───────────────────────────── */}
-          <div
-            style={STYLE_TOGGLE}
-            onClick={(e) => {
-              e.stopPropagation();
-              setShowMetaData((v) => !v);
-            }}
-          >
+          <div style={STYLE_TOGGLE} onClick={(e) => { e.stopPropagation(); setShowMetaData((v) => !v); }}>
             {showMetaData ? 'Voir moins de MetaData' : 'Voir + de MetaData'}
           </div>
 
@@ -655,11 +629,7 @@ const InventoryContext: React.FC = () => {
               {Object.entries(item.metadata || {}).map(([key, value]) => (
                 <div key={key} style={STYLE_ROW}>
                   <span style={STYLE_LABEL}>{key}</span>
-                  <span style={STYLE_VALUE}>
-                    {typeof value === 'object'
-                      ? JSON.stringify(value)
-                      : String(value)}
-                  </span>
+                  <span style={STYLE_VALUE}>{typeof value === 'object' ? JSON.stringify(value) : String(value)}</span>
                 </div>
               ))}
             </>

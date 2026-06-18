@@ -9,6 +9,7 @@ import {
   swapSlotsReducer,
 } from '../reducers';
 import { State } from '../typings';
+import { LayoutMode } from '../typings/state';
 
 const initialState: State = {
   leftInventory: {
@@ -18,22 +19,34 @@ const initialState: State = {
     id: '', type: '', slots: 0, maxWeight: 0, items: [],
   },
   additionalMetadata: [],
-  itemAmount: 0,
+  itemAmount:   0,
   shiftPressed: false,
-  isBusy: false,
+  isBusy:       false,
+  layoutMode:   'default',
 };
 
 export const inventorySlice = createSlice({
   name: 'inventory',
   initialState,
   reducers: {
-    stackSlots:      stackSlotsReducer,
-    swapSlots:       swapSlotsReducer,
-    setupInventory:  setupInventoryReducer,
-    moveSlots:       moveSlotsReducer,
-    refreshSlots:    refreshSlotsReducer,
+    stackSlots:     stackSlotsReducer,
+    swapSlots:      swapSlotsReducer,
+    setupInventory: setupInventoryReducer,
+    moveSlots:      moveSlotsReducer,
+    refreshSlots:   refreshSlotsReducer,
 
-    // ✅ FIX : vide le slot source dans leftInventory après drag vers un ClothingSlot
+    // ── Layout mode ──────────────────────────────────────────────
+    setLayoutMode: (state, action: PayloadAction<LayoutMode>) => {
+      state.layoutMode = action.payload;
+    },
+
+    // Reset layout + inventaire droit quand on ferme
+    closeAndReset: (state) => {
+      state.layoutMode    = 'default';
+      state.rightInventory = { id: '', type: '', slots: 0, maxWeight: 0, items: [] };
+    },
+
+    // ── Vide un slot source après drag vers ClothingSlot ────────
     clearSlot: (state, action: PayloadAction<{ slot: number }>) => {
       const idx = action.payload.slot - 1;
       if (idx >= 0 && idx < state.leftInventory.items.length) {
@@ -49,8 +62,10 @@ export const inventorySlice = createSlice({
       }
       state.additionalMetadata = [...state.additionalMetadata, ...metadata];
     },
-    setItemAmount:   (state, action: PayloadAction<number>) => { state.itemAmount = action.payload; },
-    setShiftPressed: (state, action: PayloadAction<boolean>) => { state.shiftPressed = action.payload; },
+
+    setItemAmount:   (state, action: PayloadAction<number>)   => { state.itemAmount   = action.payload; },
+    setShiftPressed: (state, action: PayloadAction<boolean>)  => { state.shiftPressed = action.payload; },
+
     setContainerWeight: (state, action: PayloadAction<number>) => {
       const container = state.leftInventory.items.find(
         (item) => item.metadata?.container === state.rightInventory.id
@@ -59,6 +74,7 @@ export const inventorySlice = createSlice({
       container.weight = action.payload;
     },
   },
+
   extraReducers: (builder) => {
     builder.addMatcher(isPending, (state) => {
       state.isBusy = true;
@@ -82,11 +98,13 @@ export const {
   setAdditionalMetadata, setItemAmount, setShiftPressed,
   setupInventory, swapSlots, moveSlots, stackSlots,
   refreshSlots, setContainerWeight, clearSlot,
+  setLayoutMode, closeAndReset,
 } = inventorySlice.actions;
 
 export const selectLeftInventory  = (state: RootState) => state.inventory.leftInventory;
 export const selectRightInventory = (state: RootState) => state.inventory.rightInventory;
 export const selectItemAmount     = (state: RootState) => state.inventory.itemAmount;
 export const selectIsBusy         = (state: RootState) => state.inventory.isBusy;
+export const selectLayoutMode     = (state: RootState) => state.inventory.layoutMode;
 
 export default inventorySlice.reducer;
