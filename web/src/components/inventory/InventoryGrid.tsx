@@ -1,12 +1,11 @@
 // components/inventory/InventoryGrid.tsx
 // Orchestrateur — choisit le bon rendu selon side + layoutMode.
-// Les sous-composants sont dans leurs propres fichiers.
 
 import React from 'react';
 import { useAppSelector } from '../../store';
-import InventoryHeader      from './InventoryHeader';
-import InventorySlotList    from './InventorySlotList';
-import InventoryFilterRight from './InventoryFilterRight';
+import InventoryHeader       from './InventoryHeader';
+import InventorySlotList     from './InventorySlotList';
+import InventoryFilterRight  from './InventoryFilterRight';
 import WeaponAttachmentsGrid from './WeaponAttachmentsGrid';
 import { useItemSort } from '../../hooks/useItemSort';
 import { Inventory } from '../../typings';
@@ -38,11 +37,18 @@ const InventoryGrid: React.FC<InventoryGridProps> = ({ side }) => {
 
   return (
     <div className="inventory-grid-wrapper">
+      {/*
+        InventoryHeader reçoit `side` pour afficher :
+          left  → weight-circle + food-circle (nourriture)
+          right → weight-circle + drink-circle (boisson)
+      */}
       <InventoryHeader
         label={inventory.label}
         maxWeight={inventory.maxWeight}
         items={inventory.items}
+        side={side}
       />
+
       <InventoryFilterRight
         side={side}
         activeCategory={activeCategory}
@@ -52,6 +58,7 @@ const InventoryGrid: React.FC<InventoryGridProps> = ({ side }) => {
         onSortChange={setSortOrder}
         onReset={resetFilters}
       />
+
       <InventorySlotList
         items={sortedItems}
         inventoryType={inventory.type}

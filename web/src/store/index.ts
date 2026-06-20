@@ -1,18 +1,19 @@
 // store/index.ts
 import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import inventoryReducer  from './inventory';
-import contextMenuReducer from './contextMenu';
-import clothingReducer   from './clothing';
-import itemMetaReducer   from './itemMeta';
+import inventoryReducer    from './inventory';
+import contextMenuReducer  from './contextMenu';
+import clothingReducer     from './clothing';
+import itemMetaReducer     from './itemMeta';
+import playerStatusReducer from './playerStatus';
 
 export const store = configureStore({
   reducer: {
-    inventory:   inventoryReducer,
-   
-    contextMenu: contextMenuReducer,
-    clothing:    clothingReducer,
-    itemMeta:    itemMetaReducer,
+    inventory:    inventoryReducer,
+    contextMenu:  contextMenuReducer,
+    clothing:     clothingReducer,
+    itemMeta:     itemMetaReducer,
+    playerStatus: playerStatusReducer,
   },
 });
 

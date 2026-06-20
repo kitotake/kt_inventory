@@ -1194,6 +1194,7 @@ button:active {
 .inventory-control {
   display: flex;
   width: 100%;
+      
 
   .inventory-control-wrapper {
     display: flex;
@@ -1201,6 +1202,7 @@ button:active {
     gap: 8px;
     width: 100%;
     align-items: center;
+    margin-top: -45px;
   }
 
   .inventory-control-input {
@@ -1733,136 +1735,202 @@ button:active {
   }
 }
 
+  
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// SHOP BUY PANEL (colonne centrale en mode shop)
+// INVENTORY SIDE — LEFT
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-.inventory-center-column--shop {
-  justify-content: flex-start;
-}
-
-.shop-buy-panel {
-  width: 100%;
-  background: rgba(10, 11, 18, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 4px;
-  overflow: hidden;
+.inventory-side--left {
   display: flex;
   flex-direction: column;
+  gap: 0.5vh;
 }
 
-.shop-buy-panel__header {
-  padding: 10px 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  min-height: 38px;
-  display: flex;
-  align-items: center;
-}
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// INVENTORY HEADER STATUS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-.shop-buy-panel__item-name {
-  font-size: 13px;
-  font-weight: 500;
-  color: $textColor;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.shop-buy-panel__placeholder {
-  font-size: 12px;
-  color: $textColorMuted;
-  font-style: italic;
-}
-
-.shop-buy-panel__body {
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.shop-buy-panel__field {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.shop-buy-panel__field-label {
-  font-size: 10px;
-  color: $textColorMuted;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  font-weight: 500;
-}
-
-.shop-buy-panel__qty-row {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.shop-buy-panel__qty-btn {
-  width: 28px;
-  height: 28px;
-  flex-shrink: 0;
-  background: rgba(20, 22, 35, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 3px;
-  color: $textColor;
-  font-size: 16px;
-  line-height: 1;
-  cursor: pointer;
+.inventory-header-status {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: $mainFont;
-  transition: background-color 100ms ease, border-color 100ms ease;
-
-  &:hover:not(:disabled) {
-    background: rgba(37, 99, 235, 0.18);
-    border-color: rgba(59, 130, 246, 0.4);
-  }
-
-  &:disabled {
-    opacity: 0.35;
-    cursor: not-allowed;
-  }
+  gap: 0.4vh;
 }
 
-.shop-buy-panel__qty-input {
-  // Hérite de .inventory-control-input, override la largeur
-  flex: 1;
-  min-width: 0;
-  padding: 5px 4px;
-  font-size: 14px;
-
-  &:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
-}
-
-.shop-buy-panel__stock {
-  font-size: 10px;
-  color: $textColorMuted;
-  text-align: right;
-}
-
-.shop-buy-panel__total-row {
+.inventory-control {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 0.6vh;
+}
+
+.inventory-status-row {
+  display: flex;
+  justify-content: center;
   align-items: center;
+  gap: 37.8vh;
 }
 
-.shop-buy-panel__total-value {
-  font-size: 16px;
-  font-weight: 700;
-  color: $textColorMuted;
-  transition: color 150ms ease;
+.inventory-control-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5vh;
 }
 
-.shop-buy-panel__buy-btn {
-  // Hérite de .inventory-control-button
-  margin-top: 2px;
-  transition: background-color 150ms ease, opacity 150ms ease, transform 80ms ease;
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// STATUS CIRCLE
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.status-circle {
+  position: relative;
+
+  width: clamp(42px, 4.8vh, 54px);
+  height: clamp(42px, 4.8vh, 54px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+  cursor: default;
+
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+
+  &:hover {
+    transform: scale(1.04);
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// SVG
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.status-circle__svg {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  transform: rotate(230deg);
+
+  overflow: visible;
+  z-index: 0;
+
+  will-change: transform;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ICON
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.status-circle__icon {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: rgba(155, 158, 172, 0.70);
+
+  pointer-events: none;
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.status-circle:hover .status-circle__icon {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// CIRCLE PATHS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.status-circle .circle-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.06);
+  stroke-width: 3;
+}
+
+.status-circle .circle-progress {
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+
+  transition:
+    stroke-dasharray 250ms ease,
+    stroke 250ms ease;
+
+  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.15));
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// TOOLTIP
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.status-tooltip {
+  position: absolute;
+
+  bottom: calc(100% + 8px);
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  padding: 4px 8px;
+
+  background: rgba(26, 27, 36, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+
+  color: #c8cad0;
+  font-size: 11px;
+  font-weight: 500;
+
+  white-space: nowrap;
+
+  pointer-events: none;
+  z-index: 9999;
+
+  box-shadow:
+    0 2px 12px rgba(0, 0, 0, 0.45);
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// CRITICAL STATE (<20%)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.status-circle--critical {
+  animation: statusPulse 1.2s infinite;
+}
+
+.status-circle--critical .circle-progress {
+  filter:
+    drop-shadow(0 0 4px currentColor)
+    drop-shadow(0 0 8px currentColor);
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ANIMATIONS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+@keyframes statusPulse {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.65;
+    transform: scale(1.05);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
