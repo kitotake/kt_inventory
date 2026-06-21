@@ -21,22 +21,6 @@ function client.setPlayerStatus(values)
     TriggerServerEvent('union:status:actionFromItem', values)
 end
 
-RegisterNetEvent('union:status:init', function(s)
-    if not s then return end
-    local state = LocalPlayer.state
-    for k, v in pairs(s) do
-        if type(v) == 'number' then state:set(k, v, true) end
-    end
-end)
-
-RegisterNetEvent('union:status:updateAll', function(s)
-    if not s then return end
-    local state = LocalPlayer.state
-    for k, v in pairs(s) do
-        if type(v) == 'number' then state:set(k, v, true) end
-    end
-end)
-
 function client.hasGroup(group)
     if not PlayerData.loaded then return end
     if type(group) == 'table' then

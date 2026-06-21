@@ -202,10 +202,10 @@ end)
 -- STATUS FROM ITEM
 -- ─────────────────────────────────────────────
 
+local PlayerStatus = require 'modules.playerstatus.server'
+
 local function safeAddStat(src, stat, value)
-    local ok, err = pcall(function()
-        return exports["union"].AddStat(nil, src, stat, value)
-    end)
+    local ok, err = pcall(PlayerStatus.AddAndSync, src, stat, value)
     if not ok then
         lib.print.warn(("[kt_inventory:union] Erreur %s: %s"):format(stat, tostring(err)))
     end

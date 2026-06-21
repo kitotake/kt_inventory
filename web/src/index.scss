@@ -1202,7 +1202,7 @@ button:active {
     gap: 8px;
     width: 100%;
     align-items: center;
-    margin-top: -45px;
+   // margin-top: -45px;
   }
 
   .inventory-control-input {
@@ -1765,9 +1765,23 @@ button:active {
 
 .inventory-status-row {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  width: 100%;
+  margin-top: 25px;
+}
+
+.status-left {
+  display: flex;
   align-items: center;
-  gap: 37.8vh;
+}
+
+.status-right {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5vh;
+  align-items: center;
 }
 
 .inventory-control-wrapper {

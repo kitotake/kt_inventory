@@ -1,15 +1,16 @@
-// store/playerStatus.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '.';
 
 interface PlayerStatusState {
-  food:  number; // 0-100
-  drink: number; // 0-100
+  hunger: number;
+  thirst: number;
+  stress: number;
 }
 
 const initialState: PlayerStatusState = {
-  food:  75,
-  drink: 60,
+  hunger: 100,
+  thirst: 100,
+  stress: 0,
 };
 
 export const playerStatusSlice = createSlice({
@@ -18,17 +19,20 @@ export const playerStatusSlice = createSlice({
   reducers: {
     setPlayerStatus(
       state,
-      action: PayloadAction<{ food?: number; drink?: number }>
+      action: PayloadAction<{ hunger?: number; thirst?: number; stress?: number }>
     ) {
-      if (action.payload.food  !== undefined)
-        state.food  = Math.max(0, Math.min(100, action.payload.food));
-      if (action.payload.drink !== undefined)
-        state.drink = Math.max(0, Math.min(100, action.payload.drink));
+      if (action.payload.hunger !== undefined)
+        state.hunger = Math.max(0, Math.min(100, action.payload.hunger));
+      if (action.payload.thirst !== undefined)
+        state.thirst = Math.max(0, Math.min(100, action.payload.thirst));
+      if (action.payload.stress !== undefined)
+        state.stress = Math.max(0, Math.min(100, action.payload.stress));
     },
   },
 });
 
 export const { setPlayerStatus } = playerStatusSlice.actions;
-export const selectFood  = (state: RootState) => state.playerStatus.food;
-export const selectDrink = (state: RootState) => state.playerStatus.drink;
+export const selectHunger = (state: RootState) => state.playerStatus.hunger;
+export const selectThirst = (state: RootState) => state.playerStatus.thirst;
+export const selectStress = (state: RootState) => state.playerStatus.stress;
 export default playerStatusSlice.reducer;

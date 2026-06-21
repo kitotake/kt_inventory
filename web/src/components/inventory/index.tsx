@@ -103,10 +103,9 @@ const Inventory: React.FC = () => {
 
   /** Met à jour les jauges faim / soif depuis le Lua.
    *  Payload attendu : `{ food: number, drink: number }` (0-100) */
-  useNuiEvent<{ food?: number; drink?: number }>('setPlayerStatus', (data) => {
+ useNuiEvent<{ hunger?: number; thirst?: number; stress?: number }>('setPlayerStatus', (data) => {
     dispatch(setPlayerStatus(data));
   });
-
   return (
     <>
       <Fade in={inventoryVisible}>

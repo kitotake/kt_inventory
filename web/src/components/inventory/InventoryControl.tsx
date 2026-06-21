@@ -53,10 +53,16 @@ const InventoryControl: React.FC = () => {
        <div className="inventory-control">
 
   {/* Ligne statuts */}
-  <div className="inventory-status-row">
-    <StatusCircle type="food" />
-    <StatusCircle type="drink" />
+<div className="inventory-status-row">
+  <div className="status-left">
+    <StatusCircle type="hunger" />
   </div>
+
+  <div className="status-right">
+    <StatusCircle type="thirst" />
+    <StatusCircle type="stress" />
+  </div>
+</div>
 
   {/* Ligne contrôles */}
   <div className="inventory-control-wrapper">
